@@ -1,22 +1,54 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+const Login = () => import('views/login/Login.vue')
+const Dashboard = () => import('views/dashboard/Dashboard.vue')
+const UserManage = () => import('views/user_manage/UserManage.vue')
+const GroundManage = () => import('views/ground_manage/GroundManage.vue')
+const EquipmentManage =() => import('views/equipment_manage/EquipmentManage.vue')
+const RaceManage = () => import('views/race_manage/RaceManage.vue')
+const DataReport = () => import('views/data_report/DataReport.vue')
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/login'
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/dashboard',
+    component: Dashboard,
+    children: [
+      {
+        path: '',
+        redirect: "user"
+      },
+      {
+        path: 'user',
+        component: UserManage
+      },
+      {
+        path: 'ground',
+        component: GroundManage
+      },
+      {
+        path: 'equipment',
+        component: EquipmentManage
+      },
+      {
+        path: 'race',
+        component: RaceManage
+      },
+      {
+        path: 'report',
+        component: DataReport
+      },
+    ]
   }
 ]
 
