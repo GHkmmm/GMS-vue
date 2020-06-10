@@ -2,8 +2,12 @@
   <div class="dashboard">
     <dashboard-nav-bar class="my-navbar" />
     <div class="bottom">
-      <tab-menu :menu="item" @menuItemClick="menuItemClick"/>
-      <router-view class="router-view" />
+      <tab-menu :menus="menus" @menuItemClick="menuItemClick">
+        <!-- <tab-menu :menus="menus[0].menu" /> -->
+      </tab-menu>
+      <keep-alive>
+        <router-view class="router-view" />
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -20,14 +24,52 @@ export default {
   },
   data(){
     return {
-      item: [
-        "用户管理",
-        "场地管理",
-        "器材管理",
-        "体育赛事管理",
-        "体育馆运营金额数据报表"
+      menus: [
+        {
+          name: "用户管理",
+          menu: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          name: "场地管理",
+          menu: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          name: "器材管理",
+          menu: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          name: "体育赛事管理",
+          menu: [
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          name: "体育馆运营金额数据报表",
+          menu: [
+            "1",
+            "2",
+            "3"
+          ]
+        }
       ]
     }
+  },
+  created(){
+    this.$toast.suc("欢迎您,xxx")
   },
   methods: {
     menuItemClick(index){
@@ -55,6 +97,7 @@ export default {
 
 <style>
 .my-navbar{
+  height: 70px;
   box-shadow: #666 2px 2px 5px;
 }
 .bottom{

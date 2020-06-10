@@ -1,27 +1,33 @@
 <template>
   <div class="tab-menu">
     <div class="menu-list">
-      <div v-for="(item,index) in menu" 
+      <div v-for="(menu,index) in menus" 
           :key="index" 
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
           @click="itemClick(index)">
-          {{item}}
+          <div>{{menu.name}}</div>
+          <!-- <item-menu :menuitem="menu.menu" :isShowItem="currentIndex==index" /> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import itemMenu from './itemMenu';
+
 export default {
   name: "TabMenu",
   props: {
-    menu: {
+    menus: {
       type: Array,
       default(){
         return []
       }
     }
+  },
+  components: {
+    itemMenu
   },
   data(){
     return {
@@ -30,7 +36,11 @@ export default {
   },
   methods: {
     itemClick(index){
-      this.currentIndex= index;
+      // if(this.currentIndex == index){
+      //   this.currentIndex = -1;
+      // }else{
+        this.currentIndex = index;
+      // }
       this.$emit('menuItemClick', index)
     }
   }
@@ -49,6 +59,7 @@ export default {
 .menu-list-item{
   line-height: 60px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 .actived{
   background-color: #fff;

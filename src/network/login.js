@@ -10,3 +10,17 @@ export function Login(username, password){
     }
   })
 }
+
+export function Register(username, password, phoneNum, posId, email){
+  return request({
+    url: '/register',
+    method: 'post',
+    data: {
+      username,
+      password,
+      phoneNum,
+      posId,
+      email
+    }
+  })
+}
