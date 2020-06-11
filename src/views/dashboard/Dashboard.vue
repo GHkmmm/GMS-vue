@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard">
-    <dashboard-nav-bar class="my-navbar" />
+    <dashboard-nav-bar class="my-navbar" @infoClick="infoClick"/>
+    <user-info-card class="my-card" v-if="isShowUserInfo" />
     <div class="bottom">
       <tab-menu :menus="menus" @menuItemClick="menuItemClick">
         <!-- <tab-menu :menus="menus[0].menu" /> -->
@@ -14,62 +15,47 @@
 
 <script>
 import DashboardNavBar from './childComps/DashboardNavBar';
+import UserInfoCard from './childComps/UserInfoCard';
 import TabMenu from 'components/common/tabmenu/TabMenu';
 
 export default {
   name: "Dashboard",
   components: {
     DashboardNavBar,
+    UserInfoCard,
     TabMenu
   },
   data(){
     return {
+      isShowUserInfo: false,
       menus: [
         {
-          name: "用户管理",
-          menu: [
-            "1",
-            "2",
-            "3"
-          ]
+          name: "用户管理"
         },
         {
-          name: "场地管理",
-          menu: [
-            "1",
-            "2",
-            "3"
-          ]
+          name: "场地管理"
         },
         {
-          name: "器材管理",
-          menu: [
-            "1",
-            "2",
-            "3"
-          ]
+          name: "器材管理"
         },
         {
-          name: "体育赛事管理",
-          menu: [
-            "1",
-            "2",
-            "3"
-          ]
+          name: "体育赛事管理"
         },
         {
-          name: "体育馆运营金额数据报表",
-          menu: [
-            "1",
-            "2",
-            "3"
-          ]
+          name: "体育馆运营金额数据报表"
         }
       ]
     }
   },
   created(){
-    this.$toast.suc("欢迎您,xxx")
+    if(this.$store.state.user){
+      this.$toast.suc("欢迎您,"+this.$store.state.user.username)
+    }else{
+      this.$toast.err("您还未登陆");
+      setTimeout(()=>{
+        this.$router.push("/login");
+      }, 1600)
+    }
   },
   methods: {
     menuItemClick(index){
@@ -90,6 +76,9 @@ export default {
           this.$router.push('report');
           break;
       }
+    },
+    infoClick(){
+      this.isShowUserInfo = !this.isShowUserInfo;
     }
   }
 }
@@ -100,9 +89,13 @@ export default {
   height: 70px;
   box-shadow: #666 2px 2px 5px;
 }
+.my-card{
+  position: absolute;
+  right: 20px;
+}
 .bottom{
   width: 100%;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 70px);
   display: flex;
 }
 .router-view{

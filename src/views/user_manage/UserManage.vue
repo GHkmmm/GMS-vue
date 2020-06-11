@@ -7,6 +7,8 @@
         <th scope="col">用户名</th>
         <th scope="col">手机号</th>
         <th scope="col">职位</th>
+        <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -15,7 +17,8 @@
         <td>{{user.username}}</td>
         <td>{{user.phoneNum}}</td>
         <td>{{user.posId|userPos}}</td>
-        <td></td>
+        <td><a href="">编辑</a></td>
+        <td><a href="">删除</a></td>
       </tr>
     </tbody>
   </table>
@@ -59,6 +62,6 @@ export default {
 .user-manage{
   width: 80%;
   margin: 0;
-  padding: 10px;
+  padding: 20px;
 }
 </style>

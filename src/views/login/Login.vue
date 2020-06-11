@@ -12,6 +12,7 @@
           <label for="password">密码</label>
           <input class="form-control" id="password" v-model="user.password">
         </div>
+        <div class="warn" v-if="isShowTip">邮箱/手机号选一项填写即可</div>
         <div class="form-group" v-if="isShowOtherInput">
           <label for="phoneNum">手机号</label>
           <input class="form-control" id="phoneNum" v-model="user.phoneNum">
@@ -26,6 +27,7 @@
         </div>
         <div class="changeto-register" @click="changeToRegister" v-if="!isShowOtherInput">还没账户?点击注册用户</div>
         <div class="changeto-register" @click="changeToLogin" v-if="isShowOtherInput">已有账户?点击登陆</div>
+        <div class="warn" @click="forgetPassword" v-if="!isShowOtherInput">忘记密码</div>
         <button class="btn btn-primary btn-block">{{title}}</button>
       </form>
     </div>
@@ -35,7 +37,7 @@
 <script>
 import Toast from 'components/common/toast/Toast';
 
-import { Login, Register } from 'network/login';
+import { Login, Register, ChangePassword } from 'network/login';
 
 export default {
   name: 'Login',
@@ -43,6 +45,7 @@ export default {
     return {
       title: "登陆",
       isShowOtherInput: false,
+      isShowTip: false,
       user: {
         username: "",
         password: "",
@@ -63,19 +66,30 @@ export default {
     changeToLogin(){
       this.title = "登陆",
       this.isShowOtherInput = !this.isShowOtherInput;
+      this.isShowTip = false;
+    },
+    forgetPassword(){
+      this.title = "修改密码"
+      this.isShowOtherInput = !this.isShowOtherInput;
+      this.isShowTip = true;
     },
 
+    /**
+     * 网络请求相关方法
+     */
     SubmitFrom(){
       if(this.title=="登陆"){
         Login(this.user.username, this.user.password).then(res => {
           console.log(res);
           if(res.code == 200){
+            this.$store.state.user = res.user;
+            console.log(this.$store.state.user);
             this.$router.push("/dashboard");
           }else{
             this.$toast.err("账号或密码错误");
           }     
         });
-      }else{
+      }else if(this.title=="注册"){
         Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email).then(res => {
           console.log(res);
           if(res.code == 200){
@@ -85,6 +99,18 @@ export default {
             }, 1000)
           }else{
             this.$toast.err("请验证您信息的格式")
+          }
+        })
+      }else{
+        ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email).then(res => {
+          console.log(res);
+          if(res.code == 200){
+            this.$toast.suc("修改成功");
+            setTimeout(()=>{
+              this.$router.go(0);
+            }, 1000)
+          }else{
+            this.$toast.err("信息验证失败")
           }
         })
       }
@@ -110,6 +136,11 @@ export default {
 .changeto-register{
   margin-bottom: 10px;
   cursor: pointer;
+  color: #06c;
+}
+.warn{
   color: #dc4245;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 </style>

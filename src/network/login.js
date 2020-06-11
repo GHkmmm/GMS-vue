@@ -24,3 +24,16 @@ export function Register(username, password, phoneNum, posId, email){
     }
   })
 }
+
+export function ChangePassword(password, username, phoneNum, email){
+  return request({
+    url: "/changePassword",
+    method: "post",
+    data: {
+      password,
+      username,
+      phoneNum,
+      email
+    }
+  })
+}
