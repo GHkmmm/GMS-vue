@@ -3,10 +3,13 @@
     <img src="~assets/img/df_avatar.svg" alt="">
     <div class="info-name">{{user.username}}</div>
     <div class="info-email">{{user.email}}</div>
+    <button class="btn btn-danger logout" @click="Logout">注销</button>
   </div>
 </template>
 
 <script>
+import { Logout } from 'network/login';
+
 export default {
   name: "UserInfoCard",
   data(){
@@ -16,6 +19,20 @@ export default {
   },
   mounted(){
     this.user = this.$store.state.user;
+  },
+  methods: {
+    Logout(){
+      Logout().then(res => {
+        if(res.code==200){
+          this.$toast.suc("注销成功");
+          setTimeout(()=>{
+            this.$router.push("/login")
+          },1600)
+        }else{
+          this.$toast.err("注销失败")
+        }
+      })
+    }
   }
 }
 </script>
@@ -44,5 +61,8 @@ export default {
 .info-email{
   font-size: 18px;
   color: #bbb;
+}
+.logout{
+  margin-top: 10px;
 }
 </style>

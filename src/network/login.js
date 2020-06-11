@@ -37,3 +37,15 @@ export function ChangePassword(password, username, phoneNum, email){
     }
   })
 }
+
+export function GetSession(){
+  return request({
+    url: "/getSession"
+  })
+}
+
+export function Logout(){
+  return request({
+    url: "/logout"
+  })
+}

@@ -5,7 +5,14 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    user: null
+    user: {
+      userId: "",
+      username: "",
+      phoneNum: "",
+      email: "",
+      posId: "",
+      posName: ""
+    }
   }
 })
 

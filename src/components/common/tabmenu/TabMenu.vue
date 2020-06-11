@@ -6,6 +6,7 @@
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
           @click="itemClick(index)">
+          <img :src="menu.img" alt="">
           <div>{{menu.name}}</div>
           <!-- <item-menu :menuitem="menu.menu" :isShowItem="currentIndex==index" /> -->
       </div>
@@ -57,9 +58,15 @@ export default {
   font-size: 14px;
 }
 .menu-list-item{
-  line-height: 60px;
+  line-height: 80px;
   cursor: pointer;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+.menu-list-item img{
+  width: 25px;
+  margin-right: 5px;
 }
 .actived{
   background-color: #fff;

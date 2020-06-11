@@ -8,6 +8,7 @@ const GroundManage = () => import('views/ground_manage/GroundManage.vue')
 const EquipmentManage =() => import('views/equipment_manage/EquipmentManage.vue')
 const RaceManage = () => import('views/race_manage/RaceManage.vue')
 const DataReport = () => import('views/data_report/DataReport.vue')
+const EditInfo = () => import('views/edit_info/EditInfo.vue')
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,10 @@ const routes = [
         path: 'report',
         component: DataReport
       },
+      {
+        path: 'editInfo',
+        component: EditInfo
+      }
     ]
   }
 ]

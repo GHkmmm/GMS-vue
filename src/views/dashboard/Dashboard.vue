@@ -18,6 +18,8 @@ import DashboardNavBar from './childComps/DashboardNavBar';
 import UserInfoCard from './childComps/UserInfoCard';
 import TabMenu from 'components/common/tabmenu/TabMenu';
 
+import { GetSession } from 'network/login';
+
 export default {
   name: "Dashboard",
   components: {
@@ -30,32 +32,40 @@ export default {
       isShowUserInfo: false,
       menus: [
         {
-          name: "用户管理"
+          name: "用户管理",
+          img: require("assets/img/tabmenu/usermanage.svg")
         },
         {
-          name: "场地管理"
+          name: "场地管理",
+          img: require("assets/img/tabmenu/placemanage.svg")
         },
         {
-          name: "器材管理"
+          name: "器材管理",
+          img: require("assets/img/tabmenu/equipmentmanage.svg")
         },
         {
-          name: "体育赛事管理"
+          name: "体育赛事管理",
+          img: require("assets/img/tabmenu/gamemanage.svg")
         },
         {
-          name: "体育馆运营金额数据报表"
+          name: "体育馆运营金额数据报表",
+          img: require("assets/img/tabmenu/trading.svg")
         }
       ]
     }
   },
   created(){
-    if(this.$store.state.user){
-      this.$toast.suc("欢迎您,"+this.$store.state.user.username)
-    }else{
-      this.$toast.err("您还未登陆");
-      setTimeout(()=>{
-        this.$router.push("/login");
-      }, 1600)
-    }
+    this.getSession();
+    setTimeout(()=>{
+      if(this.$store.state.user){
+        this.$toast.suc("欢迎您,"+this.$store.state.user.username)
+      }else{
+        this.$toast.err("您还未登陆");
+        setTimeout(()=>{
+          this.$router.push("/login");
+        }, 1600)
+      }
+    },300)
   },
   methods: {
     menuItemClick(index){
@@ -79,6 +89,15 @@ export default {
     },
     infoClick(){
       this.isShowUserInfo = !this.isShowUserInfo;
+    },
+
+    /**
+     * 网络请求相关方法
+     */
+    getSession(){
+      GetSession().then(res => {
+        this.$store.state.user = res.user;
+      })
     }
   }
 }
@@ -99,6 +118,7 @@ export default {
   display: flex;
 }
 .router-view{
-  margin: 20px;
+  width: 80%;
+  padding: 10px;
 }
 </style>

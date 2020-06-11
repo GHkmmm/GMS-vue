@@ -80,7 +80,6 @@ export default {
     SubmitFrom(){
       if(this.title=="登陆"){
         Login(this.user.username, this.user.password).then(res => {
-          console.log(res);
           if(res.code == 200){
             this.$store.state.user = res.user;
             console.log(this.$store.state.user);
@@ -91,7 +90,6 @@ export default {
         });
       }else if(this.title=="注册"){
         Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email).then(res => {
-          console.log(res);
           if(res.code == 200){
             this.$toast.suc("注册成功");
             setTimeout(()=>{
