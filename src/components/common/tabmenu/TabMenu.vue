@@ -40,8 +40,8 @@ export default {
     itemClick(index){
       if(this.currentIndex != index){
         this.currentIndex = index;
-        console.log(index);
-        this.$emit('menuItemClick', index)
+        console.log(this.menus[index].path);
+        this.$emit('menuItemClick', this.menus[index].path)
       }
     }
   }

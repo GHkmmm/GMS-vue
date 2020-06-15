@@ -46,24 +46,9 @@ export default {
     },300)
   },
   methods: {
-    menuItemClick(index){
-      switch(index){
-        case 0:
-          this.$router.push('user');
-          break;
-        case 1:
-          this.$router.push('ground');
-          break;
-        case 2:
-          this.$router.push('equipment');
-          break;
-        case 3:
-          this.$router.push('race');
-          break;
-        case 4:
-          this.$router.push('report');
-          break;
-      }
+    menuItemClick(path){
+      console.log(path);
+      this.$router.push(path)
     },
     infoClick(){
       this.isShowUserInfo = !this.isShowUserInfo;
