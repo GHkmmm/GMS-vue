@@ -38,6 +38,9 @@
 import Toast from 'components/common/toast/Toast';
 
 import { Login, Register, ChangePassword } from 'network/login';
+import { MenuUtils } from 'utils/MenuUtils';
+
+var routers = [];
 
 export default {
   name: 'Login',
@@ -52,7 +55,34 @@ export default {
         phoneNum: "",
         posId: 3,
         email: ""
-      }
+      },
+      /**
+       * 模拟后端返回路由信息
+       */
+      newRoutes: [
+        {
+          path: '/dashboard',
+          component: "Dashboard",
+          children: [
+            {
+              path: 'user',
+              component: "UserManage",
+              name:"用户管理",
+              icon: require("assets/img/tabmenu/usermanage.svg")
+            },
+            {
+              path: 'ground',
+              component: "GroundManage",
+              name:"场地管理",
+              icon: require("assets/img/tabmenu/placemanage.svg")
+            },
+            {
+              path: '',
+              redirect: "user"
+            }
+          ]
+        }
+      ]
     }
   },
   components:{
@@ -82,7 +112,11 @@ export default {
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
             this.$store.state.user = res.user;
-            console.log(this.$store.state.user);
+            MenuUtils(routers, this.newRoutes);
+            console.log("router===",routers);
+            this.$router.options.routes.push(...routers);
+            this.$router.addRoutes(routers)
+            console.log(this.$router);
             this.$router.push("/dashboard");
           }else{
             this.$toast.err("账号或密码错误");

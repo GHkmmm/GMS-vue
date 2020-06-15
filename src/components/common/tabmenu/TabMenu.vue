@@ -6,7 +6,7 @@
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
           @click="itemClick(index)">
-          <img :src="menu.img" alt="">
+          <img :src="menu.icon" alt="">
           <div>{{menu.name}}</div>
           <!-- <item-menu :menuitem="menu.menu" :isShowItem="currentIndex==index" /> -->
       </div>

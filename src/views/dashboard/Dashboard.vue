@@ -3,7 +3,7 @@
     <dashboard-nav-bar class="my-navbar" @infoClick="infoClick"/>
     <user-info-card class="my-card" v-if="isShowUserInfo" />
     <div class="bottom">
-      <tab-menu :menus="menus" @menuItemClick="menuItemClick">
+      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick">
         <!-- <tab-menu :menus="menus[0].menu" /> -->
       </tab-menu>
       <keep-alive>
@@ -29,29 +29,7 @@ export default {
   },
   data(){
     return {
-      isShowUserInfo: false,
-      menus: [
-        {
-          name: "用户管理",
-          img: require("assets/img/tabmenu/usermanage.svg")
-        },
-        {
-          name: "场地管理",
-          img: require("assets/img/tabmenu/placemanage.svg")
-        },
-        {
-          name: "器材管理",
-          img: require("assets/img/tabmenu/equipmentmanage.svg")
-        },
-        {
-          name: "体育赛事管理",
-          img: require("assets/img/tabmenu/gamemanage.svg")
-        },
-        {
-          name: "体育馆运营金额数据报表",
-          img: require("assets/img/tabmenu/trading.svg")
-        }
-      ]
+      isShowUserInfo: false
     }
   },
   created(){
