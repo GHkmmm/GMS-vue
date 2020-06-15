@@ -5,7 +5,8 @@
           :key="index" 
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
-          @click="itemClick(index)">
+          @click="itemClick(index)"
+          v-show="menu.name">
           <img :src="menu.icon" alt="">
           <div>{{menu.name}}</div>
           <!-- <item-menu :menuitem="menu.menu" :isShowItem="currentIndex==index" /> -->
@@ -37,12 +38,11 @@ export default {
   },
   methods: {
     itemClick(index){
-      // if(this.currentIndex == index){
-      //   this.currentIndex = -1;
-      // }else{
+      if(this.currentIndex != index){
         this.currentIndex = index;
-      // }
-      this.$emit('menuItemClick', index)
+        console.log(index);
+        this.$emit('menuItemClick', index)
+      }
     }
   }
 }

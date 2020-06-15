@@ -37,7 +37,7 @@
 <script>
 import Toast from 'components/common/toast/Toast';
 
-import { Login, Register, ChangePassword } from 'network/login';
+import { Login, Register, ChangePassword, GetRoutes } from 'network/login';
 import { MenuUtils } from 'utils/MenuUtils';
 
 var routers = [];
@@ -82,7 +82,8 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      routers: []
     }
   },
   components:{
@@ -112,12 +113,17 @@ export default {
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
             this.$store.state.user = res.user;
-            MenuUtils(routers, this.newRoutes);
-            console.log("router===",routers);
-            this.$router.options.routes.push(...routers);
-            this.$router.addRoutes(routers)
-            console.log(this.$router);
-            this.$router.push("/dashboard");
+            GetRoutes().then(res => {
+              console.log(res);
+              this.routers.push(res);
+              this.routers.children = res.children.reverse();
+              MenuUtils(routers, this.routers);
+              console.log("router===",routers);
+              this.$router.options.routes.push(...routers);
+              this.$router.addRoutes(routers)
+              console.log(this.$router);
+              this.$router.push("/dashboard");
+            }) 
           }else{
             this.$toast.err("账号或密码错误");
           }     

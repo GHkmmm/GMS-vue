@@ -49,3 +49,9 @@ export function Logout(){
     url: "/logout"
   })
 }
+
+export function GetRoutes(){
+  return request({
+    url: "/getRoutes"
+  })
+}
