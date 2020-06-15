@@ -5,9 +5,9 @@
           :key="index" 
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
-          @click="itemClick(index)"
+          @click="itemClick(menu)"
           v-show="menu.name">
-          <img :src="menu.icon" alt="">
+          <img :src="menu.icon|getImg" alt="">
           <div>{{menu.name}}</div>
           <!-- <item-menu :menuitem="menu.menu" :isShowItem="currentIndex==index" /> -->
       </div>
@@ -36,14 +36,22 @@ export default {
       currentIndex: 0
     }
   },
+  filters: {
+    getImg(path){
+      console.log(path);
+      if(path){
+        return require("assets/img/tabmenu/"+path)
+      }
+    }
+  },
   methods: {
     itemClick(index){
       if(this.currentIndex != index){
         this.currentIndex = index;
-        console.log(this.menus[index].path);
         this.$emit('menuItemClick', this.menus[index].path)
       }
-    }
+    },
+    
   }
 }
 </script>

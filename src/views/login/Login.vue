@@ -56,33 +56,6 @@ export default {
         posId: 3,
         email: ""
       },
-      /**
-       * 模拟后端返回路由信息
-       */
-      newRoutes: [
-        {
-          path: '/dashboard',
-          component: "Dashboard",
-          children: [
-            {
-              path: 'user',
-              component: "UserManage",
-              name:"用户管理",
-              icon: require("assets/img/tabmenu/usermanage.svg")
-            },
-            {
-              path: 'ground',
-              component: "GroundManage",
-              name:"场地管理",
-              icon: require("assets/img/tabmenu/placemanage.svg")
-            },
-            {
-              path: '',
-              redirect: "user"
-            }
-          ]
-        }
-      ],
       routers: []
     }
   },
@@ -113,7 +86,7 @@ export default {
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
             this.$store.state.user = res.user;
-            GetRoutes().then(res => {
+            GetRoutes(this.$store.state.user.posId).then(res => {
               console.log(res);
               this.routers.push(res);
               this.routers.children = res.children.reverse();

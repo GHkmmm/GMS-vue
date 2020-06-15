@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     menuItemClick(path){
-      console.log(path);
       this.$router.push(path)
     },
     infoClick(){

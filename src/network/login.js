@@ -50,8 +50,11 @@ export function Logout(){
   })
 }
 
-export function GetRoutes(){
+export function GetRoutes(posId){
   return request({
-    url: "/getRoutes"
+    url: "/getRoutes",
+    params: {
+      posId
+    }
   })
 }
