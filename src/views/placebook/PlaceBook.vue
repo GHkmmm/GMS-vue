@@ -1,12 +1,18 @@
 <template>
   <div>
-    场地预约
+<bulletin></bulletin>
   </div>
+  
 </template>
 
 <script>
+import bulletin from './bulletin/Bulletin';
 export default {
-
+  name:"charge",
+  components:{
+    bulletin
+    },
+    methods:{}
 }
 </script>
 
