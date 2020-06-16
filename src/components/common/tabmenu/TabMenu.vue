@@ -5,7 +5,7 @@
           :key="index" 
           class="menu-list-item" 
           :class="{actived: currentIndex==index}"
-          @click="itemClick(menu)"
+          @click="itemClick(index)"
           v-show="menu.name">
           <img :src="menu.icon|getImg" alt="">
           <div>{{menu.name}}</div>
@@ -38,7 +38,6 @@ export default {
   },
   filters: {
     getImg(path){
-      console.log(path);
       if(path){
         return require("assets/img/tabmenu/"+path)
       }

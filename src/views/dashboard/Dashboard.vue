@@ -18,7 +18,7 @@ import DashboardNavBar from './childComps/DashboardNavBar';
 import UserInfoCard from './childComps/UserInfoCard';
 import TabMenu from 'components/common/tabmenu/TabMenu';
 
-import { GetSession } from 'network/login';
+import { GetSession, GetRoutes } from 'network/login';
 
 export default {
   name: "Dashboard",
@@ -34,8 +34,11 @@ export default {
   },
   created(){
     this.getSession();
+    // this.getRoutes(this.$store.state.user.posId);
+
     setTimeout(()=>{
       if(this.$store.state.user){
+        console.log(this.$store.state.user);
         this.$toast.suc("欢迎您,"+this.$store.state.user.username)
       }else{
         this.$toast.err("您还未登陆");
@@ -59,6 +62,11 @@ export default {
     getSession(){
       GetSession().then(res => {
         this.$store.state.user = res.user;
+      })
+    },
+    getRoutes(posId){
+      GetRoutes(posId).then(res => {
+        console.log(res);
       })
     }
   }

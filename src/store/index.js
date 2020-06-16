@@ -12,7 +12,8 @@ const store = new Vuex.Store({
       email: "",
       posId: "",
       posName: ""
-    }
+    },
+    routes: []
   }
 })
 
