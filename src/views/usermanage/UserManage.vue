@@ -30,10 +30,14 @@
         </tr>
       </tbody>
     </table>
+    <pagination :totalPage="totalPage" 
+                @pageClick="pageClick"
+                />
   </div>
 </template>
 
 <script>
+import Pagination from 'components/common/pagination/Pagination';
 import { getUser, deleteUser, queryUser } from 'network/userManage';
 
 export default {
@@ -41,8 +45,12 @@ export default {
   data(){
     return{
       users: [],
-      isOnlyManager: false
+      isOnlyManager: false,
+      totalPage: 1
     }
+  },
+  components: {
+    Pagination
   },
   filters: {
     userPos(id){
@@ -60,7 +68,7 @@ export default {
     }
   },
   created(){
-    this.getUser();
+    this.getUser(0);
   },
   methods: {
     editInfo(userId,username,phoneNum,email,posId){
@@ -75,13 +83,19 @@ export default {
         }
       })
     },
+    pageClick(index){
+      console.log(index);
+      this.getUser(index);
+    },
 
     /**
      * 网络请求相关方法
      */
-    getUser(){
-      getUser().then(res => {
+    getUser(page){
+      getUser(page).then(res => {
+        console.log(res);
         this.users = res.users
+        this.totalPage = res.totalPage;
       })
     },
     deleteUser(userId){

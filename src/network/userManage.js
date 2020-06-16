@@ -1,8 +1,11 @@
 import { request } from './request';
 
-export function getUser(){
+export function getUser(page){
   return request({
-    url: "/users"
+    url: "/users",
+    params: {
+      page
+    }
   })
 }
 

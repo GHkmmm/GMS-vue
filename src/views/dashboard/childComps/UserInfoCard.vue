@@ -25,8 +25,11 @@ export default {
       Logout().then(res => {
         if(res.code==200){
           this.$toast.suc("注销成功");
+          this.$store.state.user={};
+          this.$store.state.router=[];
           setTimeout(()=>{
             this.$router.push("/login")
+            location.reload();
           },1600)
         }else{
           this.$toast.err("注销失败")
