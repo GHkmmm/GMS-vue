@@ -48,8 +48,9 @@ export default {
 
 <style>
 .myToast{
-  width: 150px;
+  min-width: 150px;
   line-height: 60px;
+  padding: 0px 5px;
 
   background-color: red;
   color: #fff;

@@ -4,22 +4,25 @@
     <div class="login-form" @submit.prevent="SubmitFrom()">
       <form>
         <div class="form-group">
-          <label for="username">用户名</label>
-          <input class="form-control" id="username" v-model="user.username">
-          <small class="form-text text-muted">We'll never share your username with anyone else.</small>
+          <label for="username">*用户名</label>
+          <input class="form-control" id="username" v-model="user.username" @blur="UsernameInputBlur">
+          <small class="form-text text-danger">{{usernameTip}}</small>
         </div>
         <div class="form-group">
-          <label for="password">密码</label>
-          <input class="form-control" id="password" v-model="user.password">
+          <label for="password">*密码</label>
+          <input class="form-control" id="password" v-model="user.password" @blur="PasswordInputBlur">
+          <small class="form-text text-danger">{{passwordTip}}</small>
         </div>
         <div class="warn" v-if="isShowTip">邮箱/手机号选一项填写即可</div>
         <div class="form-group" v-if="isShowOtherInput">
           <label for="phoneNum">手机号</label>
-          <input class="form-control" id="phoneNum" v-model="user.phoneNum">
+          <input class="form-control" id="phoneNum" v-model="user.phoneNum" @blur="PhoneNumInputBlur">
+          <small class="form-text text-danger">{{phoneNumTip}}</small>
         </div>
         <div class="form-group" v-if="isShowOtherInput">
           <label for="email">email</label>
-          <input class="form-control" id="email" v-model="user.email">
+          <input class="form-control" id="email" v-model="user.email" @blur="EmailInputBlur">
+          <small class="form-text text-danger">{{emailTip}}</small>
         </div>
         <div class="form-group form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -49,6 +52,14 @@ export default {
       title: "登陆",
       isShowOtherInput: false,
       isShowTip: false,
+      usernameTip: "",
+      passwordTip: "",
+      phoneNumTip: "",
+      emailTip: "",
+      nameTest: false,
+      passwordTest: false,
+      phoneNumTest: false,
+      emailTest: false,
       user: {
         username: "",
         password: "",
@@ -79,10 +90,50 @@ export default {
     },
 
     /**
+     * 验证表单相关方法
+     */
+    UsernameInputBlur(){
+      const name = /^[a-zA-Z0-9_]{3,12}$/;
+      this.nameTest = name.test(this.user.username);
+      if(!this.nameTest){
+        this.usernameTip = "请输入3到12位到英文或字母"
+      }else{
+        this.usernameTip = ""
+      }
+    },
+    PasswordInputBlur(){
+      const password = /^[a-zA-Z0-9_]{3,12}$/;
+      this.passwordTest = password.test(this.user.password);
+      if(!this.passwordTest){
+        this.passwordTip = "请输入3到12位到英文或字母"
+      }else{
+        this.passwordTip = ""
+      }
+    },
+    PhoneNumInputBlur(){
+      const phoneNum = /^1[3456789]\d{9}$/;
+      this.phoneNumTest = phoneNum.test(this.user.phoneNum);
+      if(!this.phoneNumTest){
+        this.phoneNumTip = "请输入正确的手机号"
+      }else{
+        this.phoneNumTip = ""
+      }
+    },
+    EmailInputBlur(){
+      const email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      this.emailTest = email.test(this.user.email);
+      if(!this.emailTest){
+        this.emailTip = "请输入正确的邮箱"
+      }else{
+        this.emailTip = ""
+      }
+    },
+
+    /**
      * 网络请求相关方法
      */
     SubmitFrom(){
-      if(this.title=="登陆"){
+      if(this.title=="登陆"&&this.nameTest&&this.passwordTest){
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
             this.$store.state.user = res.user;
@@ -101,7 +152,7 @@ export default {
             this.$toast.err("账号或密码错误");
           }     
         });
-      }else if(this.title=="注册"){
+      }else if(this.title=="注册"&&this.nameTest&&this.passwordTest){
         Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email).then(res => {
           if(res.code == 200){
             this.$toast.suc("注册成功");
@@ -112,7 +163,7 @@ export default {
             this.$toast.err("请验证您信息的格式")
           }
         })
-      }else{
+      }else if(this.title=="修改密码"){
         ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email).then(res => {
           console.log(res);
           if(res.code == 200){
@@ -124,6 +175,8 @@ export default {
             this.$toast.err("信息验证失败")
           }
         })
+      }else{
+        this.$toast.err("请按照要求填写信息")
       }
     }
   }
