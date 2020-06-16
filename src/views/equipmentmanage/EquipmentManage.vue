@@ -162,6 +162,9 @@ export default {
             alert("不行啊");
           }
       })
+      this.modelEquipmentAddId = null;
+      this.modelEquipmentAddName = null;
+      this.modelEquipmentAddCost = null;
     },
 
     ShowED: function() {
@@ -183,6 +186,8 @@ export default {
             alert("不行啊");
           }
       })
+
+      this.modelEquipmentDeleteId = null;
     },
 
     ShowER: function() {
@@ -204,6 +209,9 @@ export default {
             alert("不行啊");
           }
       })
+
+      this.modelEquipmentRentId = null;
+      this.modelEquipmentRentRenterId = null;
     },
 
 
@@ -226,6 +234,7 @@ export default {
             alert("不行啊");
           }
       })
+      this.modelEquipmentRecycleId = null;
     }
   }
 };
