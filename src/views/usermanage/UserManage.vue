@@ -25,8 +25,10 @@
           <td>{{user.phoneNum}}</td>
           <td>{{user.posId|userPos}}</td>
           <td>{{user.email}}</td>
+
           <td><a href="#" @click="editInfo(user.userId,user.username,user.phoneNum,user.email,user.posId)">编辑</a></td>
           <td><a href="#" @click="deleteUser(user.userId)">删除</a></td>
+          
         </tr>
       </tbody>
     </table>
