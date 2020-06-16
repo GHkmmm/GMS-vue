@@ -81,11 +81,15 @@ export default {
 .my-card{
   position: absolute;
   right: 20px;
+  z-index: 99;
 }
 .bottom{
   width: 100%;
-  height: calc(100vh - 70px);
   display: flex;
+  position: absolute;
+  top: 70px;
+  bottom: 0;
+  z-index: -99;
 }
 .router-view{
   width: 80%;

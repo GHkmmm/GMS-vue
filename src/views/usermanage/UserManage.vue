@@ -1,37 +1,11 @@
 <template>
   <div class="user-manage">
-    <div class="form-check" @click="onlyManager">
-      <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" v-model="isOnlyManager">
-      <label class="form-check-label" for="defaultCheck1">
-        只查看管理员用户
-      </label>
-    </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">id</th>
-          <th scope="col">用户名</th>
-          <th scope="col">手机号</th>
-          <th scope="col">职位</th>
-          <th scope="col">邮箱</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.key">
-          <th scope="row">{{user.userId}}</th>
-          <td>{{user.username}}</td>
-          <td>{{user.phoneNum}}</td>
-          <td>{{user.posId|userPos}}</td>
-          <td>{{user.email}}</td>
-
-          <td><a href="#" @click="editInfo(user.userId,user.username,user.phoneNum,user.email,user.posId)">编辑</a></td>
-          <td><a href="#" @click="deleteUser(user.userId)">删除</a></td>
-          
-        </tr>
-      </tbody>
-    </table>
+    <filter-user @getUser="getUser(0)"
+                 @onlyManager="onlyManager"
+                 @QueryUser="QueryUser" />
+    <user-table :users="users"
+                @editInfo="editInfo"
+                @deleteUser="deleteUser"/>
     <pagination :totalPage="totalPage" 
                 @pageClick="pageClick"
                 @Forward="Forward"
@@ -41,6 +15,8 @@
 </template>
 
 <script>
+import FilterUser from './childComps/FilterUser';
+import UserTable from './childComps/UserTable';
 import Pagination from 'components/common/pagination/Pagination';
 import { getUser, deleteUser, queryUser } from 'network/userManage';
 
@@ -49,42 +25,28 @@ export default {
   data(){
     return{
       users: [],
-      isOnlyManager: false,
       totalPage: 1,
       currentIndex: 0
     }
   },
   components: {
+    FilterUser,
+    UserTable,
     Pagination
   },
-  filters: {
-    userPos(id){
-      switch(id){
-        case 1:
-          return "超级用户";
-          break;
-        case 2:
-          return "体育馆管理专员";
-          break;
-        case 3:
-          return "普通用户";
-          break;
-      }
-    }
-  },
   created(){
-    this.getUser(0);
+    this.getUser(this.currentIndex);
   },
   methods: {
-    editInfo(userId,username,phoneNum,email,posId){
+    editInfo(user){
       this.$router.push({
         path: 'editInfo',
         query: {
-          userId,
-          username,
-          phoneNum,
-          email,
-          posId
+          userId:user.userId,
+          username:user.username,
+          phoneNum:user.phoneNum,
+          email:user.email,
+          posId:user.posId
         }
       })
     },
@@ -93,12 +55,20 @@ export default {
       this.getUser(index);
     },
     Forward(){
-      this.currentIndex--;
-      this.getUser(this.currentIndex)
+      if(this.currentIndex===0){
+        this.$toast.warn("已经是第一页啦")
+      }else{
+        this.currentIndex--;
+        this.getUser(this.currentIndex);
+      }
     },
     Backward(){
-      this.currentIndex++;
-      this.getUser(this.currentIndex)
+      if(this.currentIndex===this.totalPage-1){
+        this.$toast.warn("已经到结尾")
+      }else {
+        this.currentIndex++;
+        this.getUser(this.currentIndex)
+      }
     },
 
     /**
@@ -106,7 +76,6 @@ export default {
      */
     getUser(page){
       getUser(page).then(res => {
-        console.log(res);
         this.users = res.users
         this.totalPage = res.totalPage;
       })
@@ -121,15 +90,17 @@ export default {
       })
     },
     onlyManager(){
-      if(this.isOnlyManager==false){
-        queryUser("").then(res => {
+      queryUser("").then(res => {
+          console.log(res);
           if(res.code==200){
             this.users= res.users;
           }
         })
-      }else{
-        this.getUser();
-      }
+    },
+    QueryUser(username){
+      queryUser(username).then(res => {
+        this.users = res.users
+      })
     }
   }
 }
@@ -143,6 +114,6 @@ export default {
 .my-pagination{
   width: 100%;
   position: absolute;
-  bottom: 20px;
+  bottom: 0;
 }
 </style>

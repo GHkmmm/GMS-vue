@@ -29,7 +29,7 @@ export function deleteUser(userId){
 export function queryUser(username){
   return request({
     url: "/manageUser/query",
-    data: {
+    params: {
       username
     }
   })
