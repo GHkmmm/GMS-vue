@@ -32,7 +32,9 @@
     </table>
     <pagination :totalPage="totalPage" 
                 @pageClick="pageClick"
-                />
+                @Forward="Forward"
+                @Backward="Backward"
+                class="my-pagination" />
   </div>
 </template>
 
@@ -46,7 +48,8 @@ export default {
     return{
       users: [],
       isOnlyManager: false,
-      totalPage: 1
+      totalPage: 1,
+      currentIndex: 0
     }
   },
   components: {
@@ -84,8 +87,16 @@ export default {
       })
     },
     pageClick(index){
-      console.log(index);
+      this.currentIndex = index
       this.getUser(index);
+    },
+    Forward(){
+      this.currentIndex--;
+      this.getUser(this.currentIndex)
+    },
+    Backward(){
+      this.currentIndex++;
+      this.getUser(this.currentIndex)
     },
 
     /**
@@ -125,5 +136,11 @@ export default {
 <style>
 .user-manage{
   width: 80%;
+  position: relative;
+}
+.my-pagination{
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
 }
 </style>
