@@ -21,7 +21,8 @@ export default {
         {title:'羽毛球场有灯光10/小时，无灯光5/小时，乒乓球场则为3/小时、2/小时。'},
         {title:'最后祝你们玩得愉快'},
       ],
-      number: 0
+      number: 0,
+      rotateTime: 4000
     }
   },
   computed: {
@@ -46,7 +47,7 @@ export default {
           this.number += 1;
         }
         this.startMove();
-      },4000);
+      },this.rotateTime);
     }
   }
 }
