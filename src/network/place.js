@@ -23,13 +23,26 @@ export function deletePlace(idPlace){
     })
 }
 
-export function addPlace(placeName,placeLocation){
+export function addPlace(placeName,location){
       return request({
           url:"/place/addPlace",
           method:"post",
           data:{
               placeName,
-              placeLocation
+              location
           }
       })
+}
+
+export function changePlace(idPlace,placeName,location){
+    return request({
+        url:"/place/changePlace",
+        method:"post",
+        data:{
+            idPlace,
+            placeName,
+            location
+        }
+    })
+
 }

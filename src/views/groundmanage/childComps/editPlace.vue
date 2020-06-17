@@ -1,49 +1,67 @@
 <template>
- <div>
- <button class="btn btn-primary" onclick="document.getElementById('modalManage').style.display='block'" style="width:auto;">添加场地</button>
-
-<div id="modalManage" class="modal">
-    <div class="modal-content animate">
-        <div class="imgcontainer">
+  <div @editPlace="gotPlace">
+  <button class="btn btn-outline-warning" onclick="document.getElementById('modalEdit').style.display='block'" style="width:auto;">修改</button>
+  
+   <div id="modalEdit" class="modal">
+     <div class="modal-content animate">
+         <div>
             <!-- 点击×号，隐藏模态框-->
-            <span onclick="document.getElementById('modalManage').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <span onclick="document.getElementById('modalEdit').style.display='none'" class="close" title="Close Modal">&times;</span>
         </div>
-
+        <form @submit.prevent="editPlace">
         <div class="container">
-            <label><b>场地名字</b></label>
-            <input  placeholder="请输入场地名字" v-model="placeName">
-
-            <label><b>场地位置</b></label>
-            <input  placeholder="请输入场地位置" v-model="location">
-
-            <button  class="btn btn-outline-primary" @click="addPlaceMA" onclick="document.getElementById('modalManage').style.display='none'">确认</button>
-            <button  class="btn btn-outline-primary" onclick="document.getElementById('modalManage').style.display='none'">取消</button>
+         <label for="placeName"><b>场地名字</b></label>
+         <input  id="placeName" v-model="currentPlace.placeName">
+         <label  for="location"><b>场地位置</b></label>
+         <input  id="location" v-model="currentPlace.location">
+          <button class="btn btn-primary" type="submit">确认修改</button>
         </div>
-
-
-
+        </form>
     </div>
-</div>
+   </div>
+  </div>
 
- </div>
+
 </template>
 
 <script>
-import { addPlace } from 'network/place'
+import { changePlace } from "network/place";
+export default {
+    name:"editPlace",
+    data(){
+        return{
+            currentPlace:{
+                idPlace: " ",
+                placeName: " ",
+                location: " "
+            }
 
- export default {
-  name:"modalManage",
-   methods:{
-   addPlaceMA: function(){
-     addPlace(this.placeName,this.location).then( res =>{
-         if(res.code == 200){
-             this.$toast.suc("添加成功")
-         }else if(res.code ==400){
-             this.$toast.err("添加失败")
-         }
-      })
-  }
- }}
+        }
+    },
+    created(){
+        thsi.setPlace();
+    },
+    activated(){
+        this.setPlace();
+    },
+    methods:{
+        setPlace(){
+            this.currentPlace.idPlace = this.$route.query.idPlace;
+            this.currentPlace.placeName = this.$route.query.placeName;
+            this.currentPlace.location = this.$route.query.location;
+        },
+        editPlace(){
+            changePlace(this.currentPlace.idPlace,this.currentPlace.placeName,this.currentPlace.location).then(res =>{
+                console.log(res);
+                if(res.code == 200){
+                    this.$toast.suc("修改成功");
+                    this.$router.push("place");
+                }
+            })
+        }
+    }
+
+}
 </script>
 
 <style>
