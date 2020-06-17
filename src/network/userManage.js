@@ -9,10 +9,17 @@ export function getUser(page){
   })
 }
 
-export function editUser(username, phoneNum, email, posId){
+export function editUser(userId,username, phoneNum, email, posId){
   return request({
     url: "/manageUser/edit",
-    method: "post"
+    method: "post",
+    data: {
+      userId,
+      username,
+      phoneNum,
+      email,
+      posId
+    }
   })
 }
 
@@ -26,11 +33,14 @@ export function deleteUser(userId){
   })
 }
 
-export function queryUser(username){
+export function queryUser(userId,username,phoneNum,email){
   return request({
     url: "/manageUser/query",
     params: {
-      username
+      userId,
+      username,
+      phoneNum,
+      email
     }
   })
 }

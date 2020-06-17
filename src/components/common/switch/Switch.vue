@@ -6,29 +6,49 @@
 
 <script>
 export default {
-  name: "Switch",
+  name: "OrSwitch",
+  props:{
+    isOn: {
+      type: Boolean,
+      default: false
+    }
+  },
   data(){
     return{
-      isOn: false,
+      
     }
   },
   methods: {
     Switch(){
       this.isOn = !this.isOn;
+      this.Emit();
+    },
+    Move(){
+      console.log(this.isOn);
       const circleStyle = this.$refs.myCircle.style;
       const OrSwitchStyle = this.$refs.OrSwitch.style;
       if(this.isOn){
         circleStyle.left = `50%`
         circleStyle.right = `2px`
         OrSwitchStyle.backgroundColor = `#4FA846`
-        this.$emit("on")
       }else{
         console.log("off");
         circleStyle.right = `50%`
         circleStyle.left = `2px`
         OrSwitchStyle.backgroundColor = `#eee`
+      }
+    },
+    Emit(){
+      if(this.isOn){
+        this.$emit("on")
+      }else{
         this.$emit("off")
       }
+    }
+  },
+  watch: {
+    isOn: function(){
+      this.Move();
     }
   }
 }
