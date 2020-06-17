@@ -1,108 +1,179 @@
 <template>
   <div>
     <bulletin ref="child"></bulletin>
-    <div class="container">
-      <div class="row">
-        <!-- 器材查询 -->
-        <div v-if="varShowES" class="col-md-12">
-          <button class="btn btn-outline-secondary" @click="funHiddenES">返回主页面</button>
-          <div v-if="varShowEquipments">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">id</th>
-                  <th scope="col">器材名称</th>
-                  <th scope="col">器材费用（元/天）</th>
-                  <th scope="col">器材状态</th>
-                  <th scope="col">器材租借时间</th>
-                  <th scope="col">器材租界人Id</th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="equipment in equipments" :key="equipment.key">
-                  <th scope="row">{{equipment.equipmentId}}</th>
-                  <td>{{equipment.equipmentName}}</td>
-                  <td>{{equipment.equipmentCost}}</td>
-                  <td>{{equipment.equipmentStatus}}</td>
-                  <td>{{equipment.equipmentTime}}</td>
-                  <td>{{equipment.equipmentRenterId}}</td>
-                  <td>
-                    <button class="btn btn-outline-primary">编辑</button>
-                  </td>
-                  <td>
-                    <button class="btn btn-outline-danger" @click="funWarning">删除</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <button class="btn btn-outline-secondary" @click="funHiddenE">隐藏表格</button>
-          </div>
-          <div v-else>
-            <button class="btn btn-outline-secondary" @click="funShowE">查询全部</button>
-          </div>
-        </div>
-        <div v-else class="col-md-2">
-          <button class="btn btn-outline-secondary" @click="funShowES">器材查询</button>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-blue">
+      <span class="navbar-brand">账单</span>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <!-- 器材新增 -->
-        <div class="col-md-2">
-          <div v-if="varShowEA">
-            <button class="btn btn-outline-secondary" @click="funHiddenEA">返回主页面</button>
-            <input v-model="modelEAId" placeholder="器材Id（建议使用规范名称）" />
-            <input v-model="modelEAName" placeholder="器材名称类型" />
-            <input v-model="modelEACost" placeholder="器材租借费用" />
-            <button class="btn btn-outline-danger" @click="funSubmitEA">提交新增器材</button>
-          </div>
-          <div v-else>
-            <button class="btn btn-outline-secondary" @click="funShowEA">器材新增</button>
-          </div>
-        </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle text-dark"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>交易类型:</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">所有</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">支出</a>
+              <a class="dropdown-item" href="#">收入</a>
+            </div>
+          </li>
 
-        <!-- 器材删除 -->
-        <div class="col-md-2">
-          <div v-if="varShowED">
-            <button class="btn btn-outline-secondary" @click="funHiddenED">返回主页面</button>
-            <input v-model="modelEDId" placeholder="器材Id" />
-            <button class="btn btn-outline-danger" @click="funSubmitED">删除器材</button>
-          </div>
-          <div v-else>
-            <button class="btn btn-outline-secondary" @click="funShowED">器材删除</button>
-          </div>
-        </div>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle text-dark"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >起始时间</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">所有</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">支出</a>
+              <a class="dropdown-item" href="#">收入</a>
+            </div>
+          </li>
 
-        <!-- 器材租用 -->
-        <div class="col-md-2">
-          <div v-if="varShowER">
-            <button class="btn btn-outline-secondary" @click="funHiddenER">返回主页面</button>
-            <input v-model="modelERId" placeholder="器材Id" />
-            <button class="btn btn-outline-danger" @click="funSubmitER">租借器材</button>
-          </div>
-          <div v-else>
-            <button class="btn btn-outline-secondary" @click="funShowER">器材租用</button>
-          </div>
-        </div>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle text-dark"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >结束时间</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">所有</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">支出</a>
+              <a class="dropdown-item" href="#">收入</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="输入交易ID"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+        </form>
+      </div>
+    </nav>
 
-        <!-- 器材回收 -->
-        <div class="col-md-2">
-          <div v-if="varShowERC">
-            <button class="btn btn-outline-secondary" @click="funHiddenERC">返回主页面</button>
-            <input v-model="modelERCId" placeholder="器材Id" />
-            <button class="btn btn-outline-danger" @click="funSubmitERC">回收器材</button>
+    <!-- 器材查询 -->
+    <div v-if="varShowES">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 my-sm-3">
+            <button class="btn btn-outline-secondary" @click="funHiddenES">返回主页面</button>
           </div>
-          <div v-else>
-            <button class="btn btn-outline-secondary" @click="funShowERC">器材回收</button>
+          <div class="col-md-2 my-sm-3">
+            <modalEA @ee="funShowE"></modalEA>
+          </div>
+          <div class="col-md-2 my-sm-3">
+            <modalER @ee="funShowE"></modalER>
           </div>
         </div>
       </div>
+      <div v-if="varShowEquipments">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">器材名称</th>
+              <th scope="col">器材费用（元/天）</th>
+              <th scope="col">器材状态</th>
+              <th scope="col">器材租借时间</th>
+              <th scope="col">器材租界人Id</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="equipment in equipments" :key="equipment.key">
+              <th scope="row">{{equipment.equipmentId}}</th>
+              <td>{{equipment.equipmentName}}</td>
+              <td>{{equipment.equipmentCost}}</td>
+              <td>{{equipment.equipmentStatus}}</td>
+              <td>{{showDate(equipment.equipmentTime)}}</td>
+              <td>{{equipment.equipmentRenterId}}</td>
+              <td>
+                <button class="btn btn-outline-primary">编辑</button>
+              </td>
+              <td>
+                <button
+                  class="btn btn-outline-danger"
+                  @click="funSubmitED(equipment.equipmentId,$index)"
+                >删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination />
+        <button class="btn btn-outline-secondary" @click="funHiddenE">隐藏表格</button>
+      </div>
+      <div v-else>
+        <button class="btn btn-outline-secondary" @click="funShowE">查询全部</button>
+      </div>
+    </div>
+    <div v-else>
+    <button class="btn btn-outline-secondary" @click="funShowES">器材查询</button>
+    </div>
+
+    <!-- 器材租用 -->
+    <div v-if="varShowER">
+      <button class="btn btn-outline-secondary" @click="funHiddenER">返回主页面</button>
+      <input v-model="modelERId" placeholder="器材Id" />
+      <button class="btn btn-outline-danger" @click="funSubmitER">租借器材</button>
+    </div>
+    <div v-else>
+      <button class="btn btn-outline-secondary" @click="funShowER">器材租用</button>
+    </div>
+
+    <!-- 器材回收 -->
+    <div v-if="varShowERC">
+      <button class="btn btn-outline-secondary" @click="funHiddenERC">返回主页面</button>
+      <input v-model="modelERCId" placeholder="器材Id" />
+      <button class="btn btn-outline-danger" @click="funSubmitERC">回收器材</button>
+    </div>
+    <div v-else>
+      <button class="btn btn-outline-secondary" @click="funShowERC">器材回收</button>
     </div>
   </div>
 </template>
 
 <script>
 import bulletin from "components/content/bulletin/Bulletin";
+import Pagination from "components/common/pagination/Pagination";
+import modalEA from "./childComps/modalEA";
+import modalER from "./childComps/modalER";
+import { DateFormat } from "../../common/util";
+
 import {
   getEquipment,
   addEquipment,
@@ -114,7 +185,11 @@ import {
 export default {
   name: "EquipmentManage",
   components: {
-    bulletin
+    bulletin,
+    DateFormat,
+    Pagination,
+    modalEA,
+    modalER
   },
   data() {
     return {
@@ -122,32 +197,21 @@ export default {
 
       varShowES: false,
       varShowEquipments: false,
-      varShowEA: false,
-      varShowED: false,
       varShowER: false,
-      varShowERC: false
+      varShowERC: false,
+
+      modelEAId: null,
+      modelEAName: null,
+      modelEACost: null,
+      modelERId: null,
+      modelERCId: null
     };
   },
-  // filters: {
-  //   userPos(id){
-  //     switch(id){
-  //       case 1:
-  //         return "超级用户";
-  //         break;
-  //       case 2:
-  //         return "体育馆管理专员";
-  //         break;
-  //       case 3:
-  //         return "普通用户";
-  //         break;
-  //     }
-  //   }
-  // },
   mounted() {
-    this.changeChild();
+    this.changeBulletin();
   },
   methods: {
-    changeChild() {
+    changeBulletin() {
       this.$refs.child.textArr = [
         { title: "器材租用收费标准一览" },
         { title: "羽毛球：1￥/天" },
@@ -157,8 +221,16 @@ export default {
         { title: "篮球：1￥/天" },
         { title: "橄榄球：1￥/天" },
         { title: "排球：1￥/天" }
-      ]; // 这句很重要
+      ];
       this.$refs.child.rotateTime = 1000;
+    },
+    showDate(value) {
+      if (value != "") {
+        let date = new Date(value);
+        return DateFormat(date, "yyyy.MM.dd h:mm:ss");
+      } else {
+        return "未被租借";
+      }
     },
     // 器材查询功能
     funShowE: function() {
@@ -173,8 +245,6 @@ export default {
     funShowES: function() {
       this.varShowES = true;
 
-      this.varShowEA = false;
-      this.varShowED = false;
       this.varShowER = false;
       this.varShowERC = false;
     },
@@ -184,22 +254,14 @@ export default {
     },
 
     // 器材添加功能
-    funShowEA: function() {
-      this.varShowEA = true;
-
-      this.varShowES = false;
-      this.varShowED = false;
-      this.varShowER = false;
-      this.varShowERC = false;
-    },
-    funHiddenEA: function() {
-      this.varShowEA = false;
-    },
     funSubmitEA: function() {
       addEquipment(this.modelEAId, this.modelEAName, this.modelEACost).then(
         res => {
           if (res.code == 200) {
-            alert("可以啊");
+            alert("新增成功");
+            this.modelEAId = null;
+            this.modelEAName = null;
+            this.modelEACost = "";
           } else if (res.code == 404) {
             alert("我求求你写全信息不然插入你妈呢");
           } else if (res.msg.mostSpecificCause.errorCode == 1062) {
@@ -212,36 +274,28 @@ export default {
     },
 
     // 器材删除功能
-    funShowED: function() {
-      this.varShowED = true;
-
-      this.varShowES = false;
-      this.varShowEA = false;
-      this.varShowER = false;
-      this.varShowERC = false;
-    },
-    funHiddenED: function() {
-      this.varShowED = false;
-    },
-    funSubmitED: function() {
-      deleteEquipment(this.modelEDId).then(res => {
-        if (res.code == 200) {
-          alert("可以啊");
-        } else if (res.code == 404) {
-          alert("求你写点东西");
-        } else {
-          alert("速度爬");
-        }
-      });
-
+    funSubmitED: function(id, index) {
+      if (confirm("是否要删除") == true) {
+        deleteEquipment(id).then(res => {
+          if (res.code == 200) {
+            alert("删除成功，请稍等列表更新");
+            getEquipment().then(res => {
+              this.equipments = res.equipments;
+            });
+          } else if (res.code == 404) {
+            alert("求你写点东西");
+          } else {
+            alert("速度爬");
+          }
+        });
+      }
     },
 
+// 器材租用功能
     funShowER: function() {
       this.varShowER = true;
 
       this.varShowES = false;
-      this.varShowEA = false;
-      this.varShowED = false;
       this.varShowERC = false;
     },
     funHiddenER: function() {
@@ -250,7 +304,8 @@ export default {
     funSubmitER: function() {
       rentEquipment(this.modelERId, this.$store.state.user.userId).then(res => {
         if (res.code == 200) {
-          alert("可以啊");
+          alert("租借成功");
+          this.modelERId = null;
         } else if (res.code == 404) {
           alert("你要租什么啊");
         } else {
@@ -263,8 +318,6 @@ export default {
       this.varShowERC = true;
 
       this.varShowES = false;
-      this.varShowEA = false;
-      this.varShowED = false;
       this.varShowER = false;
     },
     funHiddenERC: function() {
@@ -274,16 +327,14 @@ export default {
       recycleEquipment(this.modelERCId).then(res => {
         if (res.code == 200) {
           alert("可以啊");
-        } else 
-        if(res.code == 404){
+          this.modelERCId = null;
+        } else if (res.code == 404) {
           alert("你要回收哪个啊");
-        } else
-        {alert("韩币")};
+        } else {
+          alert("韩币");
+        }
       });
     },
-    funWarning: function() {
-      alert("我建议你右转器材删除模块");
-    }
   }
 };
 </script>
