@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      class="btn btn-primary"
+      class="btn btn-outline-primary"
       onclick="document.getElementById('modalEA').style.display='block'"
       style="width:auto;"
     >器材新增</button>

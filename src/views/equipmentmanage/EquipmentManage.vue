@@ -89,18 +89,19 @@
     <div v-if="varShowES">
       <div class="container">
         <div class="row">
-          <div class="col-md-8 my-sm-3">
+          <div class="col-md-8 my-sm-2">
             <button class="btn btn-outline-secondary" @click="funHiddenES">返回主页面</button>
           </div>
-          <div class="col-md-2 my-sm-3">
-            <modalEA @ee="funShowE"></modalEA>
+          <div class="col-md-2 my-sm-2">
+            <modalEA @ee="funShowES"></modalEA>
           </div>
-          <div class="col-md-2 my-sm-3">
-            <modalER @ee="funShowE"></modalER>
+          <div class="col-md-2 my-sm-2">
+            <modalER @ee="funShowES"></modalER>
           </div>
         </div>
       </div>
-      <div v-if="varShowEquipments">
+
+      <div>
         <table class="table">
           <thead>
             <tr>
@@ -124,8 +125,6 @@
               <td>{{equipment.equipmentRenterId}}</td>
               <td>
                 <button class="btn btn-outline-primary">编辑</button>
-              </td>
-              <td>
                 <button
                   class="btn btn-outline-danger"
                   @click="funSubmitED(equipment.equipmentId,$index)"
@@ -135,24 +134,11 @@
           </tbody>
         </table>
         <pagination />
-        <button class="btn btn-outline-secondary" @click="funHiddenE">隐藏表格</button>
       </div>
-      <div v-else>
-        <button class="btn btn-outline-secondary" @click="funShowE">查询全部</button>
-      </div>
+    
     </div>
     <div v-else>
     <button class="btn btn-outline-secondary" @click="funShowES">器材查询</button>
-    </div>
-
-    <!-- 器材租用 -->
-    <div v-if="varShowER">
-      <button class="btn btn-outline-secondary" @click="funHiddenER">返回主页面</button>
-      <input v-model="modelERId" placeholder="器材Id" />
-      <button class="btn btn-outline-danger" @click="funSubmitER">租借器材</button>
-    </div>
-    <div v-else>
-      <button class="btn btn-outline-secondary" @click="funShowER">器材租用</button>
     </div>
 
     <!-- 器材回收 -->
@@ -197,13 +183,8 @@ export default {
 
       varShowES: false,
       varShowEquipments: false,
-      varShowER: false,
       varShowERC: false,
 
-      modelEAId: null,
-      modelEAName: null,
-      modelEACost: null,
-      modelERId: null,
       modelERCId: null
     };
   },
@@ -234,9 +215,7 @@ export default {
     },
     // 器材查询功能
     funShowE: function() {
-      getEquipment().then(res => {
-        this.equipments = res.equipments;
-      });
+      
       this.varShowEquipments = true;
     },
     funHiddenE: function() {
@@ -245,32 +224,15 @@ export default {
     funShowES: function() {
       this.varShowES = true;
 
-      this.varShowER = false;
       this.varShowERC = false;
+
+      getEquipment().then(res => {
+        this.equipments = res.equipments;
+      });
     },
     funHiddenES: function() {
       this.varShowEquipments = false;
       this.varShowES = false;
-    },
-
-    // 器材添加功能
-    funSubmitEA: function() {
-      addEquipment(this.modelEAId, this.modelEAName, this.modelEACost).then(
-        res => {
-          if (res.code == 200) {
-            alert("新增成功");
-            this.modelEAId = null;
-            this.modelEAName = null;
-            this.modelEACost = "";
-          } else if (res.code == 404) {
-            alert("我求求你写全信息不然插入你妈呢");
-          } else if (res.msg.mostSpecificCause.errorCode == 1062) {
-            alert("你别弄你妈重复ID啊");
-          } else {
-            alert("你是怎么能弄到我都不知道为什么的错的");
-          }
-        }
-      );
     },
 
     // 器材删除功能
@@ -291,34 +253,11 @@ export default {
       }
     },
 
-// 器材租用功能
-    funShowER: function() {
-      this.varShowER = true;
-
-      this.varShowES = false;
-      this.varShowERC = false;
-    },
-    funHiddenER: function() {
-      this.varShowER = false;
-    },
-    funSubmitER: function() {
-      rentEquipment(this.modelERId, this.$store.state.user.userId).then(res => {
-        if (res.code == 200) {
-          alert("租借成功");
-          this.modelERId = null;
-        } else if (res.code == 404) {
-          alert("你要租什么啊");
-        } else {
-          alert("爬爬爬");
-        }
-      });
-    },
-
+// 器材回收功能
     funShowERC: function() {
       this.varShowERC = true;
 
       this.varShowES = false;
-      this.varShowER = false;
     },
     funHiddenERC: function() {
       this.varShowERC = false;

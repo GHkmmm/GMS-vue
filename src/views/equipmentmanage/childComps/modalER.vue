@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      class="btn btn-primary"
+      class="btn btn-outline-primary"
       onclick="document.getElementById('modalER').style.display='block'"
       style="width:auto;"
     >器材租用</button>
@@ -52,6 +52,7 @@ export default {
        rentEquipment(this.equipmentId, this.$store.state.user.userId).then(res => {
         if (res.code == 200) {
           alert("租借成功");
+          this.$emit('ee');
         } else if (res.code == 404) {
           alert("你要租什么啊");
         } else {
