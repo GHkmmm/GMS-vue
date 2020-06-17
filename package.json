@@ -13,6 +13,7 @@
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
+    "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
   },

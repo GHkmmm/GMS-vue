@@ -14,14 +14,15 @@ export function searchTrading(tradingId,userId,tradingType,tradingTimeBegin,trad
   })
 }
 
-export function addTrading(tradingType, counterParty, transactionAmount){
+export function addTrading(tradingType, counterParty, transactionAmount,tradingContent){
   return request({
     url: "/trading/add",
     method: "post",
     data:{
         tradingType,
         counterParty,
-        transactionAmount
+        transactionAmount,
+        tradingContent
     }
   })
 }
@@ -50,10 +51,10 @@ export function changeTrading(tradingId,userId,tradingType,counterParty,transact
     })
   }
 
-export function tradingTotal(tradingType){
+export function totalAmount(tradingType){
   return request({
     url: "/trading/total",
-    data: {
+    params: {
       tradingType
     }
   })
