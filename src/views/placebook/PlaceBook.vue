@@ -5,7 +5,7 @@
     <table class="table">
      <thead>
       <tr>
-       <th scope="col">idCharge</th>
+       <th scope="col">收费标准编号</th>
        <th scope="col">场地名字</th>
        <th scope="col">时间</th>
        <th scope="col">开始时间</th>
@@ -33,7 +33,7 @@
 
 <script>
 import bulletin from 'components/content/bulletin/Bulletin';
-import { getCharge } from "network/place";
+import { getCharge } from 'network/place';
 export default {
   name:"chargeSearch",
   components:{
@@ -59,5 +59,11 @@ export default {
 </script>
 
 <style>
+#btn1{
+  position: absolute;
+  top:5px;
+  right:100px;
+}
+
 
 </style>
