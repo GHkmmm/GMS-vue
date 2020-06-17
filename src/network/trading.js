@@ -1,13 +1,14 @@
 import { request } from './request';
 
-export function searchTrading(tradingId,userId,tradingType,tradingTime,count){
+export function searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count){
   return request({
     url: "/trading/search",
     params: {
         tradingId,
         userId,
         tradingType,
-        tradingTime,
+        tradingTimeBegin,
+        tradingTimeEnd,
         count
     }
   })
