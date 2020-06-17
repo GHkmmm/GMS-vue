@@ -15,8 +15,8 @@
     <!-- 左ul -->
     <ul class="navbar-nav mr-auto nav-ul">
       <li class="nav-item">
-        <div><span>总支出:</span><span>{{(totalPay/100).toFixed(2)}}￥</span></div>
-        <div><span>总收入:</span>{{(totalRevenue/100).toFixed(2)}}￥</div>
+        <div class="text-primary"><span>总支出:</span><span >{{(totalPay/100).toFixed(2)}}￥</span></div>
+        <div class="text-success"><span>总收入:</span><span >{{(totalRevenue/100).toFixed(2)}}￥</span></div>
       </li>
       <li class="nav-item dropdown ">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,11 +52,17 @@
     <ul class="navbar-nav ml-auto nav-ul">
 
       <li>
-        <span class="title-span">搜索订单</span>
+        <span v-if="this.isSearchTradingId==true" class="title-span">搜索订单</span>
+        <span v-if="this.isSearchTradingId==false" class="title-span">搜索用户</span>
+
         <div class="form-inline my-2 my-lg-0 d-flex">
-          <input v-model="tid" class="form-control mr-sm-2" type="search" placeholder="输入交易ID" aria-label="Search">
-          <!-- <or-switch @on="onlyManager" @off="getUser" :isOn="isOn"/> -->
-          <button class="btn btn-primary my-2 my-sm-0" type="submit" @click="tradingIdSearch">搜索</button>
+          <input v-if="this.isSearchTradingId==true" v-model="tid" class="form-control mr-sm-2" type="search" placeholder="输入交易ID" aria-label="Search">
+          <input v-if="this.isSearchTradingId==false" v-model="userId" class="form-control mr-sm-2" type="search" placeholder="输入用户ID" aria-label="Search">
+
+          <or-switch @on="isSearchTradingIdTrue" @off="isSearchTradingIdFalse"/>
+
+          <button v-if="this.isSearchTradingId==true" class="btn btn-success my-2 my-sm-0" type="submit" @click="tradingIdSearch">搜索</button>
+          <button v-if="this.isSearchTradingId==false" class="btn btn-primary my-2 my-sm-0" type="submit" @click="tradingUserIdSearch">搜索</button>
         </div>
       </li>
     </ul>
@@ -107,7 +113,7 @@
 </template>
 
 <script>
-import { searchTrading, addTrading, deleteTrading,totalAmount} from 'network/trading';
+import {searchTrading, addTrading, deleteTrading,totalAmount} from 'network/trading';
 
 import Pagination from 'components/common/pagination/Pagination';
 import {DateFormat} from 'common/util';
@@ -138,6 +144,8 @@ export default {
       searchTradingId:-1,
       pagesize:8,
       tid:0,
+      userId:0,
+      isSearchTradingId:false,
 
       date: new Date(),
       options: {
@@ -185,6 +193,12 @@ export default {
         }
       })
     },
+    isSearchTradingIdTrue(){
+      this.isSearchTradingId=true;
+    },
+    isSearchTradingIdFalse(){
+      this.isSearchTradingId=false;
+    },
 //组件
     // 时间戳
   showDate(value){
@@ -192,9 +206,7 @@ export default {
     return DateFormat(date,'yyyy-MM-dd');
   },
   // 时间戳结束
-  isSearchTradingId(){
 
-  },
 //组件结束
 // 翻页
   pageClick(index){
@@ -216,7 +228,7 @@ export default {
         if (res.code == 200) {
           this.tradings = res.tradingList
           this.totalPage = res.page;
-          this.$toast.suc(res.msg)
+          this.$toast.suc("加载完成")
         }else{
           this.$toast.err(res.msg)
         }
@@ -227,6 +239,8 @@ export default {
         if(res.code == 200){
           this.$toast.suc(res.msg);
           this.tradings.splice(index,1)
+          this.totalAmount(1);
+          this.totalAmount(2);
         }else{
           this.$toast.err(res.msg)
         }
@@ -264,6 +278,12 @@ export default {
     //查询交易id
     tradingIdSearch(){
       this.searchTradingId=this.tid;
+      this.currentIndex=0;
+      this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex)
+    },
+    // 根据用户id查询
+    tradingUserIdSearch(){
+      this.searchUserId=this.userId;
       this.currentIndex=0;
       this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex)
     }
