@@ -1,11 +1,11 @@
 <template>
   <div>
    <bulletin></bulletin>
-   <div id="chargeSearch">
+   <div>
     <table class="table">
      <thead>
       <tr>
-       <th scope="col">idCharge</th>
+       <th scope="col">收费标准编号</th>
        <th scope="col">场地名字</th>
        <th scope="col">时间</th>
        <th scope="col">开始时间</th>
@@ -17,12 +17,12 @@
      <tbody>
       <tr v-for="charge in charges" :key="charge.key">
        <th scope="row">{{charge.idCharge}}</th>
-       <th>{{charge.placeName}}</th>
-       <th>{{charge.week}}</th>
-       <th>{{charge.startCharge}}</th>
-       <th>{{charge.overCharge}}</th>
-       <th>{{charge.light}}</th>
-       <th>{{charge.cost}}</th>  
+       <td>{{charge.placeName}}</td>
+       <td>{{charge.week}}</td>
+       <td>{{charge.startCharge}}</td>
+       <td>{{charge.overCharge}}</td>
+       <td>{{charge.light}}</td>
+       <td>{{charge.cost}}</td>  
       </tr> 
      </tbody>
     </table>
@@ -33,7 +33,7 @@
 
 <script>
 import bulletin from 'components/content/bulletin/Bulletin';
-import { getCharge } from "network/place";
+import { getCharge } from 'network/place';
 export default {
   name:"chargeSearch",
   components:{
@@ -59,5 +59,11 @@ export default {
 </script>
 
 <style>
+#btn1{
+  position: absolute;
+  top:5px;
+  right:100px;
+}
+
 
 </style>

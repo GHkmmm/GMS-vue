@@ -11,17 +11,18 @@
         <th></th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="user in users" :key="user.key" class="my-tr">
+    <tbody v-if="showUsers">
+      <tr v-for="(user,index) in users" :key="index" class="my-tr">
         <td>{{user.userId}}</td>
         <td>{{user.username}}</td>
         <td>{{user.phoneNum}}</td>
         <td>{{user.posId|userPos}}</td>
         <td>{{user.email}}</td>
         <td><a href="#" @click="editInfo(user)">编辑</a></td>
-        <td><a href="#" @click="deleteUser(user.userId)">删除</a></td>
+        <td><a href="#" @click="deleteUser(user.userId,index)">删除</a></td>
       </tr>
     </tbody>
+    <div v-else class="no-users-tip">暂无用户</div>
   </table>
 </template>
 
@@ -32,6 +33,11 @@ export default {
     users:{
       type: Array,
       default: []
+    }
+  },
+  data(){
+    return{
+      showUsers: true
     }
   },
   filters: {
@@ -53,7 +59,11 @@ export default {
     editInfo(user){
       this.$emit("editInfo", user)
     },
-    deleteUser(userId){
+    deleteUser(userId,index){
+      this.users.splice(index, 1);
+      if(this.users.length==0){
+        this.showUsers =false
+      }
       this.$emit("deleteUser", userId)
     }
   }
@@ -61,5 +71,11 @@ export default {
 </script>
 
 <style>
-
+.no-users-tip{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
 </style>

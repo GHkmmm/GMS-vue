@@ -37,6 +37,9 @@ export default {
   created(){
     this.getUser(this.currentIndex);
   },
+  activated(){
+    this.getUser(this.currentIndex);
+  },
   methods: {
     editInfo(user){
       this.$router.push({
@@ -84,22 +87,38 @@ export default {
       deleteUser(userId).then(res=>{
         if(res.code == 200){
           this.$toast.suc("删除成功")
+          this.getUser(0);
         }else{
           this.$toast.err("删除失败")
         }
       })
     },
     onlyManager(){
-      queryUser("").then(res => {
+      queryUser("","","","").then(res => {
           console.log(res);
           if(res.code==200){
             this.users= res.users;
+            this.totalPage = res.totalPage;
           }
         })
     },
-    QueryUser(username){
-      queryUser(username).then(res => {
-        this.users = res.users
+    QueryUser(user){
+      console.log(user);
+      queryUser(user.userId,user.username,user.phoneNum,user.email).then(res => {
+        console.log(res);
+        if(res.code==200){
+          if(Array.isArray(res.users)){
+            console.log(true);
+            this.users = res.users
+          }else{
+            console.log(false);
+            this.users=[];
+            this.users.push(res.users);
+          }
+          this.totalPage = res.totalPage;
+        }else{
+          this.$toast.err("未找到结果");
+        }
       })
     }
   }
