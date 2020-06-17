@@ -19,7 +19,7 @@
         <td>{{user.posId|userPos}}</td>
         <td>{{user.email}}</td>
         <td><a href="#" @click="editInfo(user)">编辑</a></td>
-        <td><a href="#" @click="deleteUser(user.userId,index)">删除</a></td>
+        <td><a href="#" @click="deleteUser(user.userId,index)" class="text-danger">删除</a></td>
       </tr>
     </tbody>
     <div v-else class="no-users-tip">暂无用户</div>

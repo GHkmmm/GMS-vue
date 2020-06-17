@@ -16,8 +16,14 @@
       </div>
       <div class="form-group">
         <label for="position">职位</label>
-        <input type="text" class="form-control" id="position" v-model="currentUser.posId">
+        <!-- <input type="text" class="form-control" id="position" v-model="currentUser.posId"> -->
+        <select class="custom-select" id="inputGroupSelect01" v-model="currentUser.posId">
+          <option value="1" >超级用户</option>
+          <option value="2" >管理员</option>
+          <option value="3" >普通用户</option>
+        </select>
       </div>
+      
       <button class="btn btn-primary" type="submit">确认修改</button>
     </form>
   </div>
