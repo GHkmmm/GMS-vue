@@ -1,7 +1,7 @@
 <template>
   <div>
    <bulletin></bulletin>
-   <div id="chargeSearch">
+   <div>
     <table class="table">
      <thead>
       <tr>
@@ -17,12 +17,12 @@
      <tbody>
       <tr v-for="charge in charges" :key="charge.key">
        <th scope="row">{{charge.idCharge}}</th>
-       <th>{{charge.placeName}}</th>
-       <th>{{charge.week}}</th>
-       <th>{{charge.startCharge}}</th>
-       <th>{{charge.overCharge}}</th>
-       <th>{{charge.light}}</th>
-       <th>{{charge.cost}}</th>  
+       <td>{{charge.placeName}}</td>
+       <td>{{charge.week}}</td>
+       <td>{{charge.startCharge}}</td>
+       <td>{{charge.overCharge}}</td>
+       <td>{{charge.light}}</td>
+       <td>{{charge.cost}}</td>  
       </tr> 
      </tbody>
     </table>
