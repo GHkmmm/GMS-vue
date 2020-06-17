@@ -94,5 +94,6 @@ export default {
 .router-view{
   width: 80%;
   padding: 10px;
+  overflow-y: scroll;
 }
 </style>

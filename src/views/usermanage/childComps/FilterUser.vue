@@ -14,6 +14,10 @@
         <label class="form-check-label">
           只查看管理员用户
         </label>
+        <or-switch @on="onlyDeletedUsers" @off="getUser" :isOn="isOn2"/>
+        <label class="form-check-label">
+          查看已删除的用户
+        </label>
       </div>
     </div>
   </div>
@@ -32,7 +36,8 @@ export default {
         phoneNum: "",
         email: ""
       },
-      isOn: false
+      isOn: false,
+      isOn2: false
     }
   },
   components: {
@@ -41,6 +46,9 @@ export default {
   methods: {
     onlyManager(){
       this.$emit("onlyManager")
+    },
+    onlyDeletedUsers(){
+      this.$emit("onlyDeletedUsers")
     },
     getUser(){
       this.user.userId ="";
