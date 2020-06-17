@@ -2,10 +2,13 @@
   <div class="user-manage">
     <filter-user @getUser="getUser(0)"
                  @onlyManager="onlyManager"
+                 @onlyDeletedUsers="onlyDeletedUsers"
                  @QueryUser="QueryUser" />
     <user-table :users="users"
+                :isDeleted="isDeleted"
                 @editInfo="editInfo"
-                @deleteUser="deleteUser"/>
+                @deleteUser="deleteUser"
+                @rollbackUser="rollbackUser" />
     <pagination :totalPage="totalPage" 
                 @pageClick="pageClick"
                 @Forward="Forward"
@@ -18,7 +21,7 @@
 import FilterUser from './childComps/FilterUser';
 import UserTable from './childComps/UserTable';
 import Pagination from 'components/common/pagination/Pagination';
-import { getUser, deleteUser, queryUser } from 'network/userManage';
+import { getUser, deleteUser, queryUser, getDeletedUsers, rollbackUser } from 'network/userManage';
 
 export default {
   name: "UserManage",
@@ -26,7 +29,8 @@ export default {
     return{
       users: [],
       totalPage: 1,
-      currentIndex: 0
+      currentIndex: 0,
+      isDeleted: false
     }
   },
   components: {
@@ -78,6 +82,7 @@ export default {
      * 网络请求相关方法
      */
     getUser(page){
+      this.isDeleted = false;
       getUser(page).then(res => {
         this.users = res.users
         this.totalPage = res.totalPage;
@@ -87,10 +92,27 @@ export default {
       deleteUser(userId).then(res=>{
         if(res.code == 200){
           this.$toast.suc("删除成功")
-          this.getUser(0);
+          this.getUser(this.currentIndex);
         }else{
           this.$toast.err("删除失败")
         }
+      })
+    },
+    rollbackUser(userId){
+      rollbackUser(userId).then(res => {
+        if(res.code==200){
+          this.$toast.suc("撤回成功")
+        }else{
+          this.$toast.err("撤回失败")
+        }
+      })
+    },
+    onlyDeletedUsers(){
+      this.isDeleted = true;
+      getDeletedUsers().then(res => {
+        console.log(res);
+        this.users = res.users
+        this.totalPage = res.totalPage
       })
     },
     onlyManager(){

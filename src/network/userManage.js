@@ -44,3 +44,19 @@ export function queryUser(userId,username,phoneNum,email){
     }
   })
 }
+
+export function getDeletedUsers(){
+  return request({
+    url: "/deletedUsers"
+  })
+}
+
+export function rollbackUser(userId){
+  return request({
+    url: "/rollbackUser",
+    method: "post",
+    data: {
+      userId
+    }
+  })
+}
