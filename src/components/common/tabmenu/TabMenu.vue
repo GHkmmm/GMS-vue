@@ -123,6 +123,7 @@ export default {
   overflow-y: scroll;
 }
 .menu-list, .menu-list-item{
+  height: 80px;
   line-height: 80px;
   cursor: pointer;
   box-sizing: border-box;

@@ -68,7 +68,7 @@ export default {
 
 <style>
 .query-input{
-  width: 20%;
+  width: 18%;
   margin-right: 10px;
 }
 .switch-group{
