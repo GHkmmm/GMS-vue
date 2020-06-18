@@ -144,7 +144,7 @@ export default {
   transition: max-height .4s;
 }
 .menuListItemContainerActived{
-  max-height: 300px;
+  max-height: 666px;
 }
 .menu-down{
   width: 10px;
