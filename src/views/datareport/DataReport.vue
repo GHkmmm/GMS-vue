@@ -33,18 +33,27 @@
     </ul>
     <!-- 中间ul -->
     <ul class="navbar-nav ml-auto nav-ul">
+      <li>
+        <button class="btn btn-sm btn-success my-refresh-btn" @click="searchTrading(searchTradingId,searchUserId,searchTrdaingType,searchTradingTimeBegin,searchTradingTimeEnd,currentIndex)">刷新</button>
+      </li>
       <li class="nav-item">
         <span>起始时间</span> 
         <div class="date-picker-container">
-          <date-picker v-model="date" :config="options"></date-picker>
-          </div>
+          <date-picker v-model="dateBegin" :config="options"></date-picker>
+        </div>
       </li>
 
       <li class="nav-item dropdown ">
-           <span>结束时间</span>
-                  <div class="date-picker-container">
-          <date-picker v-model="date" :config="options"></date-picker>
-          </div>
+        <span>结束时间</span>
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <!-- {{dateBegin|TimeName}} -->
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#" @click="allTime()">所有</a>
+          <div class="dropdown-item">
+            <date-picker  v-model="dateEnd" :config="options"></date-picker>
+        </div>
+        </div>
       </li>
 
     </ul>
@@ -82,7 +91,8 @@
           <th scope="col">金额</th>
           <th scope="col">内容</th>
           <th>
-            <modalManage></modalManage>
+            <addModal></addModal>
+            <changeModal v-if="isShowChangeModal" :aTrading="this.aTrading" @changeIsShowChangeModal="changeIsShowChangeModal()"></changeModal>
           </th>
         </tr>
       </thead>
@@ -95,10 +105,8 @@
           <td>{{trading.counterParty}}</td>
           <td>{{(trading.transactionAmount/100).toFixed(2)}}</td>
           <td>{{trading.tradingContent}}</td>
-
           <td>
-            <a class="mybtn btn btn-outline-primary btn-sm
-            " href="#" @click="editInfo(user.userId,user.username,user.phoneNum,user.email,user.posId)">编辑</a>
+             <button class="mybtn btn btn-outline-primary btn-sm" @click="changeTradingS(trading)" >编辑</button>
             <a class="mybtn btn btn-outline-danger btn-sm" href="#" @click="deleteTrading(trading.tradingId,index)">删除</a>
             </td>
         </tr>
@@ -125,7 +133,9 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 // Import date picker css
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
-import modalManage from './childComps/addModal';
+import addModal from './childComps/addModal';
+import changeModal from './childComps/changeModal'
+
 
 
 export default {
@@ -145,11 +155,19 @@ export default {
       pagesize:8,
       tid:0,
       userId:0,
-      isSearchTradingId:false,
+      isSearchTradingId:false,//搜索tradingID
+      isSearchAllTime:true,//搜索所有时间
+      isShowChangeModal:false,//编辑交易的模态框显示状态
 
-      date: new Date(),
+      aTrading:"",
+
+
+      dateBegin:new Date(),
+      dateEnd:new Date(),
+
       options: {
-      format: 'DD/MM/YYYY',
+      format: 'YYYY/MM/DD',
+      locale: 'zh-cn',
       useCurrent: false
       }
     }
@@ -158,7 +176,8 @@ export default {
     Pagination,
     datePicker,
     OrSwitch,
-    modalManage
+    addModal,
+    changeModal
   },
   filters: {
     typeName(tradingType){
@@ -173,37 +192,48 @@ export default {
           return "收入";
           break;
       }
+    },
+    TimeName(time){
+      if(time==-1){
+        return "所有"
+      }else{
+        // return DateFormat((time/100).toFixed(0),'yyyy-MM-dd');
+      }
     }
   },
   created(){
+    this.$progress.start()
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex);
     this.totalAmount(1);
     this.totalAmount(2);
   },
   methods: {
-    editInfo(userId,username,phoneNum,email,posId){
-      this.$router.push({
-        path: 'editInfo',
-        query: {
-          userId,
-          username,
-          phoneNum,
-          email,
-          posId
-        }
-      })
-    },
+//搜索相关
     isSearchTradingIdTrue(){
       this.isSearchTradingId=true;
+      this.searchUserId=-1;
     },
     isSearchTradingIdFalse(){
       this.isSearchTradingId=false;
+      this.searchTradingId=-1;
     },
+    allTime(){
+      this.dateBegin=-1;
+      this.dateEnd=-1;
+    },
+//搜索结束
 //组件
     // 时间戳
   showDate(value){
     let date=new Date(value*1000);
-    return DateFormat(date,'yyyy-MM-dd');
+    return DateFormat(date,'yyyy-MM-dd hh:mm:ss');
+  },
+  changeIsShowChangeModal(){
+    this.isShowChangeModal=!this.isShowChangeModal;
+  },
+  changeTradingS(trading){
+    this.changeIsShowChangeModal();
+    this.aTrading=trading;
   },
   // 时间戳结束
 
@@ -223,17 +253,24 @@ export default {
   // 翻页结束
 
 // 网络请求
+    //搜索方法
     searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count){
       searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count).then(res => {
         if (res.code == 200) {
           this.tradings = res.tradingList
           this.totalPage = res.page;
           this.$toast.suc("加载完成")
-        }else{
+
+          this.$progress.finished()
+        }else if(res.code==201){
+          this.$toast.err("无结果")
+        }
+        else{
           this.$toast.err(res.msg)
         }
       })
     },
+    //删除方法
     deleteTrading(tradingId,index){
       deleteTrading(tradingId).then(res=>{
         if(res.code == 200){
@@ -241,11 +278,13 @@ export default {
           this.tradings.splice(index,1)
           this.totalAmount(1);
           this.totalAmount(2);
+          this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex);
         }else{
           this.$toast.err(res.msg)
         }
       })
     },
+    //查询总金额方法
     totalAmount (tradingType){
       totalAmount(tradingType).then(res=>{
           if (tradingType==1) {
@@ -297,6 +336,9 @@ export default {
 .mybtn{
   margin-right: 5px;
 }
+.my-refresh-btn{
+  margin-top: 35px;
+}
 .nav-ul>li{
   margin-right: 5px;
 }
@@ -306,7 +348,7 @@ export default {
 .title-span{
   display: block
 }
-.date-picker-container {
+/* .date-picker-container {
 
 }
 
@@ -317,5 +359,5 @@ export default {
 .date-picker-container .table-condensed {
 width: 100%;
 height: 100%;
-}
+} */
 </style>

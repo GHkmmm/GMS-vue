@@ -40,6 +40,7 @@ export function deleteTrading(tradingId){
 export function changeTrading(tradingId,userId,tradingType,counterParty,transactionAmount,tradingContent){
     return request({
       url: "/trading/change",
+      method: "post",
       data: {
         tradingId,
         userId,
