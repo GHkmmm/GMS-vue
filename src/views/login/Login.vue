@@ -33,7 +33,6 @@
         <div class="warn" @click="forgetPassword" v-if="!isShowOtherInput">忘记密码</div>
         <button class="btn btn-primary btn-block d-flex justify-content-center align-items-center">
           {{title}}
-          <loading v-if="isLoading" color="#fff"/>
         </button>
       </form>
     </div>
@@ -43,6 +42,7 @@
 <script>
 import Toast from 'components/common/toast/Toast';
 import Loading from 'components/common/loading/Loading';
+import OrProgress from 'components/common/progress/Progress';
 
 import { Login, Register, ChangePassword, GetRoutes } from 'network/login';
 import { MenuUtils } from 'utils/MenuUtils';
@@ -77,7 +77,8 @@ export default {
   },
   components:{
     Toast,
-    Loading
+    Loading,
+    OrProgress
   },
   methods: {
     changeToRegister(){
@@ -139,24 +140,22 @@ export default {
      * 网络请求相关方法
      */
     SubmitFrom(){
+      this.$progress.start();
       if(this.title=="登陆"&&this.nameTest&&this.passwordTest){
-        this.isLoading = true;
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
+            this.isLoading = true;
             this.$store.state.user = res.user;
             GetRoutes(this.$store.state.user.posId).then(res => {
-              console.log(res);
               this.routers.push(res);
               this.routers.children = res.children.reverse();
               MenuUtils(routers, this.routers);
-              console.log("router===",routers);
               this.$router.options.routes.push(...routers);
               this.$router.addRoutes(routers)
-              console.log(this.$router);
+              this.$progress.finished();
               this.$router.push("/dashboard");
             }) 
           }else{
-            this.isLoading = false;
             this.$toast.err("账号或密码错误");
           }     
         });
@@ -204,10 +203,9 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-  bottom: 100px;
 }
 .login-form{
-  width: 40%;
+  width: 30%;
   margin: 0 auto;
 }
 .changeto-register{
