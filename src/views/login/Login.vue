@@ -33,10 +33,9 @@
         <div class="warn" @click="forgetPassword" v-if="!isShowOtherInput">忘记密码</div>
         <button class="btn btn-primary btn-block d-flex justify-content-center align-items-center">
           {{title}}
-          <loading v-if="isLoading"/>
+          <loading v-if="isLoading" color="#fff"/>
         </button>
       </form>
-      
     </div>
   </div>
 </template>

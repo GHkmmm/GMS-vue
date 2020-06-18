@@ -6,6 +6,7 @@
                  @QueryUser="QueryUser" />
     <user-table :users="users"
                 :isDeleted="isDeleted"
+                :isShowTip="isShowTip"
                 @editInfo="editInfo"
                 @deleteUser="deleteUser"
                 @rollbackUser="rollbackUser" />
@@ -31,7 +32,8 @@ export default {
       users: [],
       totalPage: 1,
       currentIndex: 0,
-      isDeleted: false
+      isDeleted: false,
+      isShowTip: false
     }
   },
   components: {
@@ -83,6 +85,7 @@ export default {
      * 网络请求相关方法
      */
     getUser(page){
+      this.isShowTip = false;
       this.isDeleted = false;
       getUser(page).then(res => {
         this.users = res.users
@@ -93,7 +96,11 @@ export default {
       deleteUser(userId).then(res=>{
         if(res.code == 200){
           this.$toast.suc("删除成功")
-          this.getUser(this.currentIndex);
+          if(this.users.length==0&&this.currentIndex!=0){
+            this.Forward();
+          }else{
+            this.getUser(this.currentIndex);
+          }
         }else{
           this.$toast.err("删除失败")
         }
@@ -103,6 +110,16 @@ export default {
       rollbackUser(userId).then(res => {
         if(res.code==200){
           this.$toast.suc("撤回成功")
+          console.log(this.users.length);
+          console.log(this.currentIndex);
+          if(this.users.length==0){
+            this.currentIndex--;
+            if(this.currentIndex==0){
+              this.isShowTip = true;
+            }
+          }else{
+            this.isShowTip = false;
+          }
         }else{
           this.$toast.err("撤回失败")
         }
@@ -114,6 +131,9 @@ export default {
         console.log(res);
         this.users = res.users
         this.totalPage = res.totalPage
+        if(this.users.length==0){
+          this.isShowTip = true;
+        }
       })
     },
     onlyManager(){

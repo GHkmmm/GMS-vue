@@ -2,11 +2,11 @@
   <div>
     <h3>搜索</h3>
     <div>
-      <div class="d-flex">
-        <input class="form-control query-input" placeholder="请输入用户id" v-model="user.userId">
-        <input class="form-control query-input" placeholder="请输入用户名" v-model="user.username">
-        <input class="form-control query-input" placeholder="请输入手机号" v-model="user.phoneNum">
-        <input class="form-control query-input" placeholder="请输入邮箱" v-model="user.email">
+      <div class="d-flex input-container">
+        <input class="form-control my-query-input" placeholder="请输入用户id" v-model="user.userId">
+        <input class="form-control my-query-input" placeholder="请输入用户名" v-model="user.username">
+        <input class="form-control my-query-input" placeholder="请输入手机号" v-model="user.phoneNum">
+        <input class="form-control my-query-input" placeholder="请输入邮箱" v-model="user.email">
         <button class="btn btn-primary" @click="QueryUser">搜索</button>
       </div>
       <div class="switch-group">
@@ -66,8 +66,14 @@ export default {
 }
 </script>
 
-<style>
-.query-input{
+<style scoped>
+.input-container{
+  width: 100%;
+}
+.form-control{
+  width: auto;
+}
+.my-query-input{
   width: 18%;
   margin-right: 10px;
 }

@@ -16,7 +16,7 @@ export default {
     },
     size: {
       type: Number,
-      default: .5
+      default: 1
     }
   },
   mounted(){
@@ -39,7 +39,6 @@ export default {
 .or-loading-circle{
   width: 20px;
   height: 20px;
-  background-color: #06c;
   border-radius: 50%;
   animation: bouncedelay 1.4s infinite ease-in-out;
 }

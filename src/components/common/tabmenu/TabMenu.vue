@@ -89,6 +89,7 @@ export default {
       this.isShowItemMenu2 = false;
       if(this.isShowItemMenu1==true){
         this.$emit('menuItemClick', "rentEquipment")
+        this.homeCurrentIndex=0;
       }
     },
     showItemMenu2(){
@@ -96,6 +97,7 @@ export default {
       this.isShowItemMenu2 = !this.isShowItemMenu2
       if(this.isShowItemMenu2==true){
         this.$emit('menuItemClick', "user")
+        this.dashboardCurrentIndex=0;
       }
     },
     SplitArray(){

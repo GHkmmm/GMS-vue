@@ -23,7 +23,7 @@
         <td><a href="#" @click="rollbackUser(user.userId,index)" class="text-danger" v-if="isDeleted">撤回</a></td>
       </tr>
     </tbody>
-    <div v-if="users.length==0" class="no-users-tip d-flex justify-content-center">暂无用户</div>
+    <div v-if="isShowTip" class="no-users-tip d-flex justify-content-center">暂无用户</div>
   </table>
 </template>
 
@@ -38,11 +38,15 @@ export default {
     isDeleted: {
       type: Boolean,
       default: false
+    },
+    isShowTip: {
+      type: Boolean,
+      default: false
     }
   },
   data(){
     return{
-      showUsers: true
+      showUsers: true,
     }
   },
   filters: {
@@ -73,9 +77,6 @@ export default {
     },
     deleteUser(userId,index){
       this.users.splice(index, 1);
-      if(this.users.length==0){
-        this.showUsers =false
-      }
       this.$emit("deleteUser", userId)
     },
     rollbackUser(userId,index){
