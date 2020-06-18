@@ -30,11 +30,12 @@
 
 <script>
 import { addPlace } from 'network/place'
+
  export default {
   name:"modalManage",
   data(){
       return{
-          place:{
+    place:{
         placeName:"",
         location:""
        }
@@ -42,15 +43,15 @@ import { addPlace } from 'network/place'
   },
   
    methods:{
-   addPlaceMA: function(){
-     addPlace(this.place.placeName,this.place.location).then( res =>{
+   addPlaceMA(){
+     addPlace(this.place.placeName,this.place.location).then(res =>{
          console.log(res);
          if(res.code == 200){
              this.$toast.suc("添加成功")
          }else if(res.code ==400){
              this.$toast.err("添加失败")
          }else if(res.code==404){
-             this.$toast.err("参数缺失，请检查！")
+             this.$toast.err("参数为空，请检查！")
          }
       })
   }

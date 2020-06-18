@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { searchUserBook } from 'network/place'
+import { searchUserBook } from 'network/place';
  export default {
   name:"searchUserAppointment",
   data(){
@@ -63,6 +63,9 @@ import { searchUserBook } from 'network/place'
   },
   created(){ 
       this.searchUserBook();
+  },
+  components:{
+
   },
    methods:{
    searchUserBook(){   

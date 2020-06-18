@@ -2,8 +2,7 @@
   <div>
     <div class="textBox">
       <transition name="slide">
-        <p class="text" :key="text.id">
-            {{text.val.title}}</p>
+        <p v-if="text.val" class="text" :key="text.id">{{text.val.title}}</p>
       </transition>
     </div>
   </div>
