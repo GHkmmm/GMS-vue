@@ -125,8 +125,12 @@
                 <button class="btn btn-outline-primary">编辑</button>
                 <button
                   class="btn btn-outline-danger"
-                  @click="funSubmitED(equipment.equipmentId,$index)"
+                  @click="funSubmitED(equipment.equipmentId,equipment.equipmentStatus,$index)"
                 >删除</button>
+                <button
+                  class="btn btn-outline-success"
+                  @click="funSubmitERC(equipment.equipmentId,equipment.equipmentStatus,equipment.equipmentRenterId,$index)"
+                >回收</button>
               </td>
             </tr>
           </tbody>
@@ -140,15 +144,6 @@
       </div>
     </div>
 
-    <!-- 器材回收 -->
-    <div v-if="varShowERC">
-      <button class="btn btn-outline-secondary" @click="funHiddenERC">返回主页面</button>
-      <input v-model="modelERCId" placeholder="器材Id" />
-      <button class="btn btn-outline-danger" @click="funSubmitERC">回收器材</button>
-    </div>
-    <div v-else>
-      <button class="btn btn-outline-secondary" @click="funShowERC">器材回收</button>
-    </div>
   </div>
 </template>
 
@@ -185,9 +180,8 @@ export default {
       varShowEquipments: false,
       varShowERC: false,
 
-      modelERCId: null,
-
-      page: 10,
+      page: 9,
+      totalNumber: 0,
       totalPage: 1,
       currentPage: 1
     };
@@ -197,7 +191,11 @@ export default {
       this.equipments = res.equipments;
       this.equipmentsShow = res.equipments;
       this.totalPage = Math.ceil(this.equipments.length / this.page);
+      this.totalNumber = this.equipments.length;
       this.showEquipments();
+      getEquipment().then(res => {
+        this.equipments = res.equipments;
+      });
     });
   },
   mounted() {
@@ -206,49 +204,71 @@ export default {
   methods: {
     showEquipments() {
       //先切尾巴再切头，不然长度有影响
-        this.equipmentsShow.splice(this.currentPage*this.page, this.equipments.length - this.currentPage*this.page);
-        this.equipmentsShow.splice(0, this.currentPage*this.page - 10);
+      this.equipmentsShow.splice(
+        this.currentPage * this.page,
+        this.equipments.length - this.currentPage * this.page
+      );
+      this.equipmentsShow.splice(0, this.currentPage * this.page - this.page);
     },
     Forward() {
-      if (this.currentPage > 1) {
-        this.currentPage -= 1;
-        console.log("第" + this.currentPage + "页");
-        console.log(this.equipments.length);
+      if (
+        this.currentPage > 1 &&
+        this.equipments.length > this.page &&
+        this.totalNumber > this.page
+        //this.page这个数字是因为有时按太快，切割完表格后还未更新又再次切割，会导致表格消失
+      ) {
         getEquipment().then(res => {
           this.equipments = res.equipments;
         });
+        this.currentPage -= 1;
         this.equipmentsShow = this.equipments;
         this.showEquipments();
-        console.log(this.equipmentsShow.length);
+      } else if (this.currentPage > 1) {
+        alert("你按太快了");
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
       } else {
         alert("你在第一页还按上一页，你觉得很好玩吗");
       }
     },
     Backward() {
-      if (this.currentPage < this.totalPage) {
-        this.currentPage += 1;
-        console.log("第" + this.currentPage + "页");
-        console.log(this.equipments.length);
+      if (
+        this.currentPage < this.totalPage &&
+        this.equipments.length > this.page &&
+        this.totalNumber > this.page
+      ) {
         getEquipment().then(res => {
           this.equipments = res.equipments;
         });
+        this.currentPage += 1;
         this.equipmentsShow = this.equipments;
         this.showEquipments();
-        console.log(this.equipmentsShow.length);
+      } else if (this.currentPage < this.totalPage) {
+        alert("你按太快了");
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
       } else {
         alert("你在最后一页还按下一页，你觉得很好玩吗");
       }
     },
     pageClick(index) {
-      this.currentPage = index + 1;
-        console.log("第" + this.currentPage + "页");
-        console.log(this.equipments.length);
+      if (this.equipments.length > this.page && this.totalNumber > this.page) {
+        this.currentPage = index + 1;
         getEquipment().then(res => {
           this.equipments = res.equipments;
         });
         this.equipmentsShow = this.equipments;
         this.showEquipments();
-        console.log(this.equipmentsShow.length);
+      } else {
+        this.currentPage = index + 1;
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+          this.equipmentsShow = res.equipments;
+          this.showEquipments();
+        });
+      }
     },
 
     changeBulletin() {
@@ -273,20 +293,19 @@ export default {
       }
     },
     // 器材查询功能
-    funShowE: function() {
-      this.varShowEquipments = true;
-    },
-    funHiddenE: function() {
-      this.varShowEquipments = false;
-    },
     funShowES: function() {
       this.varShowES = true;
 
       this.varShowERC = false;
-
       getEquipment().then(res => {
         this.equipments = res.equipments;
-        this.showEquipments;
+        this.equipmentsShow = res.equipments;
+        this.totalPage = Math.ceil(this.equipments.length / this.page);
+        this.totalNumber = this.equipments.length;
+        this.showEquipments();
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
       });
     },
     funHiddenES: function() {
@@ -295,44 +314,62 @@ export default {
     },
 
     // 器材删除功能
-    funSubmitED: function(id, index) {
+    funSubmitED: function(id, Status, index) {
       if (confirm("是否要删除") == true) {
-        deleteEquipment(id).then(res => {
-          if (res.code == 200) {
-            alert("删除成功，请稍等列表更新");
-            getEquipment().then(res => {
-              this.equipments = res.equipments;
-              this.showEquipments();
-            });
-          } else if (res.code == 404) {
-            alert("求你写点东西");
-          } else {
-            alert("速度爬");
-          }
-        });
+        if (Status == "repair" || Status == "rent") {
+          alert("不可删除，该器材在租用或修理");
+        } else
+          deleteEquipment(id).then(res => {
+            if (res.code == 200) {
+              alert("删除成功，请稍等列表更新");
+              getEquipment().then(res => {
+                this.equipments = res.equipments;
+                this.totalPage = Math.ceil(this.equipments.length / this.page);
+                if (this.currentPage > this.totalPage) {
+                  this.currentPage = this.totalPage;
+                }
+                getEquipment().then(res => {
+                  this.equipmentsShow = res.equipments;
+                  this.showEquipments();
+                });
+              });
+            } else if (res.code == 404) {
+              alert("求你写点东西");
+            } else {
+              alert("速度爬");
+            }
+          });
       }
     },
 
     // 器材回收功能
-    funShowERC: function() {
-      this.varShowERC = true;
-
-      this.varShowES = false;
-    },
-    funHiddenERC: function() {
-      this.varShowERC = false;
-    },
-    funSubmitERC: function() {
-      recycleEquipment(this.modelERCId).then(res => {
-        if (res.code == 200) {
-          alert("可以啊");
-          this.modelERCId = null;
-        } else if (res.code == 404) {
-          alert("你要回收哪个啊");
-        } else {
-          alert("韩币");
-        }
-      });
+    funSubmitERC: function(id, Status, RenterId, index) {
+      if (Status == "free" || Status == "repair") {
+        alert("都没被借，你回收个🐓啊");
+      } else if (RenterId != this.$store.state.user.userId) {
+        alert("不是你借的，回收个🔨啊？");
+      } else if (confirm("是否要回收") == true) {
+          recycleEquipment(id).then(res => {
+            if (res.code == 200) {
+              alert("回收成功，请稍等列表更新");
+              getEquipment().then(res => {
+                this.equipments = res.equipments;
+                this.totalPage = Math.ceil(this.equipments.length / this.page);
+                if (this.currentPage > this.totalPage) {
+                  this.currentPage = this.totalPage;
+                }
+                getEquipment().then(res => {
+                  this.equipmentsShow = res.equipments;
+                  this.showEquipments();
+                });
+              });
+            } else if (res.code == 404) {
+              alert("求你写点东西");
+            } else {
+              alert("速度爬");
+            }
+          });
+      }
     }
   }
 };
