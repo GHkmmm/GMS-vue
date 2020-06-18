@@ -46,3 +46,11 @@ export function changePlace(idPlace,placeName,location){
     })
 
 }
+export function searchUserBook(userId){
+     return request({
+         url:"/place/searchUserAppointment",
+         data:{
+             userId
+         }
+     })
+}

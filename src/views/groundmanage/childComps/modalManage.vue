@@ -1,6 +1,6 @@
 <template>
  <div>
- <button class="btn btn-primary" onclick="document.getElementById('modalManage').style.display='block'" style="width:auto;">添加场地</button>
+ <button  class="btn btn-primary" onclick="document.getElementById('modalManage').style.display='block'" style="width:auto;">添加场地</button>
 
 <div id="modalManage" class="modal">
     <div class="modal-content animate">
@@ -11,12 +11,12 @@
 
         <div class="container">
             <label><b>场地名字</b></label>
-            <input  placeholder="请输入场地名字" v-model="placeName">
+            <input type="text" placeholder="请输入场地名字" id="placeName" v-model="place.placeName">
 
             <label><b>场地位置</b></label>
-            <input  placeholder="请输入场地位置" v-model="location">
+            <input type="text" placeholder="请输入场地位置" id="location" v-model="place.location">
 
-            <button  class="btn btn-outline-primary" @click="addPlaceMA" onclick="document.getElementById('modalManage').style.display='none'">确认</button>
+            <button  class="btn btn-outline-primary" @click="addPlaceMA()" onclick="document.getElementById('modalManage').style.display='none'">确认</button>
             <button  class="btn btn-outline-primary" onclick="document.getElementById('modalManage').style.display='none'">取消</button>
         </div>
 
@@ -30,16 +30,27 @@
 
 <script>
 import { addPlace } from 'network/place'
-
  export default {
   name:"modalManage",
+  data(){
+      return{
+          place:{
+        placeName:"",
+        location:""
+       }
+      }
+  },
+  
    methods:{
    addPlaceMA: function(){
-     addPlace(this.placeName,this.location).then( res =>{
+     addPlace(this.place.placeName,this.place.location).then( res =>{
+         console.log(res);
          if(res.code == 200){
              this.$toast.suc("添加成功")
          }else if(res.code ==400){
              this.$toast.err("添加失败")
+         }else if(res.code==404){
+             this.$toast.err("参数缺失，请检查！")
          }
       })
   }

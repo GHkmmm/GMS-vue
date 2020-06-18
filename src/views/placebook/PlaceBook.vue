@@ -1,6 +1,7 @@
 <template>
   <div>
    <bulletin></bulletin>
+   <searchUserAppointment id="btn1"></searchUserAppointment>
    <div>
     <table class="table">
      <thead>
@@ -19,8 +20,8 @@
        <th scope="row">{{charge.idCharge}}</th>
        <td>{{charge.placeName}}</td>
        <td>{{charge.week}}</td>
-       <td>{{charge.startCharge}}</td>
-       <td>{{charge.overCharge}}</td>
+       <td>{{showTime(charge.startCharge)}}</td>
+       <td>{{showTime(charge.overCharge)}}</td>
        <td>{{charge.light}}</td>
        <td>{{charge.cost}}</td>  
       </tr> 
@@ -34,10 +35,14 @@
 <script>
 import bulletin from 'components/content/bulletin/Bulletin';
 import { getCharge } from 'network/place';
+import {DateFormat} from "../../common/util";
+import searchUserAppointment from "./childComps/FindUserBook";
 export default {
   name:"chargeSearch",
   components:{
-    bulletin
+    bulletin,
+    DateFormat,
+    searchUserAppointment
     },
     data(){
       return{
@@ -53,6 +58,14 @@ export default {
           this.charges = res.charge
         })
 
+      },
+      showTime(value){
+        if(value !=""){
+           let date = new Date(value*1000);
+           return DateFormat(date,"h:mm");
+
+        }
+
       }
     }
 }
@@ -62,7 +75,7 @@ export default {
 #btn1{
   position: absolute;
   top:5px;
-  right:100px;
+  left:320px;
 }
 
 

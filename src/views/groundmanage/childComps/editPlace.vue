@@ -1,5 +1,5 @@
 <template>
-  <div @editPlace="gotPlace">
+  <div>
   <button class="btn btn-outline-warning" onclick="document.getElementById('modalEdit').style.display='block'" style="width:auto;">修改</button>
   
    <div id="modalEdit" class="modal">
@@ -39,7 +39,7 @@ export default {
         }
     },
     created(){
-        thsi.setPlace();
+        this.setPlace();
     },
     activated(){
         this.setPlace();
