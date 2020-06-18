@@ -20,7 +20,8 @@
     </div>
     <div class="menu-list"
           @click="showItemMenu2"
-          :class="{menuListActived: isShowItemMenu2}">
+          :class="{menuListActived: isShowItemMenu2}"
+          v-if="dashboard.length>1">
           <img class="menu-list-item-title-icon" src="~assets/img/tabmenu/dashboard.svg" alt="">
           <div>控制台</div>
           <img class="menu-down" src="~assets/img/tabmenu/down.svg" alt="">
