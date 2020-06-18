@@ -123,6 +123,7 @@ export default {
   overflow-y: scroll;
 }
 .menu-list, .menu-list-item{
+  height: 80px;
   line-height: 80px;
   cursor: pointer;
   box-sizing: border-box;
@@ -143,7 +144,7 @@ export default {
   transition: max-height .4s;
 }
 .menuListItemContainerActived{
-  max-height: 300px;
+  max-height: 666px;
 }
 .menu-down{
   width: 10px;

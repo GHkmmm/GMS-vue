@@ -31,14 +31,19 @@
         <div class="changeto-register" @click="changeToRegister" v-if="!isShowOtherInput">还没账户?点击注册用户</div>
         <div class="changeto-register" @click="changeToLogin" v-if="isShowOtherInput">已有账户?点击登陆</div>
         <div class="warn" @click="forgetPassword" v-if="!isShowOtherInput">忘记密码</div>
-        <button class="btn btn-primary btn-block">{{title}}</button>
+        <button class="btn btn-primary btn-block d-flex justify-content-center align-items-center">
+          {{title}}
+          <loading v-if="isLoading"/>
+        </button>
       </form>
+      
     </div>
   </div>
 </template>
 
 <script>
 import Toast from 'components/common/toast/Toast';
+import Loading from 'components/common/loading/Loading';
 
 import { Login, Register, ChangePassword, GetRoutes } from 'network/login';
 import { MenuUtils } from 'utils/MenuUtils';
@@ -52,6 +57,7 @@ export default {
       title: "登陆",
       isShowOtherInput: false,
       isShowTip: false,
+      isLoading: false,
       usernameTip: "",
       passwordTip: "",
       phoneNumTip: "",
@@ -71,7 +77,8 @@ export default {
     }
   },
   components:{
-    Toast
+    Toast,
+    Loading
   },
   methods: {
     changeToRegister(){
@@ -134,6 +141,7 @@ export default {
      */
     SubmitFrom(){
       if(this.title=="登陆"&&this.nameTest&&this.passwordTest){
+        this.isLoading = true;
         Login(this.user.username, this.user.password).then(res => {
           if(res.code == 200){
             this.$store.state.user = res.user;
@@ -149,10 +157,12 @@ export default {
               this.$router.push("/dashboard");
             }) 
           }else{
+            this.isLoading = false;
             this.$toast.err("账号或密码错误");
           }     
         });
       }else if(this.title=="注册"&&this.nameTest&&this.passwordTest){
+        this.isLoading = true;
         Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email).then(res => {
           if(res.code == 200){
             this.$toast.suc("注册成功");
@@ -160,10 +170,12 @@ export default {
               this.$router.go(0);
             }, 1000)
           }else{
+            this.isLoading = false;
             this.$toast.err("请验证您信息的格式")
           }
         })
       }else if(this.title=="修改密码"){
+        this.isLoading = true;
         ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email).then(res => {
           console.log(res);
           if(res.code == 200){
@@ -172,10 +184,12 @@ export default {
               this.$router.go(0);
             }, 1000)
           }else{
+            this.isLoading = false;
             this.$toast.err("信息验证失败")
           }
         })
       }else{
+        this.isLoading = false;
         this.$toast.err("请按照要求填写信息")
       }
     }
