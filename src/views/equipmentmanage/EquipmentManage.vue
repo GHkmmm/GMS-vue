@@ -86,12 +86,10 @@
     </nav>
 
     <!-- 器材查询 -->
-    <div v-if="varShowES">
+    <div>
       <div class="container">
         <div class="row">
-          <div class="col-md-8 my-sm-2">
-            <button class="btn btn-outline-secondary" @click="funHiddenES">返回主页面</button>
-          </div>
+          <div class="col-md-8 my-sm-2"></div>
           <div class="col-md-2 my-sm-2">
             <modalEA @ee="funShowES"></modalEA>
           </div>
@@ -116,7 +114,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="equipment in equipments" :key="equipment.key">
+            <tr v-for="equipment in equipmentsShow" :key="equipment.key">
               <th scope="row">{{equipment.equipmentId}}</th>
               <td>{{equipment.equipmentName}}</td>
               <td>{{equipment.equipmentCost}}</td>
@@ -133,12 +131,13 @@
             </tr>
           </tbody>
         </table>
-        <pagination />
+        <pagination
+          :totalPage="this.totalPage"
+          @pageClick="pageClick"
+          @Forward="Forward"
+          @Backward="Backward"
+        />
       </div>
-    
-    </div>
-    <div v-else>
-    <button class="btn btn-outline-secondary" @click="funShowES">器材查询</button>
     </div>
 
     <!-- 器材回收 -->
@@ -180,18 +179,78 @@ export default {
   data() {
     return {
       equipments: [],
+      equipmentsShow: [],
 
       varShowES: false,
       varShowEquipments: false,
       varShowERC: false,
 
-      modelERCId: null
+      modelERCId: null,
+
+      page: 10,
+      totalPage: 1,
+      currentPage: 1
     };
+  },
+  created() {
+    getEquipment().then(res => {
+      this.equipments = res.equipments;
+      this.equipmentsShow = res.equipments;
+      this.totalPage = Math.ceil(this.equipments.length / this.page);
+      this.showEquipments();
+    });
   },
   mounted() {
     this.changeBulletin();
   },
   methods: {
+    showEquipments() {
+      //先切尾巴再切头，不然长度有影响
+        this.equipmentsShow.splice(this.currentPage*this.page, this.equipments.length - this.currentPage*this.page);
+        this.equipmentsShow.splice(0, this.currentPage*this.page - 10);
+    },
+    Forward() {
+      if (this.currentPage > 1) {
+        this.currentPage -= 1;
+        console.log("第" + this.currentPage + "页");
+        console.log(this.equipments.length);
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
+        this.equipmentsShow = this.equipments;
+        this.showEquipments();
+        console.log(this.equipmentsShow.length);
+      } else {
+        alert("你在第一页还按上一页，你觉得很好玩吗");
+      }
+    },
+    Backward() {
+      if (this.currentPage < this.totalPage) {
+        this.currentPage += 1;
+        console.log("第" + this.currentPage + "页");
+        console.log(this.equipments.length);
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
+        this.equipmentsShow = this.equipments;
+        this.showEquipments();
+        console.log(this.equipmentsShow.length);
+      } else {
+        alert("你在最后一页还按下一页，你觉得很好玩吗");
+      }
+    },
+    pageClick(index) {
+      this.currentPage = index + 1;
+        console.log("第" + this.currentPage + "页");
+        console.log(this.equipments.length);
+        getEquipment().then(res => {
+          this.equipments = res.equipments;
+        });
+        this.equipmentsShow = this.equipments;
+        this.showEquipments();
+        console.log(this.equipmentsShow.length);
+    },
+
     changeBulletin() {
       this.$refs.child.textArr = [
         { title: "器材租用收费标准一览" },
@@ -215,7 +274,6 @@ export default {
     },
     // 器材查询功能
     funShowE: function() {
-      
       this.varShowEquipments = true;
     },
     funHiddenE: function() {
@@ -228,6 +286,7 @@ export default {
 
       getEquipment().then(res => {
         this.equipments = res.equipments;
+        this.showEquipments;
       });
     },
     funHiddenES: function() {
@@ -243,6 +302,7 @@ export default {
             alert("删除成功，请稍等列表更新");
             getEquipment().then(res => {
               this.equipments = res.equipments;
+              this.showEquipments();
             });
           } else if (res.code == 404) {
             alert("求你写点东西");
@@ -253,7 +313,7 @@ export default {
       }
     },
 
-// 器材回收功能
+    // 器材回收功能
     funShowERC: function() {
       this.varShowERC = true;
 
@@ -273,7 +333,7 @@ export default {
           alert("韩币");
         }
       });
-    },
+    }
   }
 };
 </script>
