@@ -30,12 +30,12 @@
              <td scope="row">{{userAppointment.idAppointment}}</td>
              <td>{{userAppointment.userName}}</td>
              <td>{{userAppointment.startAppointment}}</td>
-             <td>{{userAppointment.overtAppointment}}</td>
+             <td>{{userAppointment.overAppointment}}</td>
              <td>{{userAppointment.placeName}}</td>
              <td>{{userAppointment.location}}</td>
              <td>{{userAppointment.purpose}}</td>
-             <td>{{userAppointment.cost}}</td>
-             <td align="center"><button>修改</button></td>
+             <td>{{userAppointment.cost+"元/小时"}}</td>
+             <td align="center"><button class="btn btn-outline-warning">修改</button></td>
              <td><button type="button" class="btn btn-outline-danger">预约退订</button></td>
             </tr>
            </tbody>
@@ -65,17 +65,21 @@ import { searchUserBook } from 'network/place'
       this.searchUserBook();
   },
    methods:{
-   searchUserBook(){     
+   searchUserBook(){   
+      
      searchUserBook(this.$store.state.user.userId).then( res =>{
+         console.log(res);
          this.userAppointments = res.userAppointment  
+          console.log(this.$store.state.user.userId);
         console.log(this.userAppointments);
-        console.log(this.$store.state.user.userId);
+    
+ 
       })
   }
  }}
 </script>
 
-<style>
+<style scoped>
 
 
 

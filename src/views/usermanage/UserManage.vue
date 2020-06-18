@@ -13,7 +13,8 @@
                 @pageClick="pageClick"
                 @Forward="Forward"
                 @Backward="Backward"
-                class="my-pagination" />
+                class="my-pagination"
+                v-if="users.length!=0" />
   </div>
 </template>
 
@@ -154,7 +155,5 @@ export default {
 }
 .my-pagination{
   width: 100%;
-  position: absolute;
-  bottom: 0;
 }
 </style>

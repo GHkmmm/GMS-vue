@@ -57,7 +57,8 @@ import { addPlace } from 'network/place'
  }}
 </script>
 
-<style>
+<style  scoped>
+
  input{
         width: 100%;
         padding: 12px 20px;

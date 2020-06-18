@@ -90,6 +90,7 @@ export default {
   top: 70px;
   bottom: 0;
   z-index: -99;
+  background-color: #FAFAFA;
 }
 .router-view{
   width: 80%;
