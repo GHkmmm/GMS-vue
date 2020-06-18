@@ -86,14 +86,14 @@ export default {
     showItemMenu1(){
       this.isShowItemMenu1 = !this.isShowItemMenu1
       this.isShowItemMenu2 = false;
-      if(isShowItemMenu1==true){
+      if(this.isShowItemMenu1==true){
         this.$emit('menuItemClick', "rentEquipment")
       }
     },
     showItemMenu2(){
       this.isShowItemMenu1 = false;
       this.isShowItemMenu2 = !this.isShowItemMenu2
-      if(isShowItemMenu2==true){
+      if(this.isShowItemMenu2==true){
         this.$emit('menuItemClick', "user")
       }
     },
