@@ -294,9 +294,6 @@ export default {
     },
     // 器材查询功能
     funShowES: function() {
-      this.varShowES = true;
-
-      this.varShowERC = false;
       getEquipment().then(res => {
         this.equipments = res.equipments;
         this.equipmentsShow = res.equipments;
@@ -307,10 +304,6 @@ export default {
           this.equipments = res.equipments;
         });
       });
-    },
-    funHiddenES: function() {
-      this.varShowEquipments = false;
-      this.varShowES = false;
     },
 
     // 器材删除功能
