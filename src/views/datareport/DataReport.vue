@@ -36,23 +36,29 @@
       <li>
         <button class="btn btn-sm btn-success my-refresh-btn" @click="searchTrading(searchTradingId,searchUserId,searchTrdaingType,searchTradingTimeBegin,searchTradingTimeEnd,currentIndex)">刷新</button>
       </li>
-      <li class="nav-item">
-        <span>起始时间</span> 
-        <div class="date-picker-container">
-          <date-picker v-model="dateBegin" :config="options"></date-picker>
+      <li class="nav-item dropdown">
+        <span>起始时间</span>
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{dateBegin|TimeName}}
+        </a> 
+        <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="#" @click="allTime()">所有</a>
+        <div class="dropdown-item date-picker-container">
+          <date-picker placeholder="请选择时间" v-model="dateBegin" :config="options"></date-picker>
+        </div>
         </div>
       </li>
 
-      <li class="nav-item dropdown ">
+      <li class="nav-item dropdown">
         <span>结束时间</span>
         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <!-- {{dateBegin|TimeName}} -->
+          {{dateEnd|TimeName}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#" @click="allTime()">所有</a>
-          <div class="dropdown-item">
-            <date-picker  v-model="dateEnd" :config="options"></date-picker>
-        </div>
+          <div class="dropdown-item date-picker-container">
+            <date-picker placeholder="请选择时间" v-model="dateEnd" :config="options"></date-picker>
+          </div>
         </div>
       </li>
 
@@ -71,7 +77,7 @@
           <or-switch @on="isSearchTradingIdTrue" @off="isSearchTradingIdFalse"/>
 
           <button v-if="this.isSearchTradingId==true" class="btn btn-success my-2 my-sm-0" type="submit" @click="tradingIdSearch">搜索</button>
-          <button v-if="this.isSearchTradingId==false" class="btn btn-primary my-2 my-sm-0" type="submit" @click="tradingUserIdSearch">搜索</button>
+          <button v-if="this.isSearchTradingId==false" class="btn btn-primary my-2 my-sm-0" type="submit" @click="tradingMixSearch">搜索</button>
         </div>
       </li>
     </ul>
@@ -150,21 +156,19 @@ export default {
       searchTrdaingType:-1,
       searchTradingTimeBegin:-1,
       searchTradingTimeEnd:-1,
-      searchUserId:-1,
+      searchUserId:"",
       searchTradingId:-1,
       pagesize:8,
-      tid:0,
-      userId:0,
+      tid:"",
+      userId:"",
       isSearchTradingId:false,//搜索tradingID
       isSearchAllTime:true,//搜索所有时间
       isShowChangeModal:false,//编辑交易的模态框显示状态
 
-      aTrading:"",
+      aTrading:"",//传入到编辑modal的trading对象
 
-
-      dateBegin:new Date(),
-      dateEnd:new Date(),
-
+      dateBegin:"",
+      dateEnd:"",
       options: {
       format: 'YYYY/MM/DD',
       locale: 'zh-cn',
@@ -196,8 +200,10 @@ export default {
     TimeName(time){
       if(time==-1){
         return "所有"
-      }else{
-        // return DateFormat((time/100).toFixed(0),'yyyy-MM-dd');
+      }else if(time==""){
+        return "所有"
+        }else{
+        return time
       }
     }
   },
@@ -220,23 +226,38 @@ export default {
     allTime(){
       this.dateBegin=-1;
       this.dateEnd=-1;
+      this.searchTradingTimeBegin=-1
+      this.searchTradingTimeEnd=-1;
+    },
+    selectSearchTime(){
+      if (this.dateBegin==""||this.dateBegin==-1) {
+        this.dateBegin=this.dateEnd;
+      }
+      if (this.dateEnd==""||this.dateEnd==-1) {
+        this.dateEnd=this.dateBegin;
+      }
+      this.searchTradingTimeBegin=this.dateBegin;
+      this.searchTradingTimeEnd=this.dateEnd;
     },
 //搜索结束
 //组件
+  changeTradingS(trading){
+    this.changeIsShowChangeModal();
+    this.aTrading=trading;
+  },
+  changeIsShowChangeModal(){
+    this.isShowChangeModal=!this.isShowChangeModal;
+  },
     // 时间戳
   showDate(value){
     let date=new Date(value*1000);
     return DateFormat(date,'yyyy-MM-dd hh:mm:ss');
   },
-  changeIsShowChangeModal(){
-    this.isShowChangeModal=!this.isShowChangeModal;
-  },
-  changeTradingS(trading){
-    this.changeIsShowChangeModal();
-    this.aTrading=trading;
+  DateToTimeStamp(timestr){
+    Date.parse(timestr);
+    return 
   },
   // 时间戳结束
-
 //组件结束
 // 翻页
   pageClick(index){
@@ -255,13 +276,16 @@ export default {
 // 网络请求
     //搜索方法
     searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count){
+      if (userId=="") {
+        userId=-1;
+      }
       searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count).then(res => {
         if (res.code == 200) {
           this.tradings = res.tradingList
           this.totalPage = res.page;
-          this.$toast.suc("加载完成")
 
           this.$progress.finished()
+
         }else if(res.code==201){
           this.$toast.err("无结果")
         }
@@ -316,13 +340,23 @@ export default {
     },
     //查询交易id
     tradingIdSearch(){
+      if (this.tid=="") {
+        tid=-1
+      }
       this.searchTradingId=this.tid;
       this.currentIndex=0;
       this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex)
     },
-    // 根据用户id查询
-    tradingUserIdSearch(){
+    // 混合条件搜索
+    tradingMixSearch(){
       this.searchUserId=this.userId;
+      if (this.dateBegin!=-1&&this.dateEnd!=-1) {
+        this.searchTradingTimeBegin=Date.parse(this.dateBegin)/1000;
+        this.searchTradingTimeEnd=(Date.parse(this.dateEnd)/1000)+86400;
+      }else{
+        this.searchTradingTimeBegin=this.dateBegin;
+        this.searchTradingTimeEnd=this.dateEnd;
+      }
       this.currentIndex=0;
       this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex)
     }
