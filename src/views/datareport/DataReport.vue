@@ -36,27 +36,30 @@
       <li>
         <button class="btn btn-sm btn-success my-refresh-btn" @click="searchTrading(searchTradingId,searchUserId,searchTrdaingType,searchTradingTimeBegin,searchTradingTimeEnd,currentIndex)">刷新</button>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown timeSelect">
         <span>起始时间</span>
         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{dateBegin|TimeName}}
         </a> 
         <div class="dropdown-menu " aria-labelledby="navbarDropdown">
         <a class="dropdown-item" href="#" @click="allTime()">所有</a>
+        <div class="dropdown-divider"></div>
         <div class="dropdown-item date-picker-container">
           <date-picker placeholder="请选择时间" v-model="dateBegin" :config="options"></date-picker>
         </div>
         </div>
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown timeSelect">
         <span>结束时间</span>
         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{dateEnd|TimeName}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#" @click="allTime()">所有</a>
+          <div class="dropdown-divider"></div>
           <div class="dropdown-item date-picker-container">
+            <div class="dropdown-divider"></div>
             <date-picker placeholder="请选择时间" v-model="dateEnd" :config="options"></date-picker>
           </div>
         </div>
@@ -371,7 +374,7 @@ export default {
   margin-right: 5px;
 }
 .my-refresh-btn{
-  margin-top: 35px;
+  margin-top: 20px;
 }
 .nav-ul>li{
   margin-right: 5px;
@@ -382,16 +385,13 @@ export default {
 .title-span{
   display: block
 }
-/* .date-picker-container {
-
+.timeSelect{
+  margin-left: 20px;
+  width: 130px;
+}
+.date-picker-container {
+  width: 190px;
 }
 
-.date-picker-container .datepicker-inline {
-    width: 100%;
-    height: 100%;
-}
-.date-picker-container .table-condensed {
-width: 100%;
-height: 100%;
-} */
+
 </style>
