@@ -1,10 +1,12 @@
-import { request } from './request';
+import {
+  request
+} from './request';
 
-export function getEquipment(equipmentId,equipmentName,equipmentCost,equipmentStatus,equipmentRenterId){
+export function getEquipment(equipmentId, equipmentName, equipmentCost, equipmentStatus, equipmentRenterId) {
   return request({
     url: "/equipment/search",
-    method:'post',
-    data:{
+    method: 'post',
+    data: {
       equipmentId,
       equipmentName,
       equipmentCost,
@@ -14,11 +16,11 @@ export function getEquipment(equipmentId,equipmentName,equipmentCost,equipmentSt
   })
 }
 
-export function addEquipment(equipmentId,equipmentName,equipmentCost){
+export function addEquipment(equipmentId, equipmentName, equipmentCost) {
   return request({
     url: "/equipment/add",
-    method:'post',
-    data:{
+    method: 'post',
+    data: {
       equipmentId,
       equipmentName,
       equipmentCost
@@ -26,39 +28,56 @@ export function addEquipment(equipmentId,equipmentName,equipmentCost){
   })
 }
 
-export function deleteEquipment(equipmentId){
+export function deleteEquipment(equipmentId) {
   return request({
     url: "/equipment/delete",
-    method:'post',
-    data:{
+    method: 'post',
+    data: {
       equipmentId,
     }
   })
 }
 
-export function rentEquipment(equipmentId,equipmentRenterId){
+export function rentEquipment(equipmentId, equipmentRenterId) {
   return request({
     url: "/equipment/rent",
-    method:'post',
-    data:{
+    method: 'post',
+    data: {
       equipmentId,
       equipmentRenterId
     }
   })
 }
 
-export function recycleEquipment(equipmentId){
+export function repairEquipment(equipmentId) {
+  return request({
+    url: "/equipment/repair",
+    method: 'post',
+    data: {
+      equipmentId,
+    }
+  })
+}
+
+export function recycleEquipment(equipmentId) {
   return request({
     url: "/equipment/recycle",
-    method:'post',
-    data:{
+    method: 'post',
+    data: {
       equipmentId
     }
   })
 }
 
-export function standardEquipment(){
+export function changeEquipment(equipmentIdOld, equipmentId, equipmentName, equipmentCost) {
   return request({
-    url: "/equipment/standard"
+    url: "/equipment/change",
+    method: 'post',
+    data: {
+      equipmentIdOld,
+      equipmentId,
+      equipmentName,
+      equipmentCost
+    }
   })
 }

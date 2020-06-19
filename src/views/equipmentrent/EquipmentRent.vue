@@ -238,7 +238,6 @@ export default {
 
     // 器材租用功能
     funSubmitER: function(id, Status, RenterId, index) {
-      alert("test");
       if (Status == "repair" || Status == "rent") {
         alert("被借了还是修着，你借屁啊");
       } else if (confirm("是否要租借") == true) {

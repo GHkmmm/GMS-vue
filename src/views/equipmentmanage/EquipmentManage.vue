@@ -2,7 +2,7 @@
   <div>
     <bulletin ref="child"></bulletin>
     <nav class="navbar navbar-expand-lg navbar-light bg-blue">
-      <span class="navbar-brand">账单</span>
+      <span class="navbar-brand">器材列表</span>
       <button
         class="navbar-toggler"
         type="button"
@@ -27,13 +27,18 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <span>交易类型:</span>
+              <span>器材类型:</span>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="#">所有</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">支出</a>
-              <a class="dropdown-item" href="#">收入</a>
+              <a class="dropdown-item" href="#">篮球</a>
+              <a class="dropdown-item" href="#">羽毛球</a>
+              <a class="dropdown-item" href="#">排球</a>
+              <a class="dropdown-item" href="#">足球</a>
+              <a class="dropdown-item" href="#">橄榄球</a>
+              <a class="dropdown-item" href="#">乒乓球</a>
+              <a class="dropdown-item" href="#">网球</a>
             </div>
           </li>
 
@@ -46,12 +51,13 @@
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
-            >起始时间</a>
+            >租借状态</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="#">所有</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">支出</a>
-              <a class="dropdown-item" href="#">收入</a>
+              <a class="dropdown-item" href="#">租借</a>
+              <a class="dropdown-item" href="#">空闲</a>
+              <a class="dropdown-item" href="#">维修</a>
             </div>
           </li>
 
@@ -64,24 +70,24 @@
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
-            >结束时间</a>
+            >关于我的</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="#">所有</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">支出</a>
-              <a class="dropdown-item" href="#">收入</a>
+              <a class="dropdown-item" href="#">我的租借</a>
             </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <div class="form-inline my-2 my-lg-0">
           <input
             class="form-control mr-sm-2"
             type="search"
-            placeholder="输入交易ID"
+            placeholder="器材ID查询"
             aria-label="Search"
           />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
-        </form>
+          <button class="btn btn-outline-success my-sm-0">搜索</button>
+          <!-- <button class="btn btn-outline-success my-sm-0" type="submit">搜索</button> -->
+        </div>
       </div>
     </nav>
 
@@ -89,11 +95,13 @@
     <div>
       <div class="container">
         <div class="row">
-          <div class="col-md-8 my-sm-2"></div>
-          <div class="col-md-2 my-sm-2">
+          <div class="col-md-4 offset-md-1 my-sm-2">
+            <modalERP @ee="funShowES"></modalERP>
+          </div>
+          <div class="col-md-4 my-sm-2">
             <modalEA @ee="funShowES"></modalEA>
           </div>
-          <div class="col-md-2 my-sm-2">
+          <div class="col-md-3 my-sm-2">
             <modalER @ee="funShowES"></modalER>
           </div>
         </div>
@@ -108,7 +116,8 @@
               <th scope="col">器材费用（元/天）</th>
               <th scope="col">器材状态</th>
               <th scope="col">器材租借时间</th>
-              <th scope="col">器材租界人Id</th>
+              <th scope="col">器材租借人Id</th>
+              <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
@@ -122,13 +131,17 @@
               <td>{{showDate(equipment.equipmentTime)}}</td>
               <td>{{equipment.equipmentRenterId}}</td>
               <td>
-                <button class="btn btn-outline-primary">编辑</button>
+                <button class="btn btn-outline-primary btn-sm" @click="funSbumitEC(equipment)">编辑</button>
+              </td>
+              <td>
                 <button
-                  class="btn btn-outline-danger"
+                  class="btn btn-outline-danger btn-sm"
                   @click="funSubmitED(equipment.equipmentId,equipment.equipmentStatus,$index)"
                 >删除</button>
+              </td>
+              <td>
                 <button
-                  class="btn btn-outline-success"
+                  class="btn btn-outline-success btn-sm "
                   @click="funSubmitERC(equipment.equipmentId,equipment.equipmentStatus,equipment.equipmentRenterId,$index)"
                 >回收</button>
               </td>
@@ -143,7 +156,6 @@
         />
       </div>
     </div>
-
   </div>
 </template>
 
@@ -152,6 +164,7 @@ import bulletin from "components/content/bulletin/Bulletin";
 import Pagination from "components/common/pagination/Pagination";
 import modalEA from "./childComps/modalEA";
 import modalER from "./childComps/modalER";
+import modalERP from "./childComps/modalERP";
 import { DateFormat } from "../../common/util";
 
 import {
@@ -169,7 +182,8 @@ export default {
     DateFormat,
     Pagination,
     modalEA,
-    modalER
+    modalER,
+    modalERP
   },
   data() {
     return {
@@ -198,10 +212,34 @@ export default {
       });
     });
   },
+  activated() {
+    getEquipment().then(res => {
+      this.equipments = res.equipments;
+      this.equipmentsShow = res.equipments;
+      this.totalPage = Math.ceil(this.equipments.length / this.page);
+      this.totalNumber = this.equipments.length;
+      this.showEquipments();
+      getEquipment().then(res => {
+        this.equipments = res.equipments;
+      });
+    });
+  },
   mounted() {
     this.changeBulletin();
   },
   methods: {
+    funSbumitEC(equipment) {
+      this.$router.push({
+        path: "editEquipment",
+        query: {
+          equipmentIdOld: equipment.equipmentId,
+          equipmentId: equipment.equipmentId,
+          equipmentName: equipment.equipmentName,
+          equipmentCost: equipment.equipmentCost
+        }
+      });
+    },
+
     showEquipments() {
       //先切尾巴再切头，不然长度有影响
       this.equipmentsShow.splice(
@@ -224,7 +262,7 @@ export default {
         this.equipmentsShow = this.equipments;
         this.showEquipments();
       } else if (this.currentPage > 1) {
-        alert("你按太快了");
+        alert("可能是按太快或者是数据库连接出问题了");
         getEquipment().then(res => {
           this.equipments = res.equipments;
         });
@@ -245,7 +283,7 @@ export default {
         this.equipmentsShow = this.equipments;
         this.showEquipments();
       } else if (this.currentPage < this.totalPage) {
-        alert("你按太快了");
+        alert("可能是按太快或者是数据库连接出问题了");
         getEquipment().then(res => {
           this.equipments = res.equipments;
         });
@@ -308,60 +346,59 @@ export default {
 
     // 器材删除功能
     funSubmitED: function(id, Status, index) {
-      if (confirm("是否要删除") == true) {
-        if (Status == "repair" || Status == "rent") {
-          alert("不可删除，该器材在租用或修理");
-        } else
-          deleteEquipment(id).then(res => {
-            if (res.code == 200) {
-              alert("删除成功，请稍等列表更新");
+      if (Status == "repair" || Status == "rent") {
+        alert("不可删除，该器材在租用或修理");
+      } else if (confirm("是否要删除") == true) {
+        deleteEquipment(id).then(res => {
+          if (res.code == 200) {
+            alert("删除成功，请稍等列表更新");
+            getEquipment().then(res => {
+              this.equipments = res.equipments;
+              this.totalPage = Math.ceil(this.equipments.length / this.page);
+              if (this.currentPage > this.totalPage) {
+                this.currentPage = this.totalPage;
+              }
               getEquipment().then(res => {
-                this.equipments = res.equipments;
-                this.totalPage = Math.ceil(this.equipments.length / this.page);
-                if (this.currentPage > this.totalPage) {
-                  this.currentPage = this.totalPage;
-                }
-                getEquipment().then(res => {
-                  this.equipmentsShow = res.equipments;
-                  this.showEquipments();
-                });
+                this.equipmentsShow = res.equipments;
+                this.showEquipments();
               });
-            } else if (res.code == 404) {
-              alert("求你写点东西");
-            } else {
-              alert("速度爬");
-            }
-          });
+            });
+          } else if (res.code == 404) {
+            alert("求你写点东西");
+          } else {
+            alert("速度爬");
+          }
+        });
       }
     },
 
     // 器材回收功能
     funSubmitERC: function(id, Status, RenterId, index) {
-      if (Status == "free" || Status == "repair") {
-        alert("都没被借，你回收个🐓啊");
-      } else if (RenterId != this.$store.state.user.userId) {
+      if (Status == "rent" && RenterId != this.$store.state.user.userId) {
         alert("不是你借的，回收个🔨啊？");
-      } else if (confirm("是否要回收") == true) {
-          recycleEquipment(id).then(res => {
-            if (res.code == 200) {
-              alert("回收成功，请稍等列表更新");
+      } else if (Status == "free") {
+        alert("都没被借也没被修，你回收个🐓啊");
+      } else if (confirm("是否要回收？") == true) {
+        recycleEquipment(id).then(res => {
+          if (res.code == 200) {
+            alert("回收成功，请稍等列表更新");
+            getEquipment().then(res => {
+              this.equipments = res.equipments;
+              this.totalPage = Math.ceil(this.equipments.length / this.page);
+              if (this.currentPage > this.totalPage) {
+                this.currentPage = this.totalPage;
+              }
               getEquipment().then(res => {
-                this.equipments = res.equipments;
-                this.totalPage = Math.ceil(this.equipments.length / this.page);
-                if (this.currentPage > this.totalPage) {
-                  this.currentPage = this.totalPage;
-                }
-                getEquipment().then(res => {
-                  this.equipmentsShow = res.equipments;
-                  this.showEquipments();
-                });
+                this.equipmentsShow = res.equipments;
+                this.showEquipments();
               });
-            } else if (res.code == 404) {
-              alert("求你写点东西");
-            } else {
-              alert("速度爬");
-            }
-          });
+            });
+          } else if (res.code == 404) {
+            alert("求你写点东西");
+          } else {
+            alert("速度爬");
+          }
+        });
       }
     }
   }
