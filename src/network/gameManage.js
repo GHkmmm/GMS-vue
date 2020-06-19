@@ -1,8 +1,11 @@
 import { request } from './request';
 
-export function getGame(){
+export function getGame(page){
   return request({
-    url: "/game/game"
+    url: "/game/game",
+    params: {//GET请求最好是在parameters里面设置，而POST请求就在Body Data里面设置
+      page
+    }
   })
 }
 

@@ -8,7 +8,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <td align="center" scope="col"><modalAddGame @emit="addGameFun"></modalAddGame></td>
+    <td align="center" scope="col"><modalAddGame @emit="addGame"></modalAddGame></td>
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">添加赛事</button>
     <!--<ul class="navbar-nav ml-auto">
 
@@ -86,6 +86,12 @@
         </tr>
       </tbody>
     </table>
+    <!--分页-->
+    <pagination :totalPage="this.totalPage" 
+                @pageClick="pageClick"
+                @Forward="Forward"
+                @Backward="Backward"
+                class="my-pagination" />
     </div>
   </div>
 </template>
@@ -95,16 +101,20 @@
 import { getGame, addGame, deleteGame } from 'network/gameManage';
 import bulletin from "components/content/bulletin/Bulletin";
 import modalAddGame from './childComps/modalAddGame';
+import Pagination from 'components/common/pagination/Pagination';
 export default {
   name: "GameManage",
    components: {
-    bulletin,
-    modalAddGame
+    bulletin,//滚动栏
+    modalAddGame,//模态框
+    Pagination//转页
+    
   },
   data(){
     return{
-      games: []
-      
+      games: [],
+      totalPage: 1,//总页数
+      currentIndex: 0//当前页数
     }
   },
 
@@ -113,9 +123,13 @@ export default {
   },
 
   created(){
-      this.getGame();
+      this.getGame(0);
     },
- 
+
+ activated(){
+    this.getGame(0);
+  },
+
   methods: {
     changeChild() {
       this.$refs.childbulletin.textArr = [
@@ -129,11 +143,13 @@ export default {
       ]; // 滚动时间
       this.$refs.childbulletin.rotateTime = 2000;
     },
-
-    getGame(){
-      getGame().then(res => {
+    //网络请求
+    getGame(page){
+      getGame(page).then(res => {
+        console.log("res");
         console.log(res);
-        this.games = res.game
+        this.games = res.game//使用分页后game未定义？
+        this.totalPage = res.totalPage;
       })
     },
 
@@ -149,11 +165,33 @@ export default {
       })
     },
    
+   //分页
+   pageClick(index){
+    this.currentIndex = index
+      this.getGame(index);
+  },
+  Forward(){
+    if(this.currentIndex===0){
+        this.$toast.warn("已经是第一页啦")
+      }else{
+        this.currentIndex--;
+        this.getGame(this.currentIndex);
+      }
+  },
+  Backward(){
+    if(this.currentIndex===this.totalPage-1){
+        this.$toast.warn("已经到最后一页啦")
+      }else {
+        this.currentIndex++;
+        this.getGame(this.currentIndex)
+      }
+  },
   }
 }
 </script>
 
 <style>
-
-
+.my-pagination{
+  width: 100%;
+}
 </style>
