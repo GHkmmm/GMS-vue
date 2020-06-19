@@ -82,5 +82,7 @@ export default {
 .edit-info img{
   width: 40px;
   height: 40px;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 </style>

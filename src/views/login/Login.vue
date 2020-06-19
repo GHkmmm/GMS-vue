@@ -18,7 +18,7 @@
           <div class="input-group mb-3">
             <input class="form-control" id="code" v-model="code">
             <div class="input-group-append" @click="changeCode">
-              <img id="codeimg" class="img-code" alt="">
+              <img id="codeimg" class="img-code" alt="验证码">
             </div>
           </div>
         </div> 

@@ -11,7 +11,7 @@
       <div v-for="(menu,index) in home" 
         :key="index" 
         class="menu-list-item" 
-        :class="{actived: homeCurrentIndex==index}"
+        :class="{actived: homeCurrentIndex==index-1}"
         @click="HomeItemClick(index,menu.path)"
         v-show="menu.name">
         <img :src="menu.icon|getImg" alt="">
@@ -102,7 +102,7 @@ export default {
     },
     SplitArray(){
       this.menus.forEach((item, index) => {
-        if(index<=3){
+        if(index<=4){
           this.home.push(item)
         }else{
           this.dashboard.push(item)
