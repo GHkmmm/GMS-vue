@@ -3,11 +3,11 @@
     <dashboard-nav-bar class="my-navbar" @infoClick="infoClick"/>
     <user-info-card class="my-card" v-if="isShowUserInfo" />
     <div class="bottom">
-      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick">
+      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick" ref="OrTabMenu">
         <!-- <tab-menu :menus="menus[0].menu" /> -->
       </tab-menu>
       <keep-alive>
-        <router-view class="router-view" />
+        <router-view class="router-view" ref="RouterView" />
       </keep-alive>
     </div>
   </div>
@@ -48,6 +48,21 @@ export default {
       }
     },300)
   },
+  mounted(){
+    this.$bus.$on("clickNavMenu", (isSpread) => {
+      const OrTabMenuStyle = this.$refs.OrTabMenu.$el.style;
+      const RouterViewStyle = this.$refs.RouterView.$el.style
+      if(!isSpread){
+        OrTabMenuStyle.width = `0`;
+        RouterViewStyle.width = `100%`;
+        OrTabMenuStyle.transition = `.6s`
+      }else{
+        OrTabMenuStyle.width = `20%`;
+        RouterViewStyle.width = `80%`;
+        OrTabMenuStyle.transition = `.6s`
+      }
+    })
+  },
   methods: {
     menuItemClick(path){
       this.$router.push(path)
@@ -76,7 +91,9 @@ export default {
 <style>
 .my-navbar{
   height: 70px;
-  box-shadow: #666 2px 2px 5px;
+  background-color: #047AFB;
+  color: #fff;
+  box-shadow: #999 0 2px 8px;
 }
 .my-card{
   position: absolute;

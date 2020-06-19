@@ -7,7 +7,9 @@
         <th scope="col">手机号</th>
         <th scope="col">职位</th>
         <th scope="col">邮箱</th>
-        <th></th>
+        <th>
+          <img src="~assets/img/add.svg" alt="添加管理员用户" class="add-manager-btn" @click="AddManager">
+        </th>
         <th></th>
       </tr>
     </thead>
@@ -75,6 +77,9 @@ export default {
     editInfo(user){
       this.$emit("editInfo", user)
     },
+    AddManager(){
+      this.$emit("showAddManagerWindow")
+    },
     deleteUser(userId,index){
       this.users.splice(index, 1);
       this.$emit("deleteUser", userId)
@@ -95,5 +100,10 @@ export default {
   transform: translate(-50%, -50%);
   font-size: 30px;
   color: #666;
+}
+.add-manager-btn{
+  width: 25px;
+  height: auto;
+  cursor: pointer;
 }
 </style>

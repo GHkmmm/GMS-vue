@@ -9,6 +9,18 @@ export function getUser(page){
   })
 }
 
+export function addManager(username, phoneNum, email){
+  return request({
+    url: "/manageUser/add",
+    method: "post",
+    data: {
+      username,
+      phoneNum,
+      email
+    }
+  })
+}
+
 export function editUser(userId,username, phoneNum, email, posId){
   return request({
     url: "/manageUser/edit",

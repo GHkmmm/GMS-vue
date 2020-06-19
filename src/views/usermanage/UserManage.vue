@@ -8,6 +8,7 @@
                 :isDeleted="isDeleted"
                 :isShowTip="isShowTip"
                 @editInfo="editInfo"
+                @showAddManagerWindow="showAddManagerWindow"
                 @deleteUser="deleteUser"
                 @rollbackUser="rollbackUser" />
     <pagination :totalPage="totalPage" 
@@ -16,6 +17,25 @@
                 @Backward="Backward"
                 class="my-pagination"
                 v-if="users.length!=0" />
+
+    <or-modal :height="450" :width="400" v-if="isShowModal" @CloseModalWindow="CloseModalWindow">
+      <form @submit.prevent="AddManager">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input type="text" class="form-control btn-block" id="username" v-model="newManager.username">
+        </div>
+        <div class="form-group">
+          <label for="phoneNum">手机号</label>
+          <input type="text" class="form-control" id="phoneNum" v-model="newManager.phoneNum">
+        </div>
+        <div class="form-group">
+          <label for="email">邮箱</label>
+          <input type="text" class="form-control" id="email" v-model="newManager.email">
+        </div>
+        <button class="btn btn-primary" type="submit">新增管理员</button>
+      </form>
+    </or-modal>
+
   </div>
 </template>
 
@@ -23,7 +43,8 @@
 import FilterUser from './childComps/FilterUser';
 import UserTable from './childComps/UserTable';
 import Pagination from 'components/common/pagination/Pagination';
-import { getUser, deleteUser, queryUser, getDeletedUsers, rollbackUser } from 'network/userManage';
+import OrModal from 'components/common/modal/Modal';
+import { getUser, deleteUser, queryUser, getDeletedUsers, rollbackUser, addManager } from 'network/userManage';
 
 export default {
   name: "UserManage",
@@ -33,13 +54,20 @@ export default {
       totalPage: 1,
       currentIndex: 0,
       isDeleted: false,
-      isShowTip: false
+      isShowTip: false,
+      isShowModal: false,
+      newManager:{
+        username:"",
+        phoneNum: "",
+        email: ""
+      }
     }
   },
   components: {
     FilterUser,
     UserTable,
-    Pagination
+    Pagination,
+    OrModal
   },
   created(){
     this.getUser(this.currentIndex);
@@ -80,6 +108,12 @@ export default {
         this.getUser(this.currentIndex)
       }
     },
+    showAddManagerWindow(){
+      this.isShowModal = true;
+    },
+    CloseModalWindow(){
+      this.isShowModal = false
+    },
 
     /**
      * 网络请求相关方法
@@ -90,6 +124,14 @@ export default {
       getUser(page).then(res => {
         this.users = res.users
         this.totalPage = res.totalPage;
+      })
+    },
+    AddManager(){
+      addManager(this.newManager.username,this.newManager.phoneNum,this.newManager.email).then(res => {
+        if(res.code==200){
+          this.$toast.suc("添加成功")
+          this.CloseModalWindow();
+        }
       })
     },
     deleteUser(userId){

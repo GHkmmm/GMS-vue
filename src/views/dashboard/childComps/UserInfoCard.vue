@@ -54,8 +54,7 @@ export default {
 
   border-radius: 10px;
   background: linear-gradient(225deg, #e6e6e6, #ffffff);
-  box-shadow:  -20px 20px 40px #c9c9c9, 
-             20px -20px 40px #ffffff;
+  box-shadow:  -20px 20px 40px #c9c9c9
 }
 .info-name{
   font-size: 24px;

@@ -1,17 +1,18 @@
 import { request } from './request';
 
-export function Login(username, password){
+export function Login(username, password,code){
   return request({
     url: '/login',
     method: 'post',
     data: {
       username,
-      password
+      password,
+      code
     }
   })
 }
 
-export function Register(username, password, phoneNum, posId, email){
+export function Register(username, password, phoneNum, posId, email,code){
   return request({
     url: '/register',
     method: 'post',
@@ -20,12 +21,13 @@ export function Register(username, password, phoneNum, posId, email){
       password,
       phoneNum,
       posId,
-      email
+      email,
+      code
     }
   })
 }
 
-export function ChangePassword(password, username, phoneNum, email){
+export function ChangePassword(password, username, phoneNum, email,code){
   return request({
     url: "/changePassword",
     method: "post",
@@ -33,8 +35,15 @@ export function ChangePassword(password, username, phoneNum, email){
       password,
       username,
       phoneNum,
-      email
+      email,
+      code
     }
+  })
+}
+
+export function GetValidateCode(){
+  return request({
+    url: "/getCaptchaImage"
   })
 }
 

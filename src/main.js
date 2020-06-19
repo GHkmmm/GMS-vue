@@ -15,6 +15,8 @@ Vue.use(OrProgress);
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$bus = new Vue();
+
 var routes = [];
 
 router.beforeEach((to, from, next) => {

@@ -9,10 +9,19 @@
           <small class="form-text text-danger">{{usernameTip}}</small>
         </div>
         <div class="form-group">
-          <label for="password">*密码</label>
+          <label for="password">*{{password}}</label>
           <input class="form-control" id="password" v-model="user.password" @blur="PasswordInputBlur">
           <small class="form-text text-danger">{{passwordTip}}</small>
         </div>
+        <div class="form-group">
+          <label for="code">验证码</label>
+          <div class="input-group mb-3">
+            <input class="form-control" id="code" v-model="code">
+            <div class="input-group-append" @click="changeCode">
+              <img id="codeimg" class="img-code" alt="">
+            </div>
+          </div>
+        </div> 
         <div class="warn" v-if="isShowTip">邮箱/手机号选一项填写即可</div>
         <div class="form-group" v-if="isShowOtherInput">
           <label for="phoneNum">手机号</label>
@@ -23,11 +32,7 @@
           <label for="email">email</label>
           <input class="form-control" id="email" v-model="user.email" @blur="EmailInputBlur">
           <small class="form-text text-danger">{{emailTip}}</small>
-        </div>
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Check me out</label>
-        </div>
+        </div>    
         <div class="changeto-register" @click="changeToRegister" v-if="!isShowOtherInput">还没账户?点击注册用户</div>
         <div class="changeto-register" @click="changeToLogin" v-if="isShowOtherInput">已有账户?点击登陆</div>
         <div class="warn" @click="forgetPassword" v-if="!isShowOtherInput">忘记密码</div>
@@ -44,7 +49,7 @@ import Toast from 'components/common/toast/Toast';
 import Loading from 'components/common/loading/Loading';
 import OrProgress from 'components/common/progress/Progress';
 
-import { Login, Register, ChangePassword, GetRoutes } from 'network/login';
+import { Login, Register, ChangePassword, GetRoutes, GetValidateCode } from 'network/login';
 import { MenuUtils } from 'utils/MenuUtils';
 
 var routers = [];
@@ -65,6 +70,7 @@ export default {
       passwordTest: false,
       phoneNumTest: false,
       emailTest: false,
+      password: "密码",
       user: {
         username: "",
         password: "",
@@ -72,6 +78,7 @@ export default {
         posId: 3,
         email: ""
       },
+      code: "",
       routers: []
     }
   },
@@ -79,6 +86,9 @@ export default {
     Toast,
     Loading,
     OrProgress
+  },
+  created(){
+    this.changeCode();
   },
   methods: {
     changeToRegister(){
@@ -92,6 +102,7 @@ export default {
     },
     forgetPassword(){
       this.title = "修改密码"
+      this.password = "新密码"
       this.isShowOtherInput = !this.isShowOtherInput;
       this.isShowTip = true;
     },
@@ -141,8 +152,8 @@ export default {
      */
     SubmitFrom(){
       this.$progress.start();
-      if(this.title=="登陆"&&this.nameTest&&this.passwordTest){
-        Login(this.user.username, this.user.password).then(res => {
+      if(this.title=="登陆"&&this.nameTest&&this.passwordTest&&this.code!=""){
+        Login(this.user.username, this.user.password,this.code).then(res => {
           if(res.code == 200){
             this.isLoading = true;
             this.$store.state.user = res.user;
@@ -155,41 +166,61 @@ export default {
               this.$progress.finished();
               this.$router.push("/dashboard");
             }) 
+          }else if(res.code == 400){
+            this.$toast.err("验证码错误");
+            this.$progress.stop();
+            this.changeCode();
           }else{
             this.$toast.err("账号或密码错误");
+            this.$progress.stop();
+            this.changeCode();
           }     
         });
-      }else if(this.title=="注册"&&this.nameTest&&this.passwordTest){
+      }else if(this.title=="注册"&&this.nameTest&&this.passwordTest&&this.code!=""){
         this.isLoading = true;
-        Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email).then(res => {
+        Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email,this.code).then(res => {
           if(res.code == 200){
             this.$toast.suc("注册成功");
             setTimeout(()=>{
               this.$router.go(0);
             }, 1000)
+          }else if(res.code == 400){
+            this.$toast.err("验证码错误");
+            this.$progress.stop();
+            this.changeCode();
           }else{
-            this.isLoading = false;
-            this.$toast.err("请验证您信息的格式")
+            this.$toast.err("注册失败")
+            this.$progress.stop();
           }
         })
-      }else if(this.title=="修改密码"){
+      }else if(this.title=="修改密码"&&this.code!=""){
         this.isLoading = true;
-        ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email).then(res => {
+        ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email,this.code).then(res => {
           console.log(res);
           if(res.code == 200){
             this.$toast.suc("修改成功");
             setTimeout(()=>{
               this.$router.go(0);
             }, 1000)
+          }else if(res.code == 400){
+            this.$toast.err("验证码错误");
+            this.$progress.stop();
+            this.changeCode();
           }else{
             this.isLoading = false;
             this.$toast.err("信息验证失败")
+            this.$progress.stop();
           }
         })
       }else{
         this.isLoading = false;
         this.$toast.err("请按照要求填写信息")
       }
+    },
+    changeCode(){
+      GetValidateCode().then(res => {
+        document.getElementById('codeimg').src=res.url;
+      })
     }
   }
 }
@@ -207,6 +238,9 @@ export default {
 .login-form{
   width: 30%;
   margin: 0 auto;
+}
+.img-code{
+  cursor: pointer;
 }
 .changeto-register{
   margin-bottom: 10px;

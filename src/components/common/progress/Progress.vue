@@ -21,6 +21,11 @@ export default {
       setTimeout(()=>{
         OrProgressParent.removeChild(OrProgress);
       },600)
+    },
+    stop(){
+      const OrProgress = this.$refs.OrProgressBar;
+      const OrProgressParent = OrProgress.parentElement;
+      OrProgressParent.removeChild(OrProgress);
     }
   }
 }
