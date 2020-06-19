@@ -58,7 +58,7 @@ export default {
         OrTabMenuStyle.transition = `.6s`
       }else{
         OrTabMenuStyle.width = `20%`;
-        RouterViewStyle.width = `80%`;
+        // RouterViewStyle.width = `80%`;
         OrTabMenuStyle.transition = `.6s`
       }
     })
