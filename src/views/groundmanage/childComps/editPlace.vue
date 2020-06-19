@@ -1,25 +1,29 @@
 <template>
-  <div>
-  <button class="btn btn-outline-warning" onclick="document.getElementById('modalEdit').style.display='block'" style="width:auto;">修改</button>
-  
-   <div id="modalEdit" class="modal">
+
+   <div id="modalEdit" class="modal modalself">
      <div class="modal-content animate">
          <div>
             <!-- 点击×号，隐藏模态框-->
-            <span onclick="document.getElementById('modalEdit').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <span @click="closeModal()" class="close" title="Close Modal">&times;</span>
         </div>
-        <form @submit.prevent="editPlace">
+        <form>
+        
         <div class="container">
+         <div><label><b>当前场地编号： </b><span>{{currentPlace.idPlace}}</span></label></div>
          <label for="placeName"><b>场地名字</b></label>
          <input  id="placeName" v-model="currentPlace.placeName">
          <label  for="location"><b>场地位置</b></label>
          <input  id="location" v-model="currentPlace.location">
-          <button class="btn btn-primary" type="submit">确认修改</button>
+         
         </div>
         </form>
+        <div>
+  <button class="btn btn-primary"  @click="editPlace()">确认修改</button>
+  <button class="btn btn-primary" @click="closeModal()">取消</button>
+  </div>
     </div>
    </div>
-  </div>
+
 
 
 </template>
@@ -30,34 +34,31 @@ export default {
     name:"editPlace",
     data(){
         return{
-            currentPlace:{
-                idPlace: " ",
-                placeName: " ",
-                location: " "
-            }
+           currentPlace:Object
 
         }
     },
-    created(){
-        this.setPlace();
+    props:{
+       placeMsg:Object
     },
-    activated(){
-        this.setPlace();
+    created(){
+        this.currentPlace = this.placeMsg
     },
     methods:{
-        setPlace(){
-            this.currentPlace.idPlace = this.$route.query.idPlace;
-            this.currentPlace.placeName = this.$route.query.placeName;
-            this.currentPlace.location = this.$route.query.location;
-        },
+
         editPlace(){
             changePlace(this.currentPlace.idPlace,this.currentPlace.placeName,this.currentPlace.location).then(res =>{
-                console.log(res);
+
+                if(confirm("是否要修改")==true){
                 if(res.code == 200){
                     this.$toast.suc("修改成功");
-                    this.$router.push("place");
-                }
+                    this.$emit('ifShowEditModal');
+                
+                }}
             })
+        },
+        closeModal(){
+            this.$emit('ifShowEditModal');
         }
     }
 
@@ -65,6 +66,11 @@ export default {
 </script>
 
 <style>
+button{
+    width:100px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
  input{
         width: 100%;
         padding: 12px 20px;
@@ -76,8 +82,8 @@ export default {
 
 
     /* The Modal (background) */
-    .modal {
-        display: none; /* Hidden by default */
+    .modalself {
+        display: block; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
         width: 100%; /* Full width */
@@ -94,6 +100,9 @@ export default {
         margin: 2% auto 20% auto; /* 2% from the top, 20% from the bottom and centered */
         border: 1px solid #888;
         width: 500px; /* Could be more or less, depending on screen size */
+    }
+    .container{
+        margin-top:50px;
     }
 
     /* The Close Button (x) */

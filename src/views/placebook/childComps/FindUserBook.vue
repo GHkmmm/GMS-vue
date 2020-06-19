@@ -10,34 +10,36 @@
         </div>
 
         <div class="container">
-            <table class="table">
+            <table style="width:110%" class="table">
              <thead>
               <tr>
                 <th scope="col">预约编号</th>
                 <th scope="col">用户名</th>
+                <th scope="col">星期</th>
                 <th scope="col">开始时间</th>
                 <th scope="col">结束时间</th>
                 <th scope="col">场地名字</th>
                 <th scope="col">场地位置</th>
                 <th scope="col">场地用途</th>
                 <th scope="col">场地费用</th>
-                
-                <td align="center" scope="col"></td>
+               <td> <changeAppointment v-if="isShowChangeModal"  :appointmentMsg="this.appointmentMsg" @ifShowChangeModal="ifShowChangeModal()">修改</changeAppointment>
+                    </td>
             </tr>
           </thead>
           <tbody>
              <tr v-for="(userAppointment,index) in userAppointments" :key="userAppointment.key">
              <td scope="row">{{userAppointment.idAppointment}}</td>
              <td>{{userAppointment.userName}}</td>
+             <td>{{userAppointment.week}}</td>
              <td>{{showTime(userAppointment.startAppointment)}}</td>
              <td>{{showTime(userAppointment.overAppointment)}}</td>
              <td>{{userAppointment.placeName}}</td>
              <td>{{userAppointment.location}}</td>
              <td>{{userAppointment.purpose}}</td>
              <td>{{userAppointment.cost+"元/小时"}}</td>
-             <td align="center"><changeAppointment>修改</changeAppointment></td>
+             <td><button class="btn btn-outline-warning" @click="changeAppointment(userAppointment)">修改</button></td>
              <td><button type="button" class="btn btn-outline-danger" @click="deleteAppointment(userAppointment.idAppointment,index)">预约退订</button></td>
-             <td><button type="button" class="btn btn-outline-primary">结算</button></td>
+             <td><button type="button" class="btn btn-outline-primary" @click="checkOut(userAppointment.startAppointment,userAppointment.overAppointment,userAppointment.purpose,userAppointment.cost,userAppointment.placeName,userAppointment.idAppointment,index)">结算</button></td>
             </tr>
            </tbody>
             
@@ -56,12 +58,16 @@
 import { searchUserBook,deleteAppointment } from 'network/place';
 import changeAppointment from "./ChangeBook";
 import {DateFormat} from "../../../common/util";
+import {addTrading} from 'network/trading';
+
 
  export default {
   name:"searchUserAppointment",
   data(){
       return{
-      userAppointments:[]
+      userAppointments:[],
+      isShowChangeModal:false,
+      appointmentMsg:""
       
       }
   },
@@ -71,7 +77,7 @@ import {DateFormat} from "../../../common/util";
   },
 
   components:{
-   changeAppointment,
+   changeAppointment
   },
    methods:{
    searchUserBook(){   
@@ -99,8 +105,40 @@ import {DateFormat} from "../../../common/util";
 
         }
 
-      }
+      }, 
+       ifShowChangeModal(){
+         this.isShowChangeModal=!this.isShowChangeModal;    
+      },
 
+      changeAppointment(userAppointment){
+         this.ifShowChangeModal();
+         this.appointmentMsg = userAppointment;
+      },
+      
+      addTrading(tradingType, counterParty, transactionAmount,tradingContent){
+      addTrading(tradingType, counterParty, transactionAmount,tradingContent).then(res=>{
+          
+        if(res.code == 200){
+          this.$toast.suc("结算成功")
+        }else{
+           this.$toast.err("结算失败")
+        }
+      })
+    },
+    checkOut(startAppointment,overAppointment,purpose,cost,placeName,idAppointment,index){
+        this.checkOutAppointment(idAppointment,index)
+         this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose)
+        
+    },
+      checkOutAppointment(idAppointment,index){
+      
+      deleteAppointment(idAppointment).then(res=>{
+          if(res.code ==200){ 
+            this.userAppointments.splice(index,1)
+          }
+      })
+       },
+    
  }}
 </script>
 
@@ -126,7 +164,7 @@ import {DateFormat} from "../../../common/util";
         background-color: #fefefe;
         margin: 1% auto 20% auto; /* 1% from the top, 20% from the bottom and centered */
         border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
+        width: 85%; /* Could be more or less, depending on screen size */
     }
 
     /* The Close Button (x) */

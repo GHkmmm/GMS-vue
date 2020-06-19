@@ -6,15 +6,19 @@
       <th scope="col">idPlace</th>
       <th scope="col">场地名字</th>
       <th scope="col">场地位置</th>
-      <td align="center" scope="col"><modalManage @gm="showAgain"></modalManage></td>
+      <td align="center" scope="col">
+      <modalManage @gm="showAgain"></modalManage>
+   <modalEdit v-if="isShowEditModal" :placeMsg="this.placeMsg"  @ifShowEditModal="ifShowEditModal()" >修改</modalEdit>
+      </td>
      </tr>
     </thead>
+ 
      <tbody>
       <tr v-for="(place,index) in places" :key="place.key">
        <td scope="row">{{place.idPlace}}</td>
        <td>{{place.placeName}}</td>
        <td>{{place.location}}</td>
-       <td align="center"><modalEdit  @click="editPlace(place)">修改</modalEdit></td>
+       <td align="center"><button class="btn btn-outline-warning" @click="editPlace(place)">修改</button></td>
        <td><button type="button" class="btn btn-outline-danger" @click="deletePlaceMA(place.idPlace,index)">删除</button></td>
       </tr>
      </tbody>
@@ -30,7 +34,9 @@ export default {
   name:"placeManage",
   data(){
     return{
-      places:[]
+      places:[],
+      isShowEditModal:false,
+      placeMsg:""
       }
     },
     components:{
@@ -41,18 +47,6 @@ export default {
       this.getPlaceMA();
     },
     methods:{
-      editPlace(place){
-          this.$emit("editPlace",place);
-          this.$router.push({
-            path:'editPlace',
-            query:{
-              idPlace:place.idPlace,
-              placeName:place.placeName,
-              location:place.location
-
-            }
-          })
-      },
       getPlaceMA(){
         getPlace().then( res=>{
           this.places = res.place;
@@ -73,6 +67,13 @@ export default {
          getPlace().then( res=>{
           this.places = res.place;
          })
+      },
+      ifShowEditModal(){
+        this.isShowEditModal = !this.isShowEditModal;
+      },
+        editPlace(place){
+         this.ifShowEditModal();
+         this.placeMsg =place;
       }
     }
   }

@@ -9,7 +9,7 @@
       <tr>
        <th scope="col">收费标准编号</th>
        <th scope="col">场地名字</th>
-       <th scope="col">时间</th>
+       <th scope="col">星期</th>
        <th scope="col">开始时间</th>
        <th scope="col">结束时间</th>
        <th scope="col">是否有灯光</th>

@@ -80,3 +80,27 @@ export function deleteAppointment(idAppointment){
         }
     })
 }
+export function changeAppointment(                
+   idAppointment,
+   week,
+    startAppointment,
+    overAppointment,
+    placeName,
+    location,
+    purpose,
+   light){
+    return request({
+        url:"place/changeAppointment",
+        method:"post",
+        data:{
+            idAppointment,
+            week,
+            startAppointment,
+            overAppointment,
+            placeName,
+            location,
+            purpose,
+            light
+        }
+    })
+}
