@@ -8,7 +8,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <td align="center" scope="col"><modalAddGame @emit="addGame"></modalAddGame></td>
+    <td align="center" scope="col"></td>
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">添加赛事</button>
     <!--<ul class="navbar-nav ml-auto">
 
@@ -69,7 +69,7 @@
           <th scope="col">举办时间</th>
           <th scope="col">主办方</th>
           <th scope="col">创建者</th>
-          <th></th>
+          <th><modalAddGame @emit="addGame"></modalAddGame></th>
           <th></th>
         </tr>
       </thead>
@@ -113,6 +113,7 @@ export default {
   data(){
     return{
       games: [],
+      //userId:0,//未登录时默认当前用户Id是0
       totalPage: 1,//总页数
       currentIndex: 0//当前页数
     }
@@ -123,11 +124,11 @@ export default {
   },
 
   created(){
-      this.getGame(0);
+      this.getGame(this.currentIndex);
     },
 
  activated(){
-    this.getGame(0);
+    this.getGame(this.currentIndex);
   },
 
   methods: {

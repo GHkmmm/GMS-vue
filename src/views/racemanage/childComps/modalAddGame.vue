@@ -25,8 +25,8 @@
             <label><b>主办方</b></label>
             <input type="text" placeholder="请输入主办方" v-model="game.sponsor" required>
 
-            <label><b>创建者</b></label>
-            <input type="text" placeholder="请输入创建者" v-model="game.userId" required>
+            <!--<label><b>创建者</b></label>
+            <input type="text" placeholder="请输入创建者" v-model="game.userId" required>-->
 
             <button  class="btn btn-outline-primary" @click="addGame" onclick="document.getElementById('modalAddGame').style.display='none'">确认</button>
             <button  class="btn btn-outline-primary" onclick="document.getElementById('modalAddGame').style.display='none'">取消</button>
@@ -59,7 +59,7 @@ export default {
   },
  methods:{
     addGame(){
-     addGame(this.game.gameId,this.game.gameName,this.game.event,this.game.holdingTime,this.game.sponsor,this.game.userId).then(res=>{
+     addGame(this.game.gameId,this.game.gameName,this.game.event,this.game.holdingTime,this.game.sponsor,this.$store.state.user.userId).then(res=>{
        console.log("曹尼玛杀币res")
        console.log(res)
          if(res.code ==200){
@@ -67,9 +67,9 @@ export default {
              this.$emit('emit');
             }else if (res.code == 404){
              this.$toast.err("输入信息不全")
-            }//else{
-             //this.$toast.err("添加失败")
-         //}
+            }else{
+             this.$toast.err("添加失败")
+         }
      })
     },
  
