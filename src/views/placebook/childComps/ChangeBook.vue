@@ -1,67 +1,36 @@
 <template>
- <div>
- <button  class="btn btn-primary" onclick="document.getElementById('modalManage').style.display='block'" style="width:auto;">添加场地</button>
-
-<div id="modalManage" class="modal">
-    <div class="modal-content animate">
-        <div class="imgcontainer">
+  <div>
+  <button class="btn btn-outline-warning" onclick="document.getElementById('modalChangeBook').style.display='block'" style="width:auto;">修改</button>
+  
+   <div id="modalChangeBook" class="modal">
+     <div class="modal-content animate">
+         <div>
             <!-- 点击×号，隐藏模态框-->
-            <span onclick="document.getElementById('modalManage').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <span onclick="document.getElementById('modalChangeBook').style.display='none'" class="close" title="Close Modal">&times;</span>
         </div>
-
+        <form >
         <div class="container">
-            <label><b>场地名字</b></label>
-            <input type="text" placeholder="请输入场地名字" id="placeName" v-model="place.placeName">
-
-            <label><b>场地位置</b></label>
-            <input type="text" placeholder="请输入场地位置" id="location" v-model="place.location">
-
-            <button  class="btn btn-outline-primary" @click="addPlaceMA()" onclick="document.getElementById('modalManage').style.display='none'">确认</button>
-            <button  class="btn btn-outline-primary" onclick="document.getElementById('modalManage').style.display='none'">取消</button>
+         <p>这里是修改预约信息</p>
+          <button class="btn btn-primary" type="submit">确认修改</button>
         </div>
-
-
-
+        </form>
     </div>
-</div>
+   </div>
+  </div>
 
- </div>
+
 </template>
 
 <script>
-import { addPlace } from 'network/place'
+import { changeAppointment } from "network/place";
+export default {
+    name:"changeAppointment"
 
- export default {
-  name:"modalManage",
-  data(){
-      return{
-    place:{
-        placeName:"",
-        location:""
-       }
-      }
-  },
-  
-   methods:{
-   addPlaceMA(){
-     addPlace(this.place.placeName,this.place.location).then(res =>{
-         
-         if(res.code == 200){
-             alert("添加成功，请稍等列表更新");
-             this.$emit('gm');
-            // this.$toast.suc("添加成功")
-         }else if(res.code ==400){
-             this.$toast.err("添加失败")
-         }else if(res.code==404){
-             this.$toast.err("参数为空，请检查！")
-         }
-      })
-  }
- }}
+
+}
 </script>
 
-<style  scoped>
-
+<style scoped>
  input{
         width: 100%;
         padding: 12px 20px;

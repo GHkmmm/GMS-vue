@@ -2,6 +2,7 @@
   <div>
    <bulletin></bulletin>
    <searchUserAppointment id="btn1"></searchUserAppointment>
+   <modalAddAppointment id="btn2"></modalAddAppointment>
    <div>
     <table class="table">
      <thead>
@@ -37,12 +38,14 @@ import bulletin from 'components/content/bulletin/Bulletin';
 import { getCharge } from 'network/place';
 import {DateFormat} from "../../common/util";
 import searchUserAppointment from "./childComps/FindUserBook";
+import modalAddAppointment from "./childComps/AddBook";
 export default {
   name:"chargeSearch",
   components:{
     bulletin,
-    DateFormat,
+    modalAddAppointment,
     searchUserAppointment
+
     },
     data(){
       return{
@@ -59,6 +62,7 @@ export default {
         })
 
       },
+
       showTime(value){
         if(value !=""){
            let date = new Date(value*1000);
@@ -77,6 +81,10 @@ export default {
   top:5px;
   left:320px;
 }
-
+#btn2{
+  position: absolute;
+  top:5px;
+  left:460px;
+}
 
 </style>

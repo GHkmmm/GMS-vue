@@ -1,8 +1,8 @@
 <template>
  <div>
- <button class="btn btn-primary" onclick="document.getElementById('modalUserAppointment').style.display='block'" style="width:auto;">查看个人预约</button>
+ <button class="btn btn-primary" @click="searchUserBook()" onclick="document.getElementById('modalUserAppointment').style.display='block'" style="width:auto;">查看个人预约</button>
 
-<div id="modalUserAppointment" class="modal">
+<div id="modalUserAppointment" class="modal" >
     <div class="modal-content animate">
         <div class="imgcontainer">
             <!-- 点击×号，隐藏模态框-->
@@ -22,21 +22,22 @@
                 <th scope="col">场地用途</th>
                 <th scope="col">场地费用</th>
                 
-                <td align="center" scope="col"><modalManage></modalManage></td>
+                <td align="center" scope="col"></td>
             </tr>
           </thead>
           <tbody>
-             <tr v-for="userAppointment in userAppointments" :key="userAppointment.key">
+             <tr v-for="(userAppointment,index) in userAppointments" :key="userAppointment.key">
              <td scope="row">{{userAppointment.idAppointment}}</td>
              <td>{{userAppointment.userName}}</td>
-             <td>{{userAppointment.startAppointment}}</td>
-             <td>{{userAppointment.overAppointment}}</td>
+             <td>{{showTime(userAppointment.startAppointment)}}</td>
+             <td>{{showTime(userAppointment.overAppointment)}}</td>
              <td>{{userAppointment.placeName}}</td>
              <td>{{userAppointment.location}}</td>
              <td>{{userAppointment.purpose}}</td>
              <td>{{userAppointment.cost+"元/小时"}}</td>
-             <td align="center"><button class="btn btn-outline-warning">修改</button></td>
-             <td><button type="button" class="btn btn-outline-danger">预约退订</button></td>
+             <td align="center"><changeAppointment>修改</changeAppointment></td>
+             <td><button type="button" class="btn btn-outline-danger" @click="deleteAppointment(userAppointment.idAppointment,index)">预约退订</button></td>
+             <td><button type="button" class="btn btn-outline-primary">结算</button></td>
             </tr>
            </tbody>
             
@@ -52,7 +53,10 @@
 </template>
 
 <script>
-import { searchUserBook } from 'network/place';
+import { searchUserBook,deleteAppointment } from 'network/place';
+import changeAppointment from "./ChangeBook";
+import {DateFormat} from "../../../common/util";
+
  export default {
   name:"searchUserAppointment",
   data(){
@@ -61,24 +65,42 @@ import { searchUserBook } from 'network/place';
       
       }
   },
-  created(){ 
+    activated(){ 
+
       this.searchUserBook();
   },
-  components:{
 
+  components:{
+   changeAppointment,
   },
    methods:{
    searchUserBook(){   
       
      searchUserBook(this.$store.state.user.userId).then( res =>{
-         console.log(res);
          this.userAppointments = res.userAppointment  
-          console.log(this.$store.state.user.userId);
-        console.log(this.userAppointments);
-    
  
       })
-  }
+  },
+  deleteAppointment(idAppointment,index){
+      if(confirm("是否要退订预约")==true){
+      deleteAppointment(idAppointment).then(res=>{
+          if(res.code ==200){
+            this.$toast.suc("退订成功")
+            this.userAppointments.splice(index,1)
+          }else{
+             this.$toast.err("退订失败失败")
+          }
+      })}
+       },
+        showTime(value){
+        if(value !=""){
+           let date = new Date(value*1000);
+           return DateFormat(date,"h:mm");
+
+        }
+
+      }
+
  }}
 </script>
 
@@ -102,7 +124,7 @@ import { searchUserBook } from 'network/place';
     /* Modal Content/Box */
     .modal-content {
         background-color: #fefefe;
-        margin: 1% auto 20% auto; /* 2% from the top, 20% from the bottom and centered */
+        margin: 1% auto 20% auto; /* 1% from the top, 20% from the bottom and centered */
         border: 1px solid #888;
         width: 80%; /* Could be more or less, depending on screen size */
     }

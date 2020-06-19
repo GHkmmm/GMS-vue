@@ -1,4 +1,5 @@
 import { request } from './request';
+import { expr } from 'jquery';
 
 export function getCharge(){
     return request({
@@ -53,4 +54,29 @@ export function searchUserBook(userId){
              userId
          }
      })
+}
+export function addAppointment( idPlace,placeName, startAppointment,overAppointment, week,purpose, light,userId){
+    return request({
+        url:"/place/addAppointment",
+        method:"post",
+        data:{
+           idPlace,
+           placeName,
+           startAppointment,
+           overAppointment,
+           week,purpose,
+           light,
+           userId
+        }
+    })
+
+}
+export function deleteAppointment(idAppointment){
+    return request({
+        url:"/place/deleteAppointment",
+        method:"post",
+        data:{
+            idAppointment
+        }
+    })
 }

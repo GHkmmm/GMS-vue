@@ -6,7 +6,7 @@
       <th scope="col">idPlace</th>
       <th scope="col">场地名字</th>
       <th scope="col">场地位置</th>
-      <td align="center" scope="col"><modalManage></modalManage></td>
+      <td align="center" scope="col"><modalManage @gm="showAgain"></modalManage></td>
      </tr>
     </thead>
      <tbody>
@@ -59,6 +59,7 @@ export default {
          })
       },
       deletePlaceMA(idPlace,index){
+        if(confirm("是否要删除场地")== true){
         deletePlace(idPlace).then(res=>{
           if(res.code == 200){
             this.$toast.suc("删除成功")
@@ -66,8 +67,13 @@ export default {
           }else{
             this.$toast.err("删除失败")
           }
-        })
+        })}
       },
+      showAgain:function(){
+         getPlace().then( res=>{
+          this.places = res.place;
+         })
+      }
     }
   }
 
