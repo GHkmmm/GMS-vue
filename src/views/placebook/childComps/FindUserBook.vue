@@ -164,7 +164,7 @@ import {addTrading} from 'network/trading';
         background-color: #fefefe;
         margin: 1% auto 20% auto; /* 1% from the top, 20% from the bottom and centered */
         border: 1px solid #888;
-        width: 85%; /* Could be more or less, depending on screen size */
+        width: 86%; /* Could be more or less, depending on screen size */
     }
 
     /* The Close Button (x) */

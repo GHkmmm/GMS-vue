@@ -4,7 +4,7 @@
      <div class="modal-content animate">
         <div class="imgcontainer">
             <!-- 点击×号，隐藏模态框-->
-            <span @click="closeModal()" class="close" title="Close Modal">&times;</span>
+            <span @click="closeSelf()" class="close" title="Close Modal">&times;</span>
         </div>
 
         <div class="container">
@@ -57,10 +57,12 @@
             <option value="二楼编号3">台球桌 二楼编号3</option>
             <option value="二楼编号4">台球桌 二楼编号4</option>
             <option value="二楼右转">健身房 二楼右转</option>
-            <option value="保龄球馆二楼左转">保龄球馆二楼左转</option>
-            <option value="乒乓球场（收费）三楼">乒乓球场（收费）三楼</option>
-            <option value="武术馆 四楼左边">武术馆 四楼左边</option>
-            <option value="体操馆 四楼右边">体操馆 四楼右边</option>
+            <option value="一楼左边">羽毛球场 一楼左边</option>
+            <option value="三楼">乒乓球场（收费）三楼</option>
+            <option value="二楼左转">保龄球馆二楼左转</option>
+            <option value="四楼左边">武术馆 四楼左边</option>
+            <option value="四楼右边">体操馆 四楼右边</option>
+           
             </select> </div>
      <div>
               <label for="purpose"><b>场地用途：</b></label>
@@ -117,7 +119,7 @@ export default {
           this.currentAppointment=this.appointmentMsg
         },
     methods:{
-        closeModal(){
+        closeSelf(){
             this.$emit("ifShowChangeModal")
         },
         changeAppointment(){
@@ -131,7 +133,7 @@ export default {
                 this.currentAppointment.purpose,
                 this.light).then(res=>{
                   if(confirm("是否要修改")==true){
-                    if(res.code ==200){
+                    if(res.code == 200){
                         this.$toast.suc("修改成功");
                         this.$emit('ifShowChangeModal');
                     }}

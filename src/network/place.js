@@ -55,16 +55,18 @@ export function searchUserBook(userId){
          }
      })
 }
-export function addAppointment( idPlace,placeName, startAppointment,overAppointment, week,purpose, light,userId){
+export function addAppointment( idPlace,placeName,week,startAppointment,overAppointment,purpose, light,userId){
     return request({
         url:"/place/addAppointment",
         method:"post",
         data:{
            idPlace,
            placeName,
+           week,
            startAppointment,
            overAppointment,
-           week,purpose,
+           
+           purpose,
            light,
            userId
         }

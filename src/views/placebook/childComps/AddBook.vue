@@ -48,11 +48,11 @@
             <option value="8">乒乓球场（收费）三楼</option>
             <option value="9">武术馆 四楼左边</option>
             <option value="10">体操馆 四楼右边</option>
+            <option value="11">羽毛球场 一楼左边</option>
             </select></td>
 
              <td>
-            <select v-model="appointment.week" required> 
-            
+            <select v-model="appointment.week" required>     
             <option value="周一">星期一</option>
             <option value="周二">星期二</option>
             <option value="周三">星期三</option>
@@ -126,7 +126,7 @@ export default {
     },
     methods:{
         addAppointment(){
-            addAppointment(this.appointment.idPlace,this.appointment.placeName,this.appointment.startAppointment,this.appointment.overAppointment,this.appointment.week,this.appointment.purpose,this.appointment.light,this.$store.state.user.userId).then(res=>{
+            addAppointment(this.appointment.idPlace,this.appointment.placeName,this.appointment.week,this.appointment.startAppointment,this.appointment.overAppointment,this.appointment.purpose,this.appointment.light,this.$store.state.user.userId).then(res=>{
                 if(res.code == 200){
                     this.$toast.suc("添加成功，请查看个人预约")
                     this.$emit('ab');
