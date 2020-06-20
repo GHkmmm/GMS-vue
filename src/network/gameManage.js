@@ -24,6 +24,20 @@ export function addGame(gameId,gameName,event,holdingTime,sponsor,userId){
     })
   }
 
+  export function editGame(gameId,gameName,event,holdingTime,sponsor){
+    return request({
+      url: "/game/edit",
+      method: "post",
+      data: {
+        gameId,
+        gameName,
+        event,
+        holdingTime,
+        sponsor
+      }
+    })
+  }
+
   export function deleteGame(gameId){
     return request({
       url: "/game/delete",

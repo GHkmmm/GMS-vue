@@ -69,8 +69,11 @@
           <th scope="col">举办时间</th>
           <th scope="col">主办方</th>
           <th scope="col">创建者</th>
-          <th><modalAddGame @emit="addGame"></modalAddGame></th>
-          <th></th>
+          <th>
+            <modalAddGame ></modalAddGame>
+            <modalEditGame v-if="isShowModalEditGame" :aGame="this.aGame" @changeIsShowModalEditGame="changeIsShowModalEditGame()"></modalEditGame>
+          </th>
+          
         </tr>
       </thead>
       <tbody>
@@ -81,8 +84,10 @@
           <td>{{game.holdTime}}</td>
           <td>{{game.sponsor}}</td>
           <td>{{game.userId}}</td>
-          <td><button type="button" class="btn btn btn-info" >编辑</button></td>
-          <td><button type="button" class="btn btn-outline-danger" @click="deleteGame(game.gameId,index)">删除</button></td>
+          <td>
+            <button type="button" class="btn btn btn-info" @click="editGameComp(game)">编辑</button>
+            <button type="button" class="btn btn-outline-danger" @click="deleteGame(game.gameId,index)">删除</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -99,14 +104,17 @@
 <script>
 
 import { getGame, addGame, deleteGame } from 'network/gameManage';
+
 import bulletin from "components/content/bulletin/Bulletin";
 import modalAddGame from './childComps/modalAddGame';
+import modalEditGame from './childComps/modalEditGame';
 import Pagination from 'components/common/pagination/Pagination';
 export default {
   name: "GameManage",
    components: {
     bulletin,//滚动栏
-    modalAddGame,//模态框
+    modalAddGame,//添加赛事模态框
+    modalEditGame,//编辑赛事模态框
     Pagination//转页
     
   },
@@ -115,7 +123,10 @@ export default {
       games: [],
       //userId:0,//未登录时默认当前用户Id是0
       totalPage: 1,//总页数
-      currentIndex: 0//当前页数
+      currentIndex: 0,//当前页数
+
+      isShowModalEditGame:false,//编辑赛事的模态框显示状态
+      aGame:"",//传入到编辑modal的game对象
     }
   },
 
@@ -165,7 +176,16 @@ export default {
         }
       })
     },
-   
+
+   //编辑模态框组件
+  editGameComp(game){
+    this.changeIsShowModalEditGame();
+    this.aGame=game;
+  },
+  changeIsShowModalEditGame(){
+    this.isShowModalEditGame=!this.isShowModalEditGame;
+  },
+
    //分页
    pageClick(index){
     this.currentIndex = index
