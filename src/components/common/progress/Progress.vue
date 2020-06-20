@@ -42,7 +42,7 @@ export default {
 .or-progress-bar{
   width: 0;
   height: 100%;
-  background-color: #79b8ff;
+  background-color: #2ea44f;
   transition: .6s
   /* animation-name: forward;
   animation-duration: 1s;

@@ -1,6 +1,7 @@
 <template>
   <div class="or-modal-container">
-    <div class="or-modal" ref="OrModal">
+    <div class="or-modal-background">
+      <div class="or-modal" ref="OrModal">
       <img class="or-modal-close" src="~assets/img/close.svg" alt="" @click="CloseModalWindow">
       <div class="or-modal-content">
         <slot>
@@ -8,7 +9,7 @@
         </slot>
       </div>
     </div>
-    <div class="or-modal-background"></div>
+    </div>
   </div>
 </template>
 
@@ -49,21 +50,21 @@ export default {
 .or-modal-background{
   width: 100%;
   height: 100%;
-  background-color: #000;
-  opacity: .2;
+  background-color: rgba(0, 0, 0, .2);
+  position: absolute;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .or-modal{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 99;
   background-color: #fff;
   border-radius: 10px;
   opacity: 1;
+  position: relative;
   animation-name: scale;
-  animation-duration: .6s;
-  transition: scale .6s;
+  animation-duration: .6s
 }
 .or-modal-close{
   height: 30px;
@@ -82,10 +83,10 @@ export default {
 
 @keyframes scale {
   0%{
-    transform: scale(0.6)
+    transform: scale(.1)
   }
   100%{
-    transform: scale(1.1)
+    transform: scale(1)
   }
 }
 </style>

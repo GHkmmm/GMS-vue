@@ -87,7 +87,7 @@ export default {
     Loading,
     OrProgress
   },
-  created(){
+  mounted(){
     this.changeCode();
   },
   methods: {

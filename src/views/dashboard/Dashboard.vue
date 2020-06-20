@@ -3,13 +3,12 @@
     <dashboard-nav-bar class="my-navbar" @infoClick="infoClick"/>
     <user-info-card class="my-card" v-if="isShowUserInfo" />
     <div class="bottom">
-      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick" ref="OrTabMenu">
-        <!-- <tab-menu :menus="menus[0].menu" /> -->
-      </tab-menu>
+      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick" ref="OrTabMenu" />
       <keep-alive>
         <router-view class="router-view" ref="RouterView" />
       </keep-alive>
     </div>
+    <dashboard-modal v-if="isShowModal" @CloseModalWindow="CloseModalWindow"/>
   </div>
 </template>
 
@@ -17,6 +16,7 @@
 import DashboardNavBar from './childComps/DashboardNavBar';
 import UserInfoCard from './childComps/UserInfoCard';
 import TabMenu from 'components/common/tabmenu/TabMenu';
+import DashboardModal from './childComps/DashboardModal';
 
 import { GetSession, GetRoutes } from 'network/login';
 
@@ -25,16 +25,17 @@ export default {
   components: {
     DashboardNavBar,
     UserInfoCard,
-    TabMenu
+    TabMenu,
+    DashboardModal
   },
   data(){
     return {
-      isShowUserInfo: false
+      isShowUserInfo: false,
+      isShowModal: true
     }
   },
   created(){
     this.getSession();
-    // this.getRoutes(this.$store.state.user.posId);
 
     setTimeout(()=>{
       if(this.$store.state.user){
@@ -69,6 +70,9 @@ export default {
     },
     infoClick(){
       this.isShowUserInfo = !this.isShowUserInfo;
+    },
+    CloseModalWindow(){
+      this.isShowModal = false;
     },
 
     /**

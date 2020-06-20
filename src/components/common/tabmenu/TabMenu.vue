@@ -11,7 +11,7 @@
       <div v-for="(menu,index) in home" 
         :key="index" 
         class="menu-list-item" 
-        :class="{actived: homeCurrentIndex==index-1}"
+        :class="{actived: homeCurrentIndex==index}"
         @click="HomeItemClick(index,menu.path)"
         v-show="menu.name">
         <img :src="menu.icon|getImg" alt="">
@@ -37,6 +37,12 @@
         <div>{{menu.name}}</div>
       </div>
     </div>
+    <div class="menu-list"
+          @click="pushUserInfo"
+          :class="{actived: isShowItemMenu3}" >
+          <img class="menu-list-item-title-icon" src="~assets/img/tabmenu/userinfo.svg" alt="">
+          <div>个人中心</div>
+    </div>
   </div>
 </template>
 
@@ -57,6 +63,7 @@ export default {
       dashboardCurrentIndex: 0,
       isShowItemMenu1: true,
       isShowItemMenu2: false,
+      isShowItemMenu3: false,
       home:[],
       dashboard: []
     }
@@ -84,9 +91,19 @@ export default {
         this.$emit('menuItemClick', path)
       }
     },
+
+    pushUserInfo(){
+      if(this.isShowItemMenu3==false){
+        this.$router.push("userinfo");
+      }
+      this.isShowItemMenu1 = false;
+      this.isShowItemMenu2 = false;
+      this.isShowItemMenu3 = true;
+    },
     showItemMenu1(){
       this.isShowItemMenu1 = !this.isShowItemMenu1
       this.isShowItemMenu2 = false;
+      this.isShowItemMenu3 = false;
       if(this.isShowItemMenu1==true){
         this.$emit('menuItemClick', "rentEquipment")
         this.homeCurrentIndex=0;
@@ -94,7 +111,8 @@ export default {
     },
     showItemMenu2(){
       this.isShowItemMenu1 = false;
-      this.isShowItemMenu2 = !this.isShowItemMenu2
+      this.isShowItemMenu2 = !this.isShowItemMenu2;
+      this.isShowItemMenu3 = false;
       if(this.isShowItemMenu2==true){
         this.$emit('menuItemClick', "user")
         this.dashboardCurrentIndex=0;
@@ -102,10 +120,12 @@ export default {
     },
     SplitArray(){
       this.menus.forEach((item, index) => {
-        if(index<=4){
-          this.home.push(item)
-        }else{
-          this.dashboard.push(item)
+        if(item.name){
+          if(index<=4){
+            this.home.push(item)
+          }else{
+            this.dashboard.push(item)
+          }
         }
       })
       console.log(this.home);

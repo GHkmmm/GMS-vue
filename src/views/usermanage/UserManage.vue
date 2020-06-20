@@ -12,6 +12,7 @@
                 @deleteUser="deleteUser"
                 @rollbackUser="rollbackUser" />
     <pagination :totalPage="totalPage" 
+                :currentIndex="currentIndex"
                 @pageClick="pageClick"
                 @Forward="Forward"
                 @Backward="Backward"

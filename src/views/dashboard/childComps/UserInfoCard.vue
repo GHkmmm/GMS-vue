@@ -1,6 +1,6 @@
 <template>
   <div class="info-card">
-    <img src="~assets/img/df_avatar.svg" alt="">
+    <img src="~assets/img/avatar.png" alt="">
     <div class="info-name">{{user.username}}</div>
     <div class="info-email">{{user.email}}</div>
     <button class="btn btn-danger logout" @click="Logout">注销</button>
@@ -40,9 +40,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .info-card{
-  width: 180px;
+  width: 200px;
   height: 250px;
   background-color: red;
 
@@ -56,6 +56,9 @@ export default {
   background: linear-gradient(225deg, #e6e6e6, #ffffff);
   box-shadow:  -20px 20px 40px #c9c9c9
 }
+.info-card img{
+  width: 70px;
+}
 .info-name{
   font-size: 24px;
   margin-top: 15px;
@@ -66,5 +69,8 @@ export default {
 }
 .logout{
   margin-top: 10px;
+}
+img{
+  width: 30px;
 }
 </style>

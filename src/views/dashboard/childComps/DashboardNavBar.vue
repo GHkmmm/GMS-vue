@@ -11,7 +11,7 @@
     <div slot="right" class="info" @click="infoClick">
       <div>{{$store.state.user.username+"---"}}</div>
       <div>{{$store.state.user.posId|showPosition}}</div>
-      <img src="~assets/img/df_avatar.svg" alt="">
+      <img src="~assets/img/avatar.png" alt="">
     </div>
   </nav-bar>
 </template>
@@ -84,6 +84,7 @@ export default {
   cursor: pointer;
 }
 .info img{
+  width: 50px;
   margin-left: 10px;
 }
 </style>
