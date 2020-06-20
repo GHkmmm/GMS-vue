@@ -60,3 +60,13 @@ export function totalAmount(tradingType){
     }
   })
 }
+
+export function payMent(paymentUid,step){
+  return request({
+    url: "/trading/qrcode",
+    params: {
+      paymentUid,
+      step
+    }
+  })
+}

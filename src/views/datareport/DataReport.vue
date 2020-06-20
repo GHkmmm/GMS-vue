@@ -34,6 +34,14 @@
     <!-- 中间ul -->
     <ul class="navbar-nav ml-auto nav-ul">
       <li>
+        <button  @click="payMent()">支付</button>
+
+        <or-modal v-if="isShowQRcode" @CloseModalWindow="CloseModalWindow"
+>
+            <div class="qrcode" ref="qrCodeUrl"></div>
+        </or-modal>
+        
+
         <button class="btn btn-sm btn-success my-refresh-btn" @click="searchTrading(searchTradingId,searchUserId,searchTrdaingType,searchTradingTimeBegin,searchTradingTimeEnd,currentIndex)">刷新</button>
       </li>
       <li class="nav-item dropdown timeSelect">
@@ -130,7 +138,7 @@
 </template>
 
 <script>
-import {searchTrading, addTrading, deleteTrading,totalAmount} from 'network/trading';
+import {searchTrading, addTrading, deleteTrading,totalAmount,payMent} from 'network/trading';
 
 import Pagination from 'components/common/pagination/Pagination';
 import {DateFormat} from 'common/util';
@@ -145,7 +153,9 @@ import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import addModal from './childComps/addModal';
 import changeModal from './childComps/changeModal'
 
+import QRCode from 'qrcodejs2'
 
+import OrModal from 'components/common/modal/Modal';
 
 export default {
   name: "tradingList",
@@ -169,6 +179,7 @@ export default {
       isShowChangeModal:false,//编辑交易的模态框显示状态
 
       aTrading:"",//传入到编辑modal的trading对象
+      isShowQRcode:false,
 
       dateBegin:"",
       dateEnd:"",
@@ -184,7 +195,8 @@ export default {
     datePicker,
     OrSwitch,
     addModal,
-    changeModal
+    changeModal,
+    OrModal
   },
   filters: {
     typeName(tradingType){
@@ -260,6 +272,19 @@ export default {
     Date.parse(timestr);
     return 
   },
+  creatQrCode(text) {
+    var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: text, // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    })
+},
+CloseModalWindow(){
+  this.isShowQRcode=false;
+},
   // 时间戳结束
 //组件结束
 // 翻页
@@ -322,6 +347,17 @@ export default {
           }
       })
     },
+      payMent(){
+        this.isShowQRcode=true;
+        payMent("2",1).then(res=>{
+          if (res.code==200) {
+            this.creatQrCode(res.payLink);
+          }else{
+            this.$toast.err("请求支付二维码失败")
+          }
+        })
+    },
+// 网络请求结束
     // 查询方法
     //查询交易类型
     allType(){
