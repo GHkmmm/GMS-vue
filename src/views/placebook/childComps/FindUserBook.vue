@@ -136,8 +136,9 @@ import OrModal from 'components/common/modal/Modal';
       })
     },
     checkOut(startAppointment,overAppointment,purpose,cost,placeName,idAppointment,index){
+          this.checkOutAppointment(idAppointment,index);
+          this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose);
          this.payMent();
-       
         
     },
       checkOutAppointment(idAppointment,index){
@@ -163,8 +164,7 @@ CloseModalWindow(){
 },
     payMent(){
         this.isShowQRcode=true;
-        payMent("2",1).then(res=>{
-        console.log(2222222);
+        payMent("fbt",1).then(res=>{
           if (res.code==200) {
             this.paymentUid=res.paymentUid;
             console.log(this.paymentUid);
@@ -174,12 +174,11 @@ CloseModalWindow(){
           }
         })
     },
-     paySucess(){
-      payMent(paymentUid,3).then(res=>{
+     paySuccess(){
+      payMent(this.paymentUid,3).then(res=>{
          if (res.code==200) {
-           this.$toast.suc(res.msg)
-          this.checkOutAppointment(idAppointment,index);
-          this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose)
+          this.isShowQRcode=true;
+          this.$toast.suc(res.msg);
           }else{
             this.$toast.err(res.msg)
           }

@@ -34,7 +34,7 @@
     <!-- 中间ul -->
     <ul class="navbar-nav ml-auto nav-ul">
       <li>
-        <button  @click="payMent()">支付</button>
+        <!-- <button  @click="payMent()">支付</button> -->
 
         <or-modal v-if="isShowQRcode" @CloseModalWindow="CloseModalWindow"
 >
