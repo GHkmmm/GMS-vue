@@ -1,7 +1,10 @@
 <template>
   <div class="edit-info">
-    <img src="~assets/img/back.svg" alt="" @click="BackUserManage">
-    <form @submit.prevent="editInfo">
+    <div @click="BackUserManage">
+      <img src="~assets/img/back.svg" alt="" >
+      <span class="back-btn">返回</span>
+    </div>
+    <form @submit.prevent="editInfo" class="edit-info-form">
       <div class="form-group">
         <label for="username">用户名</label>
         <input type="text" class="form-control" id="username" v-model="currentUser.username">
@@ -83,6 +86,15 @@ export default {
   width: 40px;
   height: 40px;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+.edit-info-form{
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+.back-btn{
+  font-size: 24px;
+  color: #666;
   cursor: pointer;
 }
 </style>

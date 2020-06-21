@@ -1,6 +1,6 @@
 <template>
   <div class="info-card">
-    <img src="~assets/img/avatar.png" alt="">
+    <img :src="getAvatarImg" alt="">
     <div class="info-name">{{user.username}}</div>
     <div class="info-email">{{user.email}}</div>
     <button class="btn btn-danger logout" @click="Logout">注销</button>
@@ -19,6 +19,11 @@ export default {
   },
   mounted(){
     this.user = this.$store.state.user;
+  },
+  computed: {
+    getAvatarImg(){
+      return require("assets/img/avatar/"+this.$store.state.user.avatar)
+    }
   },
   methods: {
     Logout(){
