@@ -80,3 +80,13 @@ export function changeEquipment(equipmentIdOld, equipmentId, equipmentName, equi
     }
   })
 }
+
+export function searchEquipmentByGameId() {
+  return request({
+    url: "/equipment/searchGameId",
+    method: 'post',
+    data: {
+      
+    }
+  })
+}
