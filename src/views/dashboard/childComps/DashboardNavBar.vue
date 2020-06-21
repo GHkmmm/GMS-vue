@@ -11,7 +11,7 @@
     <div slot="right" class="info" @click="infoClick">
       <div>{{$store.state.user.username+"---"}}</div>
       <div>{{$store.state.user.posId|showPosition}}</div>
-      <img src="~assets/img/avatar.png" alt="">
+      <img :src="getAvatarImg" alt="">
     </div>
   </nav-bar>
 </template>
@@ -42,6 +42,11 @@ export default {
           return "普通用户"
           break;
       }
+    }
+  },
+  computed: {
+    getAvatarImg(){
+      return require("assets/img/avatar/"+this.$store.state.user.avatar)
     }
   },
   methods: {

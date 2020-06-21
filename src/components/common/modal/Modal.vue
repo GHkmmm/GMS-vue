@@ -46,6 +46,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 99;
 }
 .or-modal-background{
   width: 100%;

@@ -72,3 +72,14 @@ export function rollbackUser(userId){
     }
   })
 }
+
+export function changeAvatar(avatar,userId){
+  return request({
+    url: "/changeAvatar",
+    method: "post",
+    data: {
+      avatar,
+      userId
+    }
+  })
+}

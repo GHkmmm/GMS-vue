@@ -61,7 +61,6 @@ export default {
       title: "登陆",
       isShowOtherInput: false,
       isShowTip: false,
-      isLoading: false,
       usernameTip: "",
       passwordTip: "",
       phoneNumTip: "",
@@ -155,7 +154,7 @@ export default {
       if(this.title=="登陆"&&this.nameTest&&this.passwordTest&&this.code!=""){
         Login(this.user.username, this.user.password,this.code).then(res => {
           if(res.code == 200){
-            this.isLoading = true;
+            console.log(res);
             this.$store.state.user = res.user;
             GetRoutes(this.$store.state.user.posId).then(res => {
               this.routers.push(res);
@@ -177,7 +176,6 @@ export default {
           }     
         });
       }else if(this.title=="注册"&&this.nameTest&&this.passwordTest&&this.code!=""){
-        this.isLoading = true;
         Register(this.user.username, this.user.password, this.user.phoneNum, this.user.posId, this.user.email,this.code).then(res => {
           if(res.code == 200){
             this.$toast.suc("注册成功");
@@ -194,7 +192,6 @@ export default {
           }
         })
       }else if(this.title=="修改密码"&&this.code!=""){
-        this.isLoading = true;
         ChangePassword(this.user.password, this.user.username, this.user.phoneNum, this.user.email,this.code).then(res => {
           console.log(res);
           if(res.code == 200){
