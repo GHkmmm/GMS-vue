@@ -119,13 +119,15 @@ export default {
       }
     },
     SplitArray(){
+      let i = 0;
       this.menus.forEach((item, index) => {
         if(item.name){
-          if(index<=4){
+          if(i<=3){
             this.home.push(item)
           }else{
             this.dashboard.push(item)
           }
+          i++;
         }
       })
       console.log(this.home);

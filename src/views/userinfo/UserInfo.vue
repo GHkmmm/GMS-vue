@@ -44,8 +44,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  right: 50px;
+  margin-right: 100px;
 }
 .userinfo-title{
   font-size: 24px;

@@ -22,13 +22,17 @@ var routes = [];
 router.beforeEach((to, from, next) => {
   if(to.path!="/login"&&store.state.routes.length==0){
     GetSession().then(res => {
-      store.state.user = res.user;
-      store.state.routes.push(res.routes);
-      store.state.routes[0].children = res.routes.children.reverse();
-      MenuUtils(routes, store.state.routes);
-      router.options.routes.push(...routes);
-      router.addRoutes(routes);
-      next({path:"/dashboard"});
+      if(res.routes){
+        store.state.user = res.user;
+        store.state.routes.push(res.routes);
+        store.state.routes[0].children = res.routes.children.reverse();
+        MenuUtils(routes, store.state.routes);
+        router.options.routes.push(...routes);
+        router.addRoutes(routes);
+        next({path:"/dashboard"});
+      }else{
+        next({path:'/login'});
+      }
       // next();
     })
   }else{

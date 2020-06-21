@@ -3,7 +3,7 @@
     <dashboard-nav-bar class="my-navbar" @infoClick="infoClick"/>
     <user-info-card class="my-card" v-if="isShowUserInfo" />
     <div class="bottom">
-      <tab-menu :menus="$router.options.routes[2].children" @menuItemClick="menuItemClick" ref="OrTabMenu" />
+      <tab-menu :menus="$router.options.routes[3].children" @menuItemClick="menuItemClick" ref="OrTabMenu" />
       <keep-alive>
         <router-view class="router-view" ref="RouterView" />
       </keep-alive>
@@ -35,9 +35,22 @@ export default {
     }
   },
   created(){
-    this.getSession();
+    // this.getSession();
 
-    setTimeout(()=>{
+    // setTimeout(()=>{
+    //   if(this.$store.state.user){
+    //     console.log(this.$store.state.user);
+    //     this.$toast.suc("欢迎您,"+this.$store.state.user.username)
+    //   }else{
+    //     this.$toast.err("您还未登陆");
+    //     setTimeout(()=>{
+    //       this.$router.push("/login");
+    //     }, 1600)
+    //   }
+    // },300)
+    new Promise(resolve => {
+      this.getSession();
+    }).then(()=>{
       if(this.$store.state.user){
         console.log(this.$store.state.user);
         this.$toast.suc("欢迎您,"+this.$store.state.user.username)
@@ -47,7 +60,7 @@ export default {
           this.$router.push("/login");
         }, 1600)
       }
-    },300)
+    })
   },
   mounted(){
     this.$bus.$on("clickNavMenu", (isSpread) => {
@@ -57,10 +70,10 @@ export default {
         OrTabMenuStyle.width = `0`;
         RouterViewStyle.width = `100%`;
         OrTabMenuStyle.transition = `.6s`
+        RouterViewStyle.transition = `.6s`
       }else{
+        RouterViewStyle.width = `80%`;
         OrTabMenuStyle.width = `20%`;
-        // RouterViewStyle.width = `80%`;
-        OrTabMenuStyle.transition = `.6s`
       }
     })
   },
