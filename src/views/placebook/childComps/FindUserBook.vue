@@ -23,6 +23,10 @@
                 <th scope="col">场地用途</th>
                 <th scope="col">场地费用</th>
                <td> <changeAppointment v-if="isShowChangeModal"  :appointmentMsg="this.appointmentMsg" @ifShowChangeModal="ifShowChangeModal()">修改</changeAppointment>
+               <or-modal :height="350" v-if="isShowQRcode" @CloseModalWindow="CloseModalWindow">
+                 <div class="qrcode qrcode-div" ref="qrCodeUrl"></div>
+                <div class="div3"><button class="btn btn-success" @click="paySuccess()">我已支付</button></div> 
+              </or-modal>
                     </td>
             </tr>
           </thead>
@@ -58,8 +62,10 @@
 import { searchUserBook,deleteAppointment } from 'network/place';
 import changeAppointment from "./ChangeBook";
 import {DateFormat} from "../../../common/util";
-import {addTrading} from 'network/trading';
+import {addTrading,payMent} from 'network/trading';
+import QRCode from 'qrcodejs2' ;
 
+import OrModal from 'components/common/modal/Modal';
 
  export default {
   name:"searchUserAppointment",
@@ -67,7 +73,9 @@ import {addTrading} from 'network/trading';
       return{
       userAppointments:[],
       isShowChangeModal:false,
-      appointmentMsg:""
+      appointmentMsg:"",
+      isShowQRcode:false,
+      paymentUid:""
       
       }
   },
@@ -77,7 +85,8 @@ import {addTrading} from 'network/trading';
   },
 
   components:{
-   changeAppointment
+   changeAppointment,
+   OrModal
   },
    methods:{
    searchUserBook(){   
@@ -107,7 +116,8 @@ import {addTrading} from 'network/trading';
 
       }, 
        ifShowChangeModal(){
-         this.isShowChangeModal=!this.isShowChangeModal;    
+         this.isShowChangeModal=!this.isShowChangeModal; 
+         this.searchUserBook();   
       },
 
       changeAppointment(userAppointment){
@@ -126,8 +136,9 @@ import {addTrading} from 'network/trading';
       })
     },
     checkOut(startAppointment,overAppointment,purpose,cost,placeName,idAppointment,index){
-        this.checkOutAppointment(idAppointment,index)
-         this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose)
+          this.checkOutAppointment(idAppointment,index);
+          this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose);
+         this.payMent();
         
     },
       checkOutAppointment(idAppointment,index){
@@ -138,13 +149,60 @@ import {addTrading} from 'network/trading';
           }
       })
        },
+         creatQrCode(text) {
+    var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: text, // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    })
+},
+CloseModalWindow(){
+  this.isShowQRcode=false;
+},
+    payMent(){
+        this.isShowQRcode=true;
+        payMent("fbt",1).then(res=>{
+          if (res.code==200) {
+            this.paymentUid=res.paymentUid;
+            console.log(this.paymentUid);
+            this.creatQrCode(res.payLink);
+          }else{
+            this.$toast.err("请求支付二维码失败")
+          }
+        })
+    },
+     paySuccess(){
+      payMent(this.paymentUid,3).then(res=>{
+         if (res.code==200) {
+          this.isShowQRcode=true;
+          this.$toast.suc(res.msg);
+          }else{
+            this.$toast.err(res.msg)
+          }
+      })
+    },
     
  }}
 </script>
 
 <style scoped>
+   
 
+   .div3{
+       margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   }
 
+    .qrcode-div{
+     display: flex;
+  justify-content: center;
+  align-items: center;
+    }
 
     /* The Modal (background) 阴影处 */
     .modal {
@@ -164,7 +222,7 @@ import {addTrading} from 'network/trading';
         background-color: #fefefe;
         margin: 1% auto 20% auto; /* 1% from the top, 20% from the bottom and centered */
         border: 1px solid #888;
-        width: 86%; /* Could be more or less, depending on screen size */
+        width: 88%; /* Could be more or less, depending on screen size */
     }
 
     /* The Close Button (x) */

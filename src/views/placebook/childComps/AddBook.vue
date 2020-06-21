@@ -66,6 +66,7 @@
              <select v-model="appointment.startAppointment" required> 
           
             <option value="1592440200">8:30</option>
+            <option value=""></option>
             <option value="1592468400">16:20</option>
             <option value="1592475600">18:20</option>
 

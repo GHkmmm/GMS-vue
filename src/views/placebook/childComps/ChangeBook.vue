@@ -10,7 +10,7 @@
         <div class="container">
           <div><label><b>当前订单编号：</b><span>{{currentAppointment.idAppointment}}</span></label></div>
            <div><label for="week"><b>星期：</b></label>
-            <select v-model="currentAppointment.week" required>         
+            <select class="form-control"  v-model="currentAppointment.week" required>         
             <option value="周一">星期一</option>
             <option value="周二">星期二</option>
             <option value="周三">星期三</option>
@@ -21,22 +21,23 @@
             </select>
           </div>
           <div><label for="startAppointment"><b>开始时间：</b></label>
-           <select v-model="currentAppointment.startAppointment">
+           <select class="form-control" v-model="currentAppointment.startAppointment">
             <option value="1592440200">8:30</option>
+            <option value="1592461800">14:30</option>
             <option value="1592468400">16:20</option>
             <option value="1592475600">18:20</option>
            </select>
           </div>
           <div>
-            <label for="overAppointment"><b>结束时间：</b></label>
-             <select v-model="currentAppointment.overAppointment" required>
+            <label  for="overAppointment"><b>结束时间：</b></label>
+             <select class="form-control" v-model="currentAppointment.overAppointment" required>
              <option value="1592451000">11:30</option> 
              <option value="1592474400">18:00</option>
              <option value="1592488800">22:00</option>  
             </select>  </div>
                       <div>
             <label for="placeName"><b>场地名字：</b></label>
-            <select v-model="currentAppointment.placeName" required> 
+            <select class="form-control" v-model="currentAppointment.placeName" required> 
             
             <option value="篮球场">篮球场</option>
             <option value="台球桌">台球桌</option>
@@ -49,7 +50,7 @@
 
              <div>
             <label for="location"><b>场地位置：</b></label>
-            <select v-model="currentAppointment.location" required> 
+            <select class="form-control" v-model="currentAppointment.location" required> 
            
             <option value="一楼中间">篮球场 一楼中间</option>
             <option value="二楼编号1">台球桌 二楼编号1</option>
@@ -58,7 +59,7 @@
             <option value="二楼编号4">台球桌 二楼编号4</option>
             <option value="二楼右转">健身房 二楼右转</option>
             <option value="一楼左边">羽毛球场 一楼左边</option>
-            <option value="三楼">乒乓球场（收费）三楼</option>
+            <option value="三楼编号1">乒乓球场（收费）三楼</option>
             <option value="二楼左转">保龄球馆二楼左转</option>
             <option value="四楼左边">武术馆 四楼左边</option>
             <option value="四楼右边">体操馆 四楼右边</option>
@@ -66,7 +67,7 @@
             </select> </div>
      <div>
               <label for="purpose"><b>场地用途：</b></label>
-            <select v-model="currentAppointment.purpose" required> 
+            <select class="form-control" v-model="currentAppointment.purpose" required> 
             <option value="上课使用场地">上课使用场地</option>
             <option value="校队预留场地">校队预留场地</option>
             <option value="平常使用场地">平常使用场地</option>
@@ -74,16 +75,18 @@
      </div>
      <div>
      <label for="light"><b>灯光：</b></label>
-      <select v-model="light" required> 
+      <select class="form-control" v-model="light" required> 
             <option value="有">有</option>
             <option value="无">无</option>
             </select>
      </div>
-     </div>
-     
             <button  class="btn btn-outline-primary my-btn" @click="changeAppointment()">确认</button>
 
             <button  class="btn btn-outline-primary my-btn"  @click="closeSelf()">取消</button>
+     </div>
+  
+
+            
         </div>
      </div>
   </div>
@@ -131,7 +134,7 @@ export default {
                 this.currentAppointment.placeName,
                 this.currentAppointment.location,
                 this.currentAppointment.purpose,
-                this.light).then(res=>{
+                this.light        ).then(res=>{
                   if(confirm("是否要修改")==true){
                     if(res.code == 200){
                         this.$toast.suc("修改成功");
