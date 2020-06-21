@@ -291,6 +291,7 @@ CloseModalWindow(){
 // 翻页
   pageClick(index){
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,index*this.pagesize);
+    this.currentIndex=index*8;
   },
   Forward(){
     this.currentIndex=this.currentIndex-this.pagesize;
