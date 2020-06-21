@@ -2,14 +2,13 @@ import {
   request
 } from './request';
 
-export function getEquipment(equipmentId, equipmentName, equipmentCost, equipmentStatus, equipmentRenterId) {
+export function getEquipment(equipmentId,equipmentName,equipmentStatus, equipmentRenterId) {
   return request({
     url: "/equipment/search",
     method: 'post',
     data: {
       equipmentId,
       equipmentName,
-      equipmentCost,
       equipmentStatus,
       equipmentRenterId
     }

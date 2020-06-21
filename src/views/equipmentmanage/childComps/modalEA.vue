@@ -26,7 +26,15 @@
           <label>
             <b>器材名称</b>
           </label>
-          <input type="text" placeholder="器材名称" v-model="equipmentName" required />
+          <select type="text" v-model="equipmentName">
+          <option>羽毛球</option>
+          <option>篮球</option>
+          <option>足球</option>
+          <option>排球</option>
+          <option>橄榄球</option>
+          <option>乒乓球</option>
+          <option>网球</option>
+        </select>
 
           <label>
             <b>器材租借费用</b>
@@ -83,7 +91,16 @@ export default {
 </script>
 
 <style>
-input[type="text"] {
+input[type="text"]{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+select[type="text"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;

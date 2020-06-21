@@ -8,7 +8,15 @@
       </div>
       <div class="form-group">
         <label for="equipmentName">器材名称</label>
-        <input type="text" class="form-control" id="equipmentName" v-model="currentEquipment.equipmentName" />
+        <select class="form-control" v-model="currentEquipment.equipmentName">
+          <option>羽毛球</option>
+          <option>篮球</option>
+          <option>足球</option>
+          <option>排球</option>
+          <option>橄榄球</option>
+          <option>乒乓球</option>
+          <option>网球</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="equipmentCost">器材费用</label>
