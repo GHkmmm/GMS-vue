@@ -130,6 +130,7 @@
       </tbody>
     </table>
         <pagination :totalPage="this.totalPage" 
+                :currentIndex="this.currentIndex/8"
                 @pageClick="pageClick"
                 @Forward="Forward"
                 @Backward="Backward"
