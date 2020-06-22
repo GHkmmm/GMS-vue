@@ -47,6 +47,13 @@ export function changePlace(idPlace,placeName,location){
     })
 
 }
+
+export function searchAllBook(){
+      return request({
+          url:"/place/searchAppointment"
+      })
+}
+
 export function searchUserBook(userId){
      return request({
          url:"/place/searchUserAppointment",
