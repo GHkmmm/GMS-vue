@@ -224,7 +224,6 @@ export default {
     }
   },
   created(){
-    this.$progress.start()
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex);
     this.totalAmount(1);
     this.totalAmount(2);
@@ -309,12 +308,17 @@ CloseModalWindow(){
       if (userId=="") {
         userId=-1;
       }
+      this.$progress.start()
+
       searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count).then(res => {
         if (res.code == 200) {
           this.tradings = res.tradingList
           this.totalPage = res.page;
 
           this.$progress.finished()
+
+          this.totalAmount(1);
+          this.totalAmount(2);    
 
         }else if(res.code==201){
           this.$toast.err("无结果")
