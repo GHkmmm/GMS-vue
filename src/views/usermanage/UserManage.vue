@@ -122,6 +122,7 @@ export default {
     getUser(page){
       this.isShowTip = false;
       this.isDeleted = false;
+      this.currentIndex = page;
       getUser(page).then(res => {
         this.users = res.users
         this.totalPage = res.totalPage;
@@ -174,6 +175,7 @@ export default {
         console.log(res);
         this.users = res.users
         this.totalPage = res.totalPage
+        this.currentIndex = 1;
         if(this.users.length==0){
           this.isShowTip = true;
         }

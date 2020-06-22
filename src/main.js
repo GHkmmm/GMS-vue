@@ -22,6 +22,7 @@ var routes = [];
 router.beforeEach((to, from, next) => {
   if(to.path!="/login"&&store.state.routes.length==0){
     GetSession().then(res => {
+      console.log(res);
       if(res.routes){
         store.state.user = res.user;
         store.state.routes.push(res.routes);

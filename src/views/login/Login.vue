@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
           <label for="password">*{{password}}</label>
-          <input class="form-control" id="password" v-model="user.password" @blur="PasswordInputBlur">
+          <input type="password" class="form-control" id="password" v-model="user.password" @blur="PasswordInputBlur">
           <small class="form-text text-danger">{{passwordTip}}</small>
         </div>
         <div class="form-group">
@@ -157,6 +157,7 @@ export default {
             console.log(res);
             this.$store.state.user = res.user;
             GetRoutes(this.$store.state.user.posId).then(res => {
+              console.log(res);
               this.routers.push(res);
               this.routers.children = res.children.reverse();
               MenuUtils(routers, this.routers);

@@ -61,7 +61,7 @@ li{
   list-style: none;
   cursor: pointer;
   padding: 0 5px;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0);
 }
 .actived{
   color: #497CFF;
