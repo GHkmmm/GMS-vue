@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .button1{
     width:100px;
     margin-right: 20px;

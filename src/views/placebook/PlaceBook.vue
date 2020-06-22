@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #btn1{
   position: absolute;
   top:5px;

@@ -53,7 +53,7 @@
  </div>
 </template>
 
-<script>
+<script scoped>
 import { searchAllBook,deleteAppointment } from "network/place";
 import {DateFormat} from "../../../common/util";
 export default {
