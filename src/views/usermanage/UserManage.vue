@@ -190,7 +190,7 @@ export default {
           }
         })
     },
-    QueryUser(user){
+    /**QueryUser(user){
       console.log(user);
       queryUser(user.userId,user.username,user.phoneNum,user.email).then(res => {
         console.log(res);
@@ -208,7 +208,7 @@ export default {
           this.$toast.err("未找到结果");
         }
       })
-    }
+    }*/
   }
 }
 </script>

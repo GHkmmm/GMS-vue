@@ -48,3 +48,12 @@ export function addGame(gameId,gameName,event,holdingTime,sponsor,userId){
     })
   }
 
+  export function searchGame(gameName) {
+    return request({
+      url: "/game/search",
+      
+      params: {
+        gameName
+      }
+    })
+  }
