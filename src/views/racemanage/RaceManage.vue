@@ -82,7 +82,7 @@
           <th scope="row">{{game.gameId}}</th>
           <td>{{game.gameName}}</td>
           <td>{{game.event}}</td>
-          <td>{{game.holdingTime}}</td>
+          <td>{{game.holdTime}}</td>
           <td>{{game.sponsor}}</td>
           <td>{{game.userId}}</td>
           <td>
