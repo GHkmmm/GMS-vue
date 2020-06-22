@@ -11,7 +11,8 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <td align="center" scope="col"></td>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">哈哈</button>
+    <button class="btn btn-outline-success my-2 my-sm-0" @click="rentComp(equipment)">租用</button>
+    
     <!--<ul class="navbar-nav ml-auto">
 
       <li class="nav-item dropdown ">
@@ -70,7 +71,7 @@
           <th scope="col">租借者</th>
           <th scope="col">赛事Id</th>
           <th>
-            
+          <modalRent></modalRent>
           </th>
           
         </tr>
@@ -93,13 +94,21 @@
 
 <script>
 import { searchEquipmentByGameId,rentEquipment,recycleEquipment} from "network/equipmentManage";
+import modalRent from './childComps/modalRent';
 
 export default {
   name: "EditEquipment",
   data() {
     return {
-      equipments:[]
+      equipments:[],
+
+    isShowModalRent:false,//租用器材的模态框显示状态
+    aEquipment:"",//传入到modalRent的equipment对象
     };
+  },
+  components: {
+    modalRent,//租用器材模态框
+
   },
   created() {
     
@@ -115,7 +124,14 @@ export default {
     
   },
   methods: {
-   
+     //租用模态框组件
+    rentComp(equipments){
+      this.changeIsShowModalRent();
+      this.aEquipment=equipments;
+  },
+  changeIsShowModalRent(){
+    this.isShowModalRent=!this.isShowModalRent;
+  },
 
     //返回赛事管理
     backGameManage(){

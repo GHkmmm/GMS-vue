@@ -190,6 +190,7 @@ export default {
 
    //编辑模态框组件
   editGameComp(game){
+    console.log(game);
     this.changeIsShowModalEditGame();
     this.aGame=game;
   },

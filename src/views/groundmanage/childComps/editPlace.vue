@@ -18,8 +18,8 @@
         </div>
         </form>
         <div>
-  <button class="btn btn-primary"  @click="editPlace()">确认修改</button>
-  <button class="btn btn-primary" @click="closeModal()">取消</button>
+  <button class="btn btn-primary button1"  @click="editPlace()">确认修改</button>
+  <button class="btn btn-primary button1" @click="closeModal()">取消</button>
   </div>
     </div>
    </div>
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style>
-button{
+.button1{
     width:100px;
     margin-right: 20px;
     margin-bottom: 10px;
