@@ -130,8 +130,8 @@
                 &nbsp;
                 <button
                   class="btn btn-outline-secondary btn-sm"
-                  @click="funSubmitERC(equipment.equipmentId,equipment.equipmentStatus,equipment.equipmentRenterId,$index)"
-                >回收</button>
+                  @click="funSubmitERC(equipment,$index)"
+                >归还</button>
               </td>
               <td></td>
             </tr>
@@ -145,6 +145,13 @@
         />
       </div>
     </div>
+
+    <or-modal :height="350" v-if="isShowQRcode" @CloseModalWindow="CloseModalWindow">
+      <div class="qrcode qrcode-div" ref="qrCodeUrl"></div>
+      <div class="div3">
+        <button class="btn btn-success" @click="paySuccess()">我已支付</button>
+      </div>
+    </or-modal>
   </div>
 </template>
 
@@ -152,6 +159,10 @@
 import bulletin from "components/content/bulletin/Bulletin";
 import Pagination from "components/common/pagination/Pagination";
 import { DateFormat } from "../../common/util";
+
+import { addTrading, payMent } from "network/trading";
+import QRCode from "qrcodejs2";
+import OrModal from "components/common/modal/Modal";
 
 import {
   getEquipment,
@@ -166,7 +177,8 @@ export default {
   components: {
     bulletin,
     DateFormat,
-    Pagination
+    Pagination,
+    OrModal
   },
   data() {
     return {
@@ -176,6 +188,15 @@ export default {
       equipmentStatus: null,
       equipmentRenterId: null,
       modelEquipmentId: null,
+
+      varRecycleEquipmentId: null,
+      varRecycleEquipmentTime: null,
+      varRecycleEquipmentName: null,
+      varRecycleEquipmentCost: null,
+      varRecycleEquipmentRenterId: null,
+
+      isShowQRcode: false,
+      paymentUid: "",
 
       page: 9,
       totalNumber: 0,
@@ -231,6 +252,164 @@ export default {
     this.changeBulletin();
   },
   methods: {
+    //对接魔块 块头
+    addTrading(tradingType, counterParty, transactionAmount, tradingContent) {
+      addTrading(
+        tradingType,
+        counterParty,
+        transactionAmount,
+        tradingContent
+      ).then(res => {
+        if (res.code == 200) {
+          this.$toast.suc("结算成功");
+        } else {
+          this.$toast.err("结算失败");
+        }
+      });
+    },
+    creatQrCode(text) {
+      var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: text, // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    },
+    CloseModalWindow() {
+      this.isShowQRcode = false;
+    },
+    payMent() {
+      this.isShowQRcode = true;
+      payMent("hzj", 1).then(res => {
+        if (res.code == 200) {
+          this.paymentUid = res.paymentUid;
+          console.log(this.paymentUid);
+          this.creatQrCode(res.payLink);
+        } else {
+          this.$toast.err("请求支付二维码失败");
+        }
+      });
+    },
+    paySuccess() {
+      payMent(this.paymentUid, 3).then(res => {
+        if (res.code == 200) {
+          this.isShowQRcode = true;
+          this.$toast.suc(res.msg);
+          recycleEquipment(this.varRecycleEquipmentId).then(res => {
+            if (res.code == 200) {
+              switch (this.$store.state.user.posId) {
+                case 3:
+                  addTrading(
+                    2,
+                    "学生",
+                    Math.ceil(
+                      ((Date.parse(new Date()) - this.varRecycleEquipmentTime) *
+                        this.varRecycleEquipmentCost) /
+                        86400 /
+                        1000
+                    ) * 100,
+                    "学生" +
+                      this.varRecycleEquipmentRenterId +
+                      " 租借器材 " +
+                      this.varRecycleEquipmentName +
+                      this.varRecycleEquipmentId +
+                      " 总共 " +
+                      Math.ceil(
+                        (Date.parse(new Date()) -
+                          this.varRecycleEquipmentTime) /
+                          86400 /
+                          1000
+                      ) +
+                      " 天"
+                  );
+                  break;
+                case 2:
+                  addTrading(
+                    2,
+                    "管理员",
+                    Math.ceil(
+                      ((Date.parse(new Date()) - this.varRecycleEquipmentTime) *
+                        this.varRecycleEquipmentCost) /
+                        86400 /
+                        1000
+                    ) * 100,
+                    "管理员" +
+                      this.varRecycleEquipmentRenterId +
+                      " 租借器材 " +
+                      this.varRecycleEquipmentName +
+                      this.varRecycleEquipmentId +
+                      " 总共 " +
+                      Math.ceil(
+                        (Date.parse(new Date()) -
+                          this.varRecycleEquipmentTime) /
+                          86400 /
+                          1000
+                      ) +
+                      " 天"
+                  );
+                  break;
+                case 1:
+                  addTrading(
+                    2,
+                    "超级用户",
+                    Math.ceil(
+                      ((Date.parse(new Date()) - this.varRecycleEquipmentTime) *
+                        this.varRecycleEquipmentCost) /
+                        86400 /
+                        1000
+                    ) * 100,
+                    "超级用户" +
+                      this.varRecycleEquipmentRenterId +
+                      " 租借器材 " +
+                      this.varRecycleEquipmentName +
+                      this.varRecycleEquipmentId +
+                      " 总共 " +
+                      Math.ceil(
+                        (Date.parse(new Date()) -
+                          this.varRecycleEquipmentTime) /
+                          86400 /
+                          1000
+                      ) +
+                      " 天"
+                  );
+                  break;
+              }
+              getEquipment(
+                this.equipmentId,
+                this.equipmentName,
+                this.equipmentStatus,
+                this.equipmentRenterId
+              ).then(res => {
+                this.equipments = res.equipments;
+                this.totalPage = Math.ceil(this.equipments.length / this.page);
+                if (this.currentPage > this.totalPage) {
+                  this.currentPage = this.totalPage;
+                }
+                getEquipment(
+                  this.equipmentId,
+                  this.equipmentName,
+                  this.equipmentStatus,
+                  this.equipmentRenterId
+                ).then(res => {
+                  this.equipmentsShow = res.equipments;
+                  this.showEquipments();
+                });
+              });
+            } else if (res.code == 404) {
+              alert("求你写点东西");
+            } else {
+              alert("速度爬");
+            }
+          });
+        } else {
+          this.$toast.err(res.msg);
+        }
+      });
+    },
+    //对接模块 块尾
+
     funSearchById() {
       this.currentPage = 1;
       this.equipmentId = this.modelEquipmentId;
@@ -503,7 +682,7 @@ export default {
       });
     },
 
-    // 器材删除功能
+    // 器材租用功能
     funSubmitER: function(id, Status, RenterId, index) {
       if (Status == "repair" || Status == "rent") {
         alert("不可租用，该器材在租用或修理");
@@ -541,43 +720,22 @@ export default {
       }
     },
 
-    // 器材回收功能
-    funSubmitERC: function(id, Status, RenterId, index) {
-      if (Status == "rent" && RenterId != this.$store.state.user.userId) {
-        alert("不是你借的，回收个🔨啊？");
-      } else if (Status == "free") {
-        alert("都没被借也没被修，你回收个🐓啊");
-      } else if (confirm("是否要回收？") == true) {
-        recycleEquipment(id).then(res => {
-          if (res.code == 200) {
-            alert("回收成功，请稍等列表更新");
-            getEquipment(
-              this.equipmentId,
-              this.equipmentName,
-              this.equipmentStatus,
-              this.equipmentRenterId
-            ).then(res => {
-              this.equipments = res.equipments;
-              this.totalPage = Math.ceil(this.equipments.length / this.page);
-              if (this.currentPage > this.totalPage) {
-                this.currentPage = this.totalPage;
-              }
-              getEquipment(
-                this.equipmentId,
-                this.equipmentName,
-                this.equipmentStatus,
-                this.equipmentRenterId
-              ).then(res => {
-                this.equipmentsShow = res.equipments;
-                this.showEquipments();
-              });
-            });
-          } else if (res.code == 404) {
-            alert("求你写点东西");
-          } else {
-            alert("速度爬");
-          }
-        });
+    // 器材归还功能
+    funSubmitERC: function(equipment, index) {
+      if (
+        equipment.equipmentStatus == "rent" &&
+        equipment.equipmentRenterId != this.$store.state.user.userId
+      ) {
+        alert("不是你借的，归还个🔨啊？");
+      } else if (equipment.equipmentStatus == "free") {
+        alert("都没被借，你归还个🐓啊");
+      } else if (confirm("是否要归还？") == true) {
+        this.varRecycleEquipmentId = equipment.equipmentId;
+        this.varRecycleEquipmentTime = equipment.equipmentTime;
+        this.varRecycleEquipmentName = equipment.equipmentName;
+        this.varRecycleEquipmentCost = equipment.equipmentCost;
+        this.varRecycleEquipmentRenterId = equipment.equipmentRenterId;
+        this.payMent();
       }
     }
   }
@@ -585,6 +743,19 @@ export default {
 </script>
 
 <style>
+.div3 {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qrcode-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .equipment-manage {
   width: 100%;
 }

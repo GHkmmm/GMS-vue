@@ -22,8 +22,8 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#" @click="allType()">所有</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" @click="onlyPay()">支出</a>
-          <a class="dropdown-item" href="#" @click="onlyRevenue()">收入</a>
+          <a class="dropdown-item" href="#" @click="onlyPay()">收入</a>
+          <a class="dropdown-item" href="#" @click="onlyRevenue()">支出</a>
         </div>
       </li>
     </ul>
@@ -172,10 +172,10 @@ export default {
           return "所有";
           break;
         case 1:
-          return "支出";
+          return "收入";
           break;
         case 2:
-          return "收入";
+          return "支出";
           break;
       }
     },

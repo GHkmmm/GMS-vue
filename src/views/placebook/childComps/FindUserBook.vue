@@ -27,7 +27,7 @@
                  <div class="qrcode qrcode-div" ref="qrCodeUrl"></div>
                 <div class="div3"><button class="btn btn-success" @click="paySuccess()">我已支付</button></div> 
               </or-modal>
-                    </td>
+               </td>
             </tr>
           </thead>
           <tbody>
@@ -41,9 +41,14 @@
              <td>{{userAppointment.location}}</td>
              <td>{{userAppointment.purpose}}</td>
              <td>{{userAppointment.cost+"元/小时"}}</td>
-             <td><button class="btn btn-outline-warning" @click="changeAppointment(userAppointment)">修改</button></td>
-             <td><button type="button" class="btn btn-outline-danger" @click="deleteAppointment(userAppointment.idAppointment,index)">预约退订</button></td>
-             <td><button type="button" class="btn btn-outline-primary" @click="checkOut(userAppointment.startAppointment,userAppointment.overAppointment,userAppointment.purpose,userAppointment.cost,userAppointment.placeName,userAppointment.idAppointment,index)">结算</button></td>
+             <td><button class="btn btn-outline-warning" @click="changeAppointment(userAppointment)">修改</button>
+             <button type="button" class="btn btn-outline-danger" @click="deleteAppointment(userAppointment.idAppointment,index)">预约退订</button>
+             <button type="button" class="btn btn-outline-primary" @click="checkOut(userAppointment.startAppointment,
+                                                                                       userAppointment.overAppointment,
+                                                                                       userAppointment.purpose,
+                                                                                       userAppointment.cost,placeName,
+                                                                                       userAppointment.idAppointment,
+                                                                                       userAppointment.index)">结算</button></td>
             </tr>
            </tbody>
             
@@ -75,7 +80,15 @@ import OrModal from 'components/common/modal/Modal';
       isShowChangeModal:false,
       appointmentMsg:"",
       isShowQRcode:false,
-      paymentUid:""
+      paymentUid:"",
+
+      startAppointment:"",
+      overAppointment:"",
+      purpose:"",
+      cost:"",
+      placeName:"",
+      idAppointment:"",
+      index:""
       
       }
   },
@@ -107,6 +120,7 @@ import OrModal from 'components/common/modal/Modal';
           }
       })}
        },
+       //将时间戳定义为可视时间
         showTime(value){
         if(value !=""){
            let date = new Date(value*1000);
@@ -115,6 +129,7 @@ import OrModal from 'components/common/modal/Modal';
         }
 
       }, 
+      //显示修改modal
        ifShowChangeModal(){
          this.isShowChangeModal=!this.isShowChangeModal; 
          this.searchUserBook();   
@@ -124,7 +139,7 @@ import OrModal from 'components/common/modal/Modal';
          this.ifShowChangeModal();
          this.appointmentMsg = userAppointment;
       },
-      
+      //支付交易
       addTrading(tradingType, counterParty, transactionAmount,tradingContent){
       addTrading(tradingType, counterParty, transactionAmount,tradingContent).then(res=>{
           
@@ -136,10 +151,49 @@ import OrModal from 'components/common/modal/Modal';
       })
     },
     checkOut(startAppointment,overAppointment,purpose,cost,placeName,idAppointment,index){
-          this.checkOutAppointment(idAppointment,index);
-          this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose);
-         this.payMent();
-        
+        // this.checkOutAppointment(idAppointment,index);
+        // this.addTrading(2,"学生", ((overAppointment-startAppointment)/3600)*cost*100,placeName+((overAppointment-startAppointment)/3600).toFixed(0)+"小时 "+purpose);
+         this.payMentCode();
+            this.startAppointment = startAppointment;
+            this.overAppointment = overAppointment;
+            this.purpose = purpose;
+            this.cost = cost;
+            this.placeName = placeName;
+            this.idAppointment = idAppointment;
+            this.index=index
+
+
+    },
+        payMentCode(){
+        this.isShowQRcode=true;
+        payMent("fbt",1).then(res=>{
+        console.log(2222222);
+          if (res.code==200) {
+            this.paymentUid=res.paymentUid;
+
+            console.log(this.paymentUid);
+            this.creatQrCode(res.payLink);
+         
+
+          }else{
+            this.$toast.err("请求支付二维码失败")
+          }
+        })
+    },
+
+     paySuccess(){
+      payMent(this.paymentUid,3).then(res=>{
+         if (res.code==200) {
+           this.$toast.suc(res.msg);     
+           alert("你支付了"+(((this.overAppointment-this.startAppointment)/3600)*this.cost)+"元");
+            this.isShowQRcode=false;
+         this.checkOutAppointment(this.idAppointment,this.index);
+         this.addTrading(2,"学生", ((this.overAppointment-this.startAppointment)/3600)*this.cost*100,this.placeName+((this.overAppointment-this.startAppointment)/3600).toFixed(0)+"小时 "+this.purpose);
+       
+          }else{
+            this.$toast.err(res.msg)
+          }
+      })
     },
       checkOutAppointment(idAppointment,index){
       
@@ -162,28 +216,8 @@ import OrModal from 'components/common/modal/Modal';
 CloseModalWindow(){
   this.isShowQRcode=false;
 },
-    payMent(){
-        this.isShowQRcode=true;
-        payMent("fbt",1).then(res=>{
-          if (res.code==200) {
-            this.paymentUid=res.paymentUid;
-            console.log(this.paymentUid);
-            this.creatQrCode(res.payLink);
-          }else{
-            this.$toast.err("请求支付二维码失败")
-          }
-        })
-    },
-     paySuccess(){
-      payMent(this.paymentUid,3).then(res=>{
-         if (res.code==200) {
-          this.isShowQRcode=true;
-          this.$toast.suc(res.msg);
-          }else{
-            this.$toast.err(res.msg)
-          }
-      })
-    },
+
+
     
  }}
 </script>

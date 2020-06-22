@@ -130,6 +130,7 @@
       </tbody>
     </table>
         <pagination :totalPage="this.totalPage" 
+                :currentIndex="this.currentIndex/8"
                 @pageClick="pageClick"
                 @Forward="Forward"
                 @Backward="Backward"
@@ -223,7 +224,6 @@ export default {
     }
   },
   created(){
-    this.$progress.start()
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,this.currentIndex);
     this.totalAmount(1);
     this.totalAmount(2);
@@ -290,6 +290,7 @@ CloseModalWindow(){
 // 翻页
   pageClick(index){
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,index*this.pagesize);
+    this.currentIndex=index*8;
   },
   Forward(){
     this.currentIndex=this.currentIndex-this.pagesize;
@@ -307,12 +308,17 @@ CloseModalWindow(){
       if (userId=="") {
         userId=-1;
       }
+      this.$progress.start()
+
       searchTrading(tradingId,userId,tradingType,tradingTimeBegin,tradingTimeEnd,count).then(res => {
         if (res.code == 200) {
           this.tradings = res.tradingList
           this.totalPage = res.page;
 
           this.$progress.finished()
+
+          this.totalAmount(1);
+          this.totalAmount(2);    
 
         }else if(res.code==201){
           this.$toast.err("无结果")
@@ -390,7 +396,7 @@ CloseModalWindow(){
     tradingMixSearch(){
       this.searchUserId=this.userId;
       if (this.dateBegin!=-1&&this.dateEnd!=-1) {
-        this.searchTradingTimeBegin=Date.parse(this.dateBegin)/1000;
+        this.searchTradingTimeBegin=Date.parse(this.dateBegin)/1000+86400;
         this.searchTradingTimeEnd=(Date.parse(this.dateEnd)/1000)+86400;
       }else{
         this.searchTradingTimeBegin=this.dateBegin;

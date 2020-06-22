@@ -9,7 +9,8 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <td align="center" scope="col"></td>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">添加赛事</button>
+    <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">添加赛事</button>-->
+    <button type="button" class="btn btn-success" @click="funOpenEA(equipment)">器材安排</button>
     <!--<ul class="navbar-nav ml-auto">
 
       <li class="nav-item dropdown ">
@@ -86,6 +87,7 @@
           <td>{{game.userId}}</td>
           <td>
             <button type="button" class="btn btn btn-info" @click="editGameComp(game)">编辑</button>
+            
             <button type="button" class="btn btn-outline-danger" @click="deleteGame(game.gameId,index)">删除</button>
           </td>
         </tr>
@@ -155,6 +157,15 @@ export default {
       ]; // 滚动时间
       this.$refs.childbulletin.rotateTime = 2000;
     },
+
+    // 打开器材安排页面
+    funOpenEA(equipment) {
+      console.log("打开奇才安排快点曹尼玛")
+      this.$router.push({
+        path: "equipmentArrange",
+      });
+    },
+
     //网络请求
     getGame(page){
       getGame(page).then(res => {
@@ -179,6 +190,7 @@ export default {
 
    //编辑模态框组件
   editGameComp(game){
+    console.log(game);
     this.changeIsShowModalEditGame();
     this.aGame=game;
   },

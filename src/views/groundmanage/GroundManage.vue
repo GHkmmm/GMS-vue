@@ -10,6 +10,7 @@
       <modalManage @gm="showAgain"></modalManage>
    <modalEdit v-if="isShowEditModal" :placeMsg="this.placeMsg"  @ifShowEditModal="ifShowEditModal()" >修改</modalEdit>
       </td>
+      <td><modalAllAppointment></modalAllAppointment></td>
      </tr>
     </thead>
  
@@ -30,6 +31,7 @@
 import { getPlace,deletePlace } from "network/place";
 import modalManage from './childComps/modalManage';
 import modalEdit from './childComps/editPlace';
+import modalAllAppointment from "./childComps/SearchAppointment"
 export default {
   name:"placeManage",
   data(){
@@ -41,7 +43,8 @@ export default {
     },
     components:{
       modalManage,
-      modalEdit
+      modalEdit,
+      modalAllAppointment
     },
     created(){
       this.getPlaceMA();

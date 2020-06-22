@@ -37,13 +37,14 @@ export function deleteEquipment(equipmentId) {
   })
 }
 
-export function rentEquipment(equipmentId, equipmentRenterId) {
+export function rentEquipment(equipmentId, equipmentRenterId, gameId) {
   return request({
     url: "/equipment/rent",
     method: 'post',
     data: {
       equipmentId,
-      equipmentRenterId
+      equipmentRenterId,
+      gameId
     }
   })
 }
@@ -77,6 +78,16 @@ export function changeEquipment(equipmentIdOld, equipmentId, equipmentName, equi
       equipmentId,
       equipmentName,
       equipmentCost
+    }
+  })
+}
+
+export function searchEquipmentByGameId() {
+  return request({
+    url: "/equipment/searchGameId",
+    method: 'post',
+    data: {
+      
     }
   })
 }
