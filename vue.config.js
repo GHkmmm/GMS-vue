@@ -15,7 +15,7 @@ module.exports= {
   devServer:{
     proxy:{
       '/api':{
-        target:'http://api.gms.atiantts.xyz/',
+        target:'http://localhost:8080/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

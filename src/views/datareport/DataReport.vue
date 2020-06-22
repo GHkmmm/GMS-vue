@@ -392,7 +392,7 @@ CloseModalWindow(){
     tradingMixSearch(){
       this.searchUserId=this.userId;
       if (this.dateBegin!=-1&&this.dateEnd!=-1) {
-        this.searchTradingTimeBegin=Date.parse(this.dateBegin)/1000;
+        this.searchTradingTimeBegin=Date.parse(this.dateBegin)/1000+86400;
         this.searchTradingTimeEnd=(Date.parse(this.dateEnd)/1000)+86400;
       }else{
         this.searchTradingTimeBegin=this.dateBegin;
