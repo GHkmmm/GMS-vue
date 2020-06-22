@@ -37,13 +37,14 @@ export function deleteEquipment(equipmentId) {
   })
 }
 
-export function rentEquipment(equipmentId, equipmentRenterId) {
+export function rentEquipment(equipmentId, equipmentRenterId, gameId) {
   return request({
     url: "/equipment/rent",
     method: 'post',
     data: {
       equipmentId,
-      equipmentRenterId
+      equipmentRenterId,
+      gameId
     }
   })
 }
