@@ -53,7 +53,8 @@ import { addPlace } from 'network/place'
          }else if(res.code ==400){
              this.$toast.err("添加失败")
          }else if(res.code==404){
-             this.$toast.err("参数为空，请检查！")
+             //this.$toast.err("参数为空，请检查！")
+              alert("您没有将信息填写完整，抱歉，添加失败");
          }
       })
   }
