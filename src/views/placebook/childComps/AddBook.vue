@@ -128,6 +128,8 @@ export default {
     methods:{
         addAppointment(){
             addAppointment(this.appointment.idPlace,this.appointment.placeName,this.appointment.week,this.appointment.startAppointment,this.appointment.overAppointment,this.appointment.purpose,this.appointment.light,this.$store.state.user.userId).then(res=>{
+            
+            if(this.appointment.idPlace!="" && this.appointment.placeName!="" && this.appointment.week !="" && this.appointment.startAppointment!="" && this.appointment.overAppointment!="" && this.appointment.purpose!="" && this.appointment.light!="" ){
                 if(res.code == 200){
                     this.$toast.suc("添加成功，请查看个人预约")
                     this.$emit('ab');
@@ -135,6 +137,8 @@ export default {
                      this.$toast.err("添加失败")
                 }else if(res.code==500){
                     this.$toast.err("数据库连接失败")
+                }}else{
+                    alert("信息填写不完整，预约失败");
                 }
             })
             }

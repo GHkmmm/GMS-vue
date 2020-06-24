@@ -2,7 +2,7 @@
  <div>
  <button class="btn btn-outline-success" onclick="document.getElementById('addModal').style.display='block'" style="width:auto;">新增交易</button>
 
-<div id="addModal" class="modal">
+<div id="addModal" class="modal modal2">
     <div class="modal-content animate">
         <div class="imgcontainer">
             <!-- 点击×号，隐藏模态框-->
@@ -23,7 +23,7 @@
             <input type="text" v-model="trading.transactionAmount" placeholder="请输入金额" id="transactionAmount">
 
             <label><b>内容</b></label>
-            <input type="text" v-model="trading.tradingContent" placeholder="请输入金额" id="tradingContent">
+            <input type="text" v-model="trading.tradingContent" placeholder="请输入交易内容" id="tradingContent">
 
             <button  class="btn btn-outline-primary my-btn" @click="addTrading()" onclick="document.getElementById('addModal').style.display='none'">确认</button>
 
@@ -53,6 +53,7 @@ export default {
     },
     methods:{
     addTrading(){
+        this.trading.transactionAmount=this.trading.transactionAmount*100
       addTrading(this.trading.tradingType, this.trading.counterParty, this.trading.transactionAmount,this.trading.tradingContent).then(res=>{
         if(res.code == 200){
           this.$toast.suc(res.msg);
@@ -84,7 +85,7 @@ export default {
 }
 
     /* The Modal (background) */
-    .modal1 {
+    .modal2 {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */

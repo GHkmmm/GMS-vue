@@ -26,8 +26,7 @@
           </thead>
           <tbody>
              <tr v-for="(allBook,index) in allBooks" :key="allBook.key">
-             <td scope="row">
-                 {{allBook.idAppointment}}</td>
+             <td scope="row">{{allBook.idAppointment}}</td>
              <td>{{allBook.userName}}</td>
              <td>{{allBook.week}}</td>
              <td>{{showTime(allBook.startAppointment)}}</td>
@@ -37,7 +36,7 @@
              <td>{{allBook.purpose}}</td>
              <td>{{allBook.cost+"元/小时"}}</td>
              <td>
-             <button type="button" class="btn btn-outline-danger" @click="deleteAppointment(allBook.idAppointment,index)">预约退订</button>
+             <button type="button" class="btn btn-outline-danger" @click="deleteTheAppointment(allBook.idAppointment,index)">预约退订</button>
              </td>
             </tr>
            </tbody>
@@ -64,23 +63,22 @@ export default {
       }
   },
   activated(){
-      this.searchAllBook()
+      this.searchAllBook();
   },
   methods:{
       searchAllBook(){
           searchAllBook().then(res=>{
-              console.log(22222222222);
-         this.allBooks = res.appointment
+         this.allBooks = res.allAppointment;
           })
       },
-       deleteAppointment(idAppointment,index){
-      if(confirm("是否要退订预约")==true){
+       deleteTheAppointment(idAppointment,index){
+      if(confirm("是否要强制退订预约")==true){
       deleteAppointment(idAppointment).then(res=>{
           if(res.code ==200){
-            this.$toast.suc("退订成功")
+            this.$toast.suc("强制退订成功")
             this.allBooks.splice(index,1)
           }else{
-             this.$toast.err("退订失败失败")
+             this.$toast.err("强制退订失败")
           }
       })}
        },
@@ -98,7 +96,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
    /* The Modal (background) */
     .modal {
         display: none; /* Hidden by default */

@@ -30,7 +30,7 @@
             <input type="text" v-model="trading.transactionAmount" placeholder="请输入金额" id="transactionAmount">
 
             <label><b>内容</b></label>
-            <input type="text" v-model="trading.tradingContent" placeholder="请输入金额" id="tradingContent">
+            <input type="text" v-model="trading.tradingContent" placeholder="请输入交易内容" id="tradingContent">
 
             <button  class="btn btn-outline-primary my-btn" @click="changeTrading()">确认</button>
 
@@ -57,9 +57,11 @@ export default {
     },
     created(){
         this.trading=this.aTrading
+        this.trading.transactionAmount=(this.trading.transactionAmount/100).toFixed(2)
     },
     methods:{
         changeTrading(){
+            this.trading.transactionAmount=this.trading.transactionAmount*100
             changeTrading(this.trading.tradingId,this.trading.userId,this.trading.tradingType,this.trading.counterParty,this.trading.transactionAmount,this.trading.tradingContent).then(res=>{
                 if (res.code==200) {
                     this.$toast.suc(res.msg);
