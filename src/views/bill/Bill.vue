@@ -108,6 +108,7 @@
       </tbody>
     </table>
         <pagination :totalPage="this.totalPage" 
+                :currentIndex="this.currentIndex/8"
                 @pageClick="pageClick"
                 @Forward="Forward"
                 @Backward="Backward"
@@ -146,7 +147,7 @@ export default {
       searchTradingId:-1,
       pagesize:8,
       tid:"",
-      userId:"",
+      userId:this.$store.state.user.userId,
       isSearchTradingId:true,//搜索tradingID
       isSearchAllTime:true,//搜索所有时间
 
@@ -237,6 +238,7 @@ export default {
 // 翻页
   pageClick(index){
     this.searchTrading(this.searchTradingId,this.searchUserId,this.searchTrdaingType,this.searchTradingTimeBegin,this.searchTradingTimeEnd,index*this.pagesize);
+    this.currentIndex=index*8;
   },
   Forward(){
     this.currentIndex=this.currentIndex-this.pagesize;
