@@ -52,10 +52,10 @@
 
       
     </ul>-->
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="输入赛事ID" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
-    </form>
+    <div class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="输入赛事名称" aria-label="Search" v-model="aGameName">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" @click="searchGameByName">搜索</button>
+    </div>
   </div>
 </nav>
 
@@ -105,7 +105,7 @@
 
 <script>
 
-import { getGame, addGame, deleteGame } from 'network/gameManage';
+import { getGame, addGame, deleteGame,searchGame } from 'network/gameManage';
 
 import bulletin from "components/content/bulletin/Bulletin";
 //import modalAddGame from './childComps/modalAddGame';
@@ -126,7 +126,7 @@ export default {
       //userId:0,//未登录时默认当前用户Id是0
       totalPage: 1,//总页数
       currentIndex: 0,//当前页数
-
+      aGameName:"",//根据赛事名搜索时输入的值
       isShowModalEditGame:false,//编辑赛事的模态框显示状态
       aGame:"",//传入到编辑modal的game对象
     }
@@ -187,7 +187,30 @@ export default {
         }
       })
     },
+ searchGame(gameName){
+      console.log(gameName);
+      searchGame(gameName).then(res => {
+        console.log(res);
+        if(res.code==200){
+            this.games = res.games
+            this.$toast.suc("查询成功");
+        }else{
+          this.$toast.err("未找到结果");
+        }
+      })
+    },
 
+//通过GameName查询
+    searchGameByName(){
+      if (this.aGameName=="") {
+        this.aGameName=null
+      }
+      console.log("搜索赛事")
+      console.log(this.aGameName);
+      this.gameName=this.aGameName;
+      console.log(this.gameName);
+      this.searchGame(this.gameName)
+    },
    //编辑模态框组件
   editGameComp(game){
     console.log(game);
