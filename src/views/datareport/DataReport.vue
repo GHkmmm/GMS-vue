@@ -330,7 +330,8 @@ CloseModalWindow(){
     },
     //删除方法
     deleteTrading(tradingId,index){
-      deleteTrading(tradingId).then(res=>{
+      if (confirm("确定要删除吗?")==true) {
+              deleteTrading(tradingId).then(res=>{
         if(res.code == 200){
           this.$toast.suc(res.msg);
           this.tradings.splice(index,1)
@@ -341,6 +342,7 @@ CloseModalWindow(){
           this.$toast.err(res.msg)
         }
       })
+      }
     },
     //查询总金额方法
     totalAmount (tradingType){
