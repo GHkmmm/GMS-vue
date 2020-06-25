@@ -44,12 +44,13 @@ export default {
   name: "modalER",
   data(){
       return{
-          equipmentId:null
+          equipmentId:null,
+          gameId:0
       }
   },
   methods: {
     rentE() {
-       rentEquipment(this.equipmentId, this.$store.state.user.userId).then(res => {
+        rentEquipment(this.equipmentId, this.$store.state.user.userId, this.gameId).then(res => {
         if (res.code == 200) {
           alert("租借成功");
           this.$emit('ee');

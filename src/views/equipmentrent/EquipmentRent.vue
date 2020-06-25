@@ -125,7 +125,7 @@
               <td>
                 <button
                   class="btn btn-outline-success btn-sm"
-                  @click="funSubmitER(equipment.equipmentId,equipment.equipmentStatus,equipment.equipmentRenterId,$index)"
+                  @click="funSubmitER(equipment.equipmentId,equipment.equipmentStatus,equipment.equipmentRenterId,equipment.gameId,$index)"
                 >租用</button>
                 &nbsp;
                 <button
@@ -683,11 +683,11 @@ export default {
     },
 
     // 器材租用功能
-    funSubmitER: function(id, Status, RenterId, index) {
+    funSubmitER: function(id, Status, RenterId, gameId, index) {
       if (Status == "repair" || Status == "rent") {
         alert("不可租用，该器材在租用或修理");
       } else if (confirm("是否要租用") == true) {
-        rentEquipment(id, this.$store.state.user.userId).then(res => {
+        rentEquipment(id, this.$store.state.user.userId,gameId).then(res => {
           if (res.code == 200) {
             alert("租借成功，请稍等列表更新");
             getEquipment(
