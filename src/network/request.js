@@ -2,7 +2,10 @@ import axios from 'axios';
 
 export function request(config){
   const instance = axios.create({
-    baseURL: "/api",
+    // baseURL: "/api",
+    withCredentials: true,
+    // baseURL: "http://localhost:1003/",
+    baseURL: "http://106.15.201.34:1003/",
     timeout: 5000
   })
 
